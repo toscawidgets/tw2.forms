@@ -1,0 +1,6 @@
+<ul xmlns:py="http://genshi.edgewall.org/" py:attrs="attrs">
+    <li py:for="c in children">
+        $c.label
+        ${c.display()}
+    </li>
+</ul>

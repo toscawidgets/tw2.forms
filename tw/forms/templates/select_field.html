@@ -1,0 +1,9 @@
+<select xmlns:py="http://genshi.edgewall.org/" py:attrs="attrs">
+    <optgroup py:for="group, options in grouped_options"
+              py:strip="not group"
+              label="${group}" >
+        <option py:for="attrs, desc in options"
+                py:attrs="attrs"
+                py:content="desc" />
+    </optgroup>
+</select>

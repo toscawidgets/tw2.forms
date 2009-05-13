@@ -1,0 +1,6 @@
+<table xmlns:py="http://genshi.edgewall.org/" py:attrs="attrs">
+    <tr py:for="c in children">
+        <th py:if="c.label">$c.label</th>
+        <td py:attrs="None if c.label else dict(colspan='2')">${c.display()}</td>
+    </tr>
+</table>

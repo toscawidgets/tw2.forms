@@ -1,0 +1,2 @@
+recursive-include tw/forms/templates *
+recursive-include tw/forms/static *

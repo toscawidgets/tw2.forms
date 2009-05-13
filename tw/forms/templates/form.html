@@ -1,0 +1,4 @@
+<form xmlns:py="http://genshi.edgewall.org/" py:attrs="attrs">
+    ${child.display()}
+    <py:if test="submit_text"><input type="submit" value="$submit_text"/></py:if>
+</form>
