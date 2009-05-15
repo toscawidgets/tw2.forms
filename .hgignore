@@ -1,0 +1,2 @@
+glob:tw.forms.egg-info
+regexp:.*pyc$

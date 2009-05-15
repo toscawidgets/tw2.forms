@@ -13,7 +13,7 @@ setup(
     author_email=__EMAIL__,
     url=__URL__,
     install_requires=[
-        "ToscaWidgets",
+        "tw.core",
         ## Add other requirements here
         # "Genshi",
         ],
