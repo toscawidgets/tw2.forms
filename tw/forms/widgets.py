@@ -57,8 +57,8 @@ class LabelHiddenField(InputField):
 class CheckBox(InputField):
     type = "checkbox"
     #validator = validators.Bool
-    def __init__(self, **kw):
-        super(CheckBox, self).__init__(**kw)
+    def prepare(self):
+        super(CheckBox, self).prepare()
         self.attrs['checked'] = 'true' if self.value else None
 
 
@@ -91,9 +91,11 @@ class Button(InputField):
 class SubmitButton(Button):
     """Button to submit a form."""
     type = "submit"
-    def __init__(self, **kw):
-        super(SubmitButton, self).__init__(**kw)
-        if self.id == 'submit':
+    @classmethod
+    def post_define(cls, cls2=None):
+        cls = cls2 or cls
+        Button.post_define(cls)
+        if cls.id_elem == 'submit':
             raise twc.ParameterError("A SubmitButton cannot have the id 'submit'")
 
 
@@ -108,8 +110,8 @@ class ImageButton(twc.Link):
     height = twc.Param('Height of image in pixels', attribute=True, default=None)
     alt = twc.Param('Alternate text', attribute=True, default=None)
     src = twc.Variable(attribute=True)
-    def __init__(self, **kw):
-        super(ImageButton, self).__init__(**kw)
+    def prepare(self):
+        super(ImageButton, self).prepare()
         self.src = self.link
 
 
@@ -128,8 +130,8 @@ class SelectionField(FormField):
     multiple = twc.Variable(default=False)
     grouped_options = twc.Variable()
 
-    def __init__(self, **kw):
-        super(SelectionField, self).__init__(**kw)
+    def prepare(self):
+        super(SelectionField, self).prepare()
         grouped_options = []
         options = []
         counter = itertools.count(0)
@@ -225,8 +227,8 @@ class SelectionTable(SelectionField):
                     yield chunk
                 break
 
-    def __init__(self, **kw):
-        super(SelectionTable, self).__init__(**kw)
+    def prepare(self):
+        super(SelectionTable, self).prepare()
         self.options_rows = self._group_rows(self.options, self.cols)
         self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
 
@@ -244,14 +246,14 @@ class CheckBoxTable(SelectionTable):
 # Layout widgets
 #--
 class BaseLayout(twc.CompoundWidget):
-    label = twc.MemberParam('Label for the field. If this is None, it is automatically derived from the id.', default=None)
-    help_text = twc.MemberParam('A longer description of the field', default=None)
+    label = twc.ChildParam('Label for the field. If this is None, it is automatically derived from the id.', default=None)
+    help_text = twc.ChildParam('A longer description of the field', default=None)
 
-    def __init__(self, **kw):
-        super(BaseLayout, self).__init__(**kw)
+    def prepare(self):
+        super(BaseLayout, self).prepare()
         for c in self.children:
-            if not c.label:
-                c.label = name2label(c.id) if c.id else ''
+            if not getattr(c, 'label', None): # TBD: shouldn't need getattr
+                c.label = name2label(c.id_elem) if c.id_elem else ''
 
 
 class TableLayout(BaseLayout):
@@ -274,9 +276,11 @@ class GridLayout(twc.RepeatingWidget):
     """
     child = twc.Param('Child for this widget. This must be a RowLayout widget.')
     template = "genshi:tw.forms.templates.grid_layout"
-    def __init__(self, **kw):
-        super(GridLayout, self).__init__(**kw)
-        if not isinstance(self.child, RowLayout):
+    @classmethod
+    def post_define(cls, cls2=None):
+        cls = cls2 or cls
+        twc.RepeatingWidget.post_define(cls)
+        if hasattr(cls, 'child') and not issubclass(cls.child, RowLayout):
             raise twc.WidgetError('child for GridLayout must be a RowLayout widget')
 
 

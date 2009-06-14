@@ -1,5 +1,5 @@
-<ul xmlns:py="http://genshi.edgewall.org/" py:attrs="attrs">
-    <li py:for="attrs, desc in options">
+<ul xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+    <li py:for="attrs, desc in w.options">
         <input py:attrs="attrs" />
         <label for="${attrs['id']}" py:content="desc" />
     </li>
