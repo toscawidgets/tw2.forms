@@ -1,4 +1,4 @@
 <table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
-    <tr><th py:for="col in w.child.children">$col.label</th></tr>
+    <tr><th py:for="col in w.children[0].children">$col.label</th></tr>
     <py:for each="row in w.children">${row.display()}</py:for>
 </table>

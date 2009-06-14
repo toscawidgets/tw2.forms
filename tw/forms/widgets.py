@@ -252,7 +252,7 @@ class BaseLayout(twc.CompoundWidget):
     def prepare(self):
         super(BaseLayout, self).prepare()
         for c in self.children:
-            if not getattr(c, 'label', None): # TBD: shouldn't need getattr
+            if not c.label:
                 c.label = name2label(c.id_elem) if c.id_elem else ''
 
 
