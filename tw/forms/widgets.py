@@ -248,6 +248,8 @@ class CheckBoxTable(SelectionTable):
 class BaseLayout(twc.CompoundWidget):
     label = twc.ChildParam('Label for the field. If this is None, it is automatically derived from the id.', default=None)
     help_text = twc.ChildParam('A longer description of the field', default=None)
+    hover_help = twc.Param('Whether to display help text as hover tips', default=False)
+    container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default=None)
 
     def prepare(self):
         super(BaseLayout, self).prepare()

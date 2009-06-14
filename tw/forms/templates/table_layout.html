@@ -1,6 +1,9 @@
 <table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
-    <tr py:for="c in w.children">
+    <tr py:for="i,c in enumerate(w.children)" class="${(i % 2 and 'even' or 'odd')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs">
         <th py:if="c.label">$c.label</th>
-        <td py:attrs="None if c.label else dict(colspan='2')">${c.display()}</td>
+        <td py:attrs="None if c.label else dict(colspan='2')">
+            ${c.display()}
+            <py:if test="not w.hover_help">$c.help_text</py:if>
+        </td>
     </tr>
 </table>
