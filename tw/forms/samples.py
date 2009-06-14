@@ -31,9 +31,9 @@ class DemoCheckBoxTable(twf.CheckBoxTable):
     cols = 2
 
 demo_cld = [
-    twf.TextField.cls(id='title'),
-    twf.SingleSelectField.cls(id='priority', options=['', 'Normal', 'High']),
-    twf.TextArea.cls(id='description'),
+    twf.TextField(id='title'),
+    twf.SingleSelectField(id='priority', options=['', 'Normal', 'High']),
+    twf.TextArea(id='description'),
 ]
 
 class DemoTableLayout(twf.TableLayout):
@@ -45,27 +45,27 @@ class DemoListLayout(twf.ListLayout):
 class DemoSpacer(twf.TableLayout):
     demo_for = twf.Spacer
     children = [
-        twf.TextField.cls(id='title'),
-        twf.Spacer.cls(),
-        twf.TextArea.cls(id='description'),
+        twf.TextField(id='title'),
+        twf.Spacer(),
+        twf.TextArea(id='description'),
     ]
 
 
 class DemoLabel(twf.TableLayout):
     demo_for = twf.Label
     children = [
-        twf.TextField.cls(id='title'),
-        twf.Label.cls(text='Please enter as much information as possible in the description.'),
-        twf.TextArea.cls(id='description'),
+        twf.TextField(id='title'),
+        twf.Label(text='Please enter as much information as possible in the description.'),
+        twf.TextArea(id='description'),
     ]
 
 class DemoFieldSet(twf.FieldSet):
     legend = 'FieldSet'
-    child = DemoTableLayout.cls(id='x')
+    child = DemoTableLayout(id='x')
 
 
 class DemoForm(twf.Form):
-    child = DemoTableLayout.cls(id='x')
+    child = DemoTableLayout(id='x')
 
 
 class DemoButton(twf.Button):
@@ -74,8 +74,8 @@ class DemoButton(twf.Button):
 
 
 class DemoGridLayout(twf.GridLayout):
-    child = twf.RowLayout.cls(id=None, children=[
-        twf.TextField.cls(id='title'),
-        twf.SingleSelectField.cls(id='priority', options=['', 'Normal', 'High']),
+    child = twf.RowLayout(id=None, children=[
+        twf.TextField(id='title'),
+        twf.SingleSelectField(id='priority', options=['', 'Normal', 'High']),
     ])
     extra_reps = 3
