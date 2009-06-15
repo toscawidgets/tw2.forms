@@ -1,32 +1,27 @@
-import os
-import sys
-
 from setuptools import setup, find_packages
 
-execfile(os.path.join("tw", "forms", "release.py"))
-
 setup(
-    name=__DISTRIBUTION__,
-    version=__VERSION__,
-    description=__DESCRIPTION__,
-    author=__AUTHOR__,
-    author_email=__EMAIL__,
-    url=__URL__,
+    name='tw2.forms',
+    version='2.0.0-alpha1',
+    description='',
+    author='Paul Johnston, Alberto Valverde & contributors',
+    author_email='paj@pajhome.org.uk',
+    url='',
     install_requires=[
-        "tw.core",
+        "tw2.core",
         ## Add other requirements here
         # "Genshi",
         ],
     packages=find_packages(exclude=['ez_setup', 'tests']),
-    namespace_packages = ['tw'],
+    namespace_packages = ['tw2'],
     zip_safe=False,
     include_package_data=True,
     test_suite = 'nose.collector',
     entry_points="""
-        [toscawidgets.widgets]
+        [tw2.widgets]
         # Register your widgets so they can be listed in the WidgetBrowser
-        tw.forms = tw.forms
-        tw.forms.samples = tw.forms.samples
+        tw2.forms = tw2.forms
+        tw2.forms.samples = tw2.forms.samples
     """,
     keywords = [
         'toscawidgets.widgets',

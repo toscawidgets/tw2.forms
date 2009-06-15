@@ -1,2 +1,2 @@
-glob:tw.forms.egg-info
 regexp:.*pyc$
+glob:tw2.forms.egg-info

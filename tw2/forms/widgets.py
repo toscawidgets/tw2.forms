@@ -1,4 +1,4 @@
-import tw.core as twc, re, itertools
+import tw2.core as twc, re, itertools
 
 
 def name2label(name):
@@ -27,7 +27,7 @@ class FormField(twc.Widget):
 class InputField(FormField):
     type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
     value = twc.Param(attribute=True)
-    template = "genshi:tw.forms.templates.input_field"
+    template = "genshi:tw2.forms.templates.input_field"
 
 
 class TextField(InputField):
@@ -39,7 +39,7 @@ class TextField(InputField):
 class TextArea(FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
-    template = "genshi:tw.forms.templates.textarea"
+    template = "genshi:tw2.forms.templates.textarea"
 
 
 class HiddenField(InputField):
@@ -51,7 +51,7 @@ class LabelHiddenField(InputField):
     A hidden field, with a label showing its contents.
     """
     type = 'hidden'
-    template = "genshi:tw.forms.templates.label_hidden"
+    template = "genshi:tw2.forms.templates.label_hidden"
 
 
 class CheckBox(InputField):
@@ -182,18 +182,18 @@ class SelectionField(FormField):
 
 
 class SingleSelectField(SelectionField):
-    template = "genshi:tw.forms.templates.select_field"
+    template = "genshi:tw2.forms.templates.select_field"
 
 
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
     multiple = twc.Param(default=True, attribute=True)
-    template = "genshi:tw.forms.templates.select_field"
+    template = "genshi:tw2.forms.templates.select_field"
 
 
 class SelectionList(SelectionField):
     selected_verb = "checked"
-    template = "genshi:tw.forms.templates.selection_list"
+    template = "genshi:tw2.forms.templates.selection_list"
 
 
 class RadioButtonList(SelectionList):
@@ -208,7 +208,7 @@ class CheckBoxList(SelectionList):
 class SelectionTable(SelectionField):
     field_type = twc.Param()
     selected_verb = "checked"
-    template = "genshi:tw.forms.templates.selection_table"
+    template = "genshi:tw2.forms.templates.selection_table"
     cols = twc.Param('Number of columns', default=1)
     options_rows = twc.Variable()
     grouped_options_rows = twc.Variable()
@@ -262,14 +262,14 @@ class TableLayout(BaseLayout):
     """
     Arrange widgets and labels in a table.
     """
-    template = "genshi:tw.forms.templates.table_layout"
+    template = "genshi:tw2.forms.templates.table_layout"
 
 
 class ListLayout(BaseLayout):
     """
     Arrange widgets and labels in a list.
     """
-    template = "genshi:tw.forms.templates.list_layout"
+    template = "genshi:tw2.forms.templates.list_layout"
 
 
 class GridLayout(twc.RepeatingWidget):
@@ -277,7 +277,7 @@ class GridLayout(twc.RepeatingWidget):
     Arrange labels and multiple rows of widgets in a grid.
     """
     child = twc.Param('Child for this widget. This must be a RowLayout widget.')
-    template = "genshi:tw.forms.templates.grid_layout"
+    template = "genshi:tw2.forms.templates.grid_layout"
     @classmethod
     def post_define(cls, cls2=None):
         cls = cls2 or cls
@@ -291,14 +291,14 @@ class RowLayout(BaseLayout):
     Arrange widgets in a table row. This is normally only useful as a child to
     :class:`GridLayout`.
     """
-    template = "genshi:tw.forms.templates.row_layout"
+    template = "genshi:tw2.forms.templates.row_layout"
 
 
 class Spacer(FormField):
     """
     A blank widget, used to insert a blank row in a layout.
     """
-    template = "genshi:tw.forms.templates.spacer"
+    template = "genshi:tw2.forms.templates.spacer"
     id = None
 
 
@@ -306,7 +306,7 @@ class Label(twc.Widget):
     """
     A textual label. This disables any label that would be displayed by a parent layout.
     """
-    template = 'genshi:tw.forms.templates.label'
+    template = 'genshi:tw2.forms.templates.label'
     text = twc.Param('Text to appear in label')
     label = None # suppress a container label
     id = None
@@ -316,7 +316,7 @@ class Form(twc.DisplayOnlyWidget):
     """
     A form, with a submit button. It's common to pass a TableLayout or ListLayout widget as the child.
     """
-    template = "genshi:tw.forms.templates.form"
+    template = "genshi:tw2.forms.templates.form"
     action = twc.Param('URL to submit form data to. If this is None, the form submits to the same URL it was displayed on.', default=None, attribute=True)
     method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
     submit_text = twc.Param('Text for the submit button. If this is None, no submit button is generated.', default='Save')
@@ -326,5 +326,5 @@ class FieldSet(twc.DisplayOnlyWidget):
     """
     A field set. It's common to pass a TableLayout or ListLayout widget as the child.
     """
-    template = "genshi:tw.forms.templates.fieldset"
+    template = "genshi:tw2.forms.templates.fieldset"
     legend = twc.Param('Text for the legend', default=None)
