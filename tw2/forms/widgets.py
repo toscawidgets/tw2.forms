@@ -21,7 +21,7 @@ def name2label(name):
 # Basic Fields
 #--
 class FormField(twc.Widget):
-    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s._compound_id, lambda s, v: 1))
+    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s._compound_id(), lambda s, v: 1))
 
 
 class InputField(FormField):
