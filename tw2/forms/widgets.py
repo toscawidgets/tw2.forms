@@ -246,7 +246,7 @@ class CheckBoxTable(SelectionTable):
 # Layout widgets
 #--
 class BaseLayout(twc.CompoundWidget):
-    label = twc.ChildParam('Label for the field. If this is None, it is automatically derived from the id.', default=None)
+    label = twc.ChildParam('Label for the field. If this is Auto, it is automatically derived from the id. If this is None, it supresses the label.', default=twc.Auto)
     help_text = twc.ChildParam('A longer description of the field', default=None)
     hover_help = twc.Param('Whether to display help text as hover tips', default=False)
     container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default=None)
@@ -254,7 +254,7 @@ class BaseLayout(twc.CompoundWidget):
     def prepare(self):
         super(BaseLayout, self).prepare()
         for c in self.children:
-            if not c.label:
+            if c.label is twc.Auto:
                 c.label = name2label(c.id_elem) if c.id_elem else ''
 
 
@@ -300,6 +300,7 @@ class Spacer(FormField):
     """
     template = "genshi:tw2.forms.templates.spacer"
     id = None
+    label = None
 
 
 class Label(twc.Widget):
@@ -308,7 +309,7 @@ class Label(twc.Widget):
     """
     template = 'genshi:tw2.forms.templates.label'
     text = twc.Param('Text to appear in label')
-    label = None # suppress a container label
+    label = None
     id = None
 
 

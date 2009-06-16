@@ -6,7 +6,7 @@ These samples will appear in the WidgetBrowser
 See http://toscawidgets.org/documentation/WidgetBrowser for more information
 """
 
-import widgets as twf
+import tw2.core as twc, widgets as twf
 
 options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
@@ -30,34 +30,29 @@ class DemoCheckBoxTable(twf.CheckBoxTable):
     options = options
     cols = 2
 
-demo_cld = [
-    twf.TextField(id='title'),
-    twf.SingleSelectField(id='priority', options=['', 'Normal', 'High']),
-    twf.TextArea(id='description'),
-]
+class DemoChildren(twc.CompoundWidget):
+    title = twf.TextField()
+    priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
+    description = twf.TextArea()
 
-class DemoTableLayout(twf.TableLayout):
-    children = demo_cld
+class DemoTableLayout(twf.TableLayout, DemoChildren):
+    pass
 
-class DemoListLayout(twf.ListLayout):
-    children = demo_cld
+class DemoListLayout(twf.ListLayout, DemoChildren):
+    pass
 
 class DemoSpacer(twf.TableLayout):
     demo_for = twf.Spacer
-    children = [
-        twf.TextField(id='title'),
-        twf.Spacer(),
-        twf.TextArea(id='description'),
-    ]
+    title = twf.TextField()
+    xx = twf.Spacer()
+    description = twf.TextArea()
 
 
 class DemoLabel(twf.TableLayout):
     demo_for = twf.Label
-    children = [
-        twf.TextField(id='title'),
-        twf.Label(text='Please enter as much information as possible in the description.'),
-        twf.TextArea(id='description'),
-    ]
+    title = twf.TextField()
+    xx = twf.Label(text='Please enter as much information as possible in the description.')
+    description = twf.TextArea()
 
 class DemoFieldSet(twf.FieldSet):
     legend = 'FieldSet'
@@ -74,8 +69,7 @@ class DemoButton(twf.Button):
 
 
 class DemoGridLayout(twf.GridLayout):
-    child = twf.RowLayout(id=None, children=[
-        twf.TextField(id='title'),
-        twf.SingleSelectField(id='priority', options=['', 'Normal', 'High']),
-    ])
+    class child(twf.RowLayout):
+        title = twf.TextField
+        priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
     extra_reps = 3
