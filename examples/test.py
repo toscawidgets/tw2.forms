@@ -2,11 +2,9 @@ import webob as wo, wsgiref.simple_server as wrs, cgi
 import tw2.core as twc, tw2.forms as twf
 
 
-class MyForm(twf.Form):
-    class child(twf.TableLayout):
-        id='a'
-        name = twf.TextField(validator=twc.Required)
-        email = twf.TextField(validator=twc.EmailValidator)
+class MyForm(twf.TableForm):
+    name = twf.TextField(validator=twc.Required)
+    email = twf.TextField(validator=twc.EmailValidator)
 
 def simple_app(environ, start_response):
     req = wo.Request(environ)

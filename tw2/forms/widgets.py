@@ -329,3 +329,15 @@ class FieldSet(twc.DisplayOnlyWidget):
     """
     template = "genshi:tw2.forms.templates.fieldset"
     legend = twc.Param('Text for the legend', default=None)
+
+class TableForm(Form):
+    layout = TableLayout
+
+class ListForm(Form):
+    layout = ListLayout
+
+class TableFieldSet(FieldSet):
+    layout = TableLayout
+
+class ListFieldSet(FieldSet):
+    layout = ListLayout

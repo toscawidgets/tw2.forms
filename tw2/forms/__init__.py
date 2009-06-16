@@ -2,4 +2,5 @@ from widgets import (Button, CheckBox, FieldSet, FileField, Form, HiddenField, I
     Label, Spacer, LabelHiddenField, ListLayout, TableLayout, PasswordField,
     RadioButton, ResetButton, SubmitButton, TextField, TextArea,
     SingleSelectField, MultipleSelectField, RadioButtonList, CheckBoxList,
-    RadioButtonTable, CheckBoxTable, GridLayout, RowLayout)
+    RadioButtonTable, CheckBoxTable, GridLayout, RowLayout, TableForm, ListForm,
+    TableFieldSet, ListFieldSet)
