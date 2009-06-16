@@ -70,6 +70,6 @@ class DemoButton(twf.Button):
 
 class DemoGridLayout(twf.GridLayout):
     class child(twf.RowLayout):
-        title = twf.TextField
+        title = twf.TextField()
         priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
     extra_reps = 3
