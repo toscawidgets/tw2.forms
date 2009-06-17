@@ -1,6 +1,5 @@
 import tw2.core as twc, re, itertools
 
-
 def name2label(name):
     """
     Convert a column name to a Human Readable name.
@@ -11,11 +10,6 @@ def name2label(name):
     """
     return ' '.join([s.capitalize() for s in
                re.findall(r'([A-Z][a-z0-9]+|[a-z0-9]+|[A-Z0-9]+)', name)])
-
-
-
-
-
 
 #--
 # Basic Fields
@@ -92,9 +86,7 @@ class SubmitButton(Button):
     """Button to submit a form."""
     type = "submit"
     @classmethod
-    def post_define(cls, cls2=None):
-        cls = cls2 or cls
-        Button.post_define(cls)
+    def post_define(cls):
         if cls.id_elem == 'submit':
             raise twc.ParameterError("A SubmitButton cannot have the id 'submit'")
 
@@ -303,9 +295,7 @@ class GridLayout(twc.RepeatingWidget):
     child = twc.Param('Child for this widget. This must be a RowLayout widget.')
     template = "genshi:tw2.forms.templates.grid_layout"
     @classmethod
-    def post_define(cls, cls2=None):
-        cls = cls2 or cls
-        twc.RepeatingWidget.post_define(cls)
+    def post_define(cls):
         if hasattr(cls, 'child') and not issubclass(cls.child, RowLayout):
             raise twc.WidgetError('child for GridLayout must be a RowLayout widget')
 
