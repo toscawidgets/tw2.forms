@@ -1,6 +1,8 @@
 <ul xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
-    <li py:for="c in w.children">
+    <li py:for="i,c in enumerate(w.children)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and c.validator.required) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs">
         $c.label
         ${c.display()}
+        <py:if test="not w.hover_help">$c.help_text</py:if>
+        <span py:if="c.error_msg" py:content="c.error_msg"/>
     </li>
 </ul>

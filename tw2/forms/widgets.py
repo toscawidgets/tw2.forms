@@ -121,6 +121,17 @@ class ImageButton(twc.Link):
 class SelectionField(FormField):
     """
     Base class for single and multiple selection fields.
+
+    The `options` parameter must be an interable; it can take several formats:
+
+     * A list of values, e.g. ['', 'Red', 'Blue']
+     * A list of (code, value) tuples, e.g.
+       [(0, ''), (1, 'Red'), (2, 'Blue')]
+     * A mixed list of values and tuples. If the code is not specified, it
+       defaults to the value. e.g. ['', (1, 'Red'), (2, 'Blue')]
+     * A list of groups, e.g.
+        [('group', ['', (1, 'Red'), (2, 'Blue')]),
+         ('group2', ['', 'Pink', 'Yellow'])]
     """
 
     options = twc.Param('Options to be displayed')
@@ -246,6 +257,19 @@ class CheckBoxTable(SelectionTable):
 # Layout widgets
 #--
 class BaseLayout(twc.CompoundWidget):
+    """
+    The following CSS classes are used, on the element containing both a child widget and its label.
+
+    `odd` / `even`
+        On alternating rows. The first row is odd.
+
+    `required`
+        If the field is a required field.
+
+    `error`
+        If the field contains a validation error.
+    """
+
     label = twc.ChildParam('Label for the field. If this is Auto, it is automatically derived from the id. If this is None, it supresses the label.', default=twc.Auto)
     help_text = twc.ChildParam('A longer description of the field', default=None)
     hover_help = twc.Param('Whether to display help text as hover tips', default=False)
@@ -259,16 +283,16 @@ class BaseLayout(twc.CompoundWidget):
 
 
 class TableLayout(BaseLayout):
-    """
+    __doc__ = """
     Arrange widgets and labels in a table.
-    """
+    """ + BaseLayout.__doc__
     template = "genshi:tw2.forms.templates.table_layout"
 
 
 class ListLayout(BaseLayout):
-    """
+    __doc__ = """
     Arrange widgets and labels in a list.
-    """
+    """ + BaseLayout.__doc__
     template = "genshi:tw2.forms.templates.list_layout"
 
 
@@ -331,13 +355,21 @@ class FieldSet(twc.DisplayOnlyWidget):
     legend = twc.Param('Text for the legend', default=None)
 
 class TableForm(Form):
+    """This is equivalent to a Form containing a TableLayout. children of the TableForm become children of the TableLayout."""
+    #child = twc.Variable(default=None) # hide from params
     layout = TableLayout
 
 class ListForm(Form):
+    """This is equivalent to a Form containing a ListLayout. children of the ListForm become children of the ListLayout."""
+    #child = twc.Variable(default=None) # hide from params
     layout = ListLayout
 
 class TableFieldSet(FieldSet):
+    """This is equivalent to a FieldSet containing a TableLayout. children of the TableFieldSet become children of the TableLayout."""
+    #child = twc.Variable(default=None) # hide from params
     layout = TableLayout
 
 class ListFieldSet(FieldSet):
+    """This is equivalent to a FieldSet containing a ListLayout. children of the ListFieldSet become children of the ListLayout."""
+    #child = twc.Variable(default=None) # hide from params
     layout = ListLayout
