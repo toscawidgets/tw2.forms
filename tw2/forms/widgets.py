@@ -1,4 +1,26 @@
-import tw2.core as twc, re, itertools
+import tw2.core as twc, re, itertools, webob
+
+
+class FormPage(twc.Page):
+    @classmethod
+    def request(cls, req):
+        if req.method == 'GET':
+            return super(FormPage, cls).request(req)
+        elif req.method == 'POST':
+            try:
+                data = cls.validate(req.POST)
+                resp = cls.validated_request(req, data)
+            except twc.ValidationError, e:
+                resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
+                resp.body = e.widget.display().encode('utf-8')
+            return resp
+
+    @classmethod
+    def validated_request(cls, req, data):
+        resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
+        resp.body = 'Form posted successfully'
+        return resp
+
 
 #--
 # Basic Fields
