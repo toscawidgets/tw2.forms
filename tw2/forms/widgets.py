@@ -2,6 +2,12 @@ import tw2.core as twc, re, itertools, webob
 
 
 class FormPage(twc.Page):
+    """
+    A page that contains a form. The :meth:`request` method performs validation,
+    redisplaying the form on errors. On success, it calls
+    :meth:`validated_request`.
+    """
+
     @classmethod
     def request(cls, req):
         if req.method == 'GET':
@@ -171,8 +177,8 @@ class SelectionField(FormField):
                 if self.field_type:
                     option_attrs['type'] = self.field_type
                     # TBD: These are only needed for SelectionList
-                    option_attrs['name'] = self.id
-                    option_attrs['id'] = self.id + ':' + str(counter.next())
+                    option_attrs['name'] = self._compound_id()
+                    option_attrs['id'] = self._compound_id() + ':' + str(counter.next())
                 if ((self.multiple and option[0] in value) or
                         (not self.multiple and option[0] == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
@@ -210,14 +216,24 @@ class SelectionList(SelectionField):
     selected_verb = "checked"
     template = "genshi:tw2.forms.templates.selection_list"
 
+class RadioButtonValidator(twc.Validator):
+    msgs = {
+        'required': 'Please pick one'
+    }
+
+class CheckBoxValidator(twc.Validator):
+    msgs = {
+        'required': 'Please pick at least one'
+    }
 
 class RadioButtonList(SelectionList):
     field_type = "radio"
-
+    validator = RadioButtonValidator()
 
 class CheckBoxList(SelectionList):
     field_type = "checkbox"
     multiple = True
+    validator = CheckBoxValidator()
 
 
 class SelectionTable(SelectionField):
@@ -250,11 +266,13 @@ class SelectionTable(SelectionField):
 
 class RadioButtonTable(SelectionTable):
     field_type = 'radio'
+    validator = RadioButtonValidator
 
 
 class CheckBoxTable(SelectionTable):
     field_type = 'checkbox'
     multiple = True
+    validator = CheckBoxValidator
 
 
 #--
@@ -278,6 +296,8 @@ class BaseLayout(twc.CompoundWidget):
     help_text = twc.ChildParam('A longer description of the field', default=None)
     hover_help = twc.Param('Whether to display help text as hover tips', default=False)
     container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default=None)
+
+    resources = [twc.CSSLink(modname='tw2.forms', filename='static/forms.css')]
 
     def prepare(self):
         super(BaseLayout, self).prepare()
