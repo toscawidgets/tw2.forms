@@ -96,16 +96,17 @@ class ResetButton(Button):
     type = "reset"
 
 
-class ImageButton(twc.Link):
+class ImageButton(twc.Link, InputField):
     type = "image"
     width = twc.Param('Width of image in pixels', attribute=True, default=None)
     height = twc.Param('Height of image in pixels', attribute=True, default=None)
-    alt = twc.Param('Alternate text', attribute=True, default=None)
+    alt = twc.Param('Alternate text', attribute=True, default='')
     src = twc.Variable(attribute=True)
+
     def prepare(self):
         super(ImageButton, self).prepare()
         self.src = self.link
-
+        self.attrs['src'] = self.src # TBD: hack!
 
 #--
 # Selection fields
@@ -288,24 +289,20 @@ class ListLayout(BaseLayout):
     template = "genshi:tw2.forms.templates.list_layout"
 
 
-class GridLayout(twc.RepeatingWidget):
-    """
-    Arrange labels and multiple rows of widgets in a grid.
-    """
-    child = twc.Param('Child for this widget. This must be a RowLayout widget.')
-    template = "genshi:tw2.forms.templates.grid_layout"
-    @classmethod
-    def post_define(cls):
-        if hasattr(cls, 'child') and not issubclass(cls.child, RowLayout):
-            raise twc.WidgetError('child for GridLayout must be a RowLayout widget')
-
-
 class RowLayout(BaseLayout):
     """
     Arrange widgets in a table row. This is normally only useful as a child to
     :class:`GridLayout`.
     """
     template = "genshi:tw2.forms.templates.row_layout"
+
+
+class GridLayout(twc.RepeatingWidget):
+    """
+    Arrange labels and multiple rows of widgets in a grid.
+    """
+    child = RowLayout
+    template = "genshi:tw2.forms.templates.grid_layout"
 
 
 class Spacer(FormField):
@@ -346,20 +343,16 @@ class FieldSet(twc.DisplayOnlyWidget):
 
 class TableForm(Form):
     """This is equivalent to a Form containing a TableLayout. children of the TableForm become children of the TableLayout."""
-    #child = twc.Variable(default=None) # hide from params
-    layout = TableLayout
+    child = TableLayout
 
 class ListForm(Form):
     """This is equivalent to a Form containing a ListLayout. children of the ListForm become children of the ListLayout."""
-    #child = twc.Variable(default=None) # hide from params
-    layout = ListLayout
+    child = ListLayout
 
 class TableFieldSet(FieldSet):
     """This is equivalent to a FieldSet containing a TableLayout. children of the TableFieldSet become children of the TableLayout."""
-    #child = twc.Variable(default=None) # hide from params
-    layout = TableLayout
+    child = TableLayout
 
 class ListFieldSet(FieldSet):
     """This is equivalent to a FieldSet containing a ListLayout. children of the ListFieldSet become children of the ListLayout."""
-    #child = twc.Variable(default=None) # hide from params
-    layout = ListLayout
+    child = ListLayout

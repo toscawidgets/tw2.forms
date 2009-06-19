@@ -10,6 +10,11 @@ import tw2.core as twc, widgets as twf
 
 options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
+class DemoChildren(twc.CompoundWidget):
+    title = twf.TextField()
+    priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
+    description = twf.TextArea()
+
 class DemoSingleSelectField(twf.SingleSelectField):
     options = [''] + options
 
@@ -30,11 +35,6 @@ class DemoCheckBoxTable(twf.CheckBoxTable):
     options = options
     cols = 2
 
-class DemoChildren(twc.CompoundWidget):
-    title = twf.TextField()
-    priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
-    description = twf.TextArea()
-
 class DemoTableLayout(twf.TableLayout, DemoChildren):
     pass
 
@@ -47,7 +47,6 @@ class DemoSpacer(twf.TableLayout):
     xx = twf.Spacer()
     description = twf.TextArea()
 
-
 class DemoLabel(twf.TableLayout):
     demo_for = twf.Label
     title = twf.TextField()
@@ -58,18 +57,19 @@ class DemoFieldSet(twf.FieldSet):
     legend = 'FieldSet'
     child = DemoTableLayout(id='x')
 
-
 class DemoForm(twf.Form):
     child = DemoTableLayout(id='x')
-
 
 class DemoButton(twf.Button):
     value = 'Click me'
     attrs = {'onclick': 'alert("Hello")'}
 
+#class DemoGridLayout(twf.GridLayout):
+#    id = 'x'
+#    extra_reps = 3
+#    title = twf.TextField()
+#    priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
 
-class DemoGridLayout(twf.GridLayout):
-    class child(twf.RowLayout):
-        title = twf.TextField()
-        priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
-    extra_reps = 3
+class DemoImageButton(twf.ImageButton):
+    modname = 'tw2.forms'
+    filename = 'static/edit-undo.png'
