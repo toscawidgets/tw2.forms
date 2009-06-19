@@ -17,7 +17,7 @@ def app(environ, start_response):
     req = wo.Request(environ)
     resp = wo.Response(request=req, content_type="text/html; charset=UTF8")
     if req.method == 'GET':
-        resp.body = TestPage.idisplay().encode('utf-8')
+        resp.body = TestPage.display().encode('utf-8')
     elif req.method == 'POST':
         try:
             data = TestPage.validate(req.POST)
