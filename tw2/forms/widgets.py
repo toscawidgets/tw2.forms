@@ -1,16 +1,5 @@
 import tw2.core as twc, re, itertools
 
-def name2label(name):
-    """
-    Convert a column name to a Human Readable name.
-
-       1) Convert _ to spaces
-       2) Convert CamelCase to Camel Case
-       3) Upcase first character of Each Word
-    """
-    return ' '.join([s.capitalize() for s in
-               re.findall(r'([A-Z][a-z0-9]+|[a-z0-9]+|[A-Z0-9]+)', name)])
-
 #--
 # Basic Fields
 #--
@@ -272,7 +261,7 @@ class BaseLayout(twc.CompoundWidget):
         super(BaseLayout, self).prepare()
         for c in self.children:
             if c.label is twc.Auto:
-                c.label = name2label(c.id_elem) if c.id_elem else ''
+                c.label = twc.util.name2label(c.id_elem) if c.id_elem else ''
 
 
 class TableLayout(BaseLayout):

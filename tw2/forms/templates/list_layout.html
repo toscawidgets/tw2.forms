@@ -5,4 +5,7 @@
         <py:if test="not w.hover_help">$c.help_text</py:if>
         <span py:if="c.error_msg" py:content="c.error_msg"/>
     </li>
+    <li py:if="w.error_msg" class="error">
+        <span py:content="w.error_msg"/>
+    </li>
 </ul>

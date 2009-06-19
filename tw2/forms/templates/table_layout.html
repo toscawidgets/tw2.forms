@@ -7,4 +7,7 @@
             <span py:if="c.error_msg" py:content="c.error_msg"/>
         </td>
     </tr>
+    <tr py:if="w.error_msg" class="error"><td colspan="2">
+        <span py:content="w.error_msg"/>
+    </td></tr>
 </table>
