@@ -1,33 +1,5 @@
 import tw2.core as twc, re, itertools, webob
 
-
-class FormPage(twc.Page):
-    """
-    A page that contains a form. The :meth:`request` method performs validation,
-    redisplaying the form on errors. On success, it calls
-    :meth:`validated_request`.
-    """
-
-    @classmethod
-    def request(cls, req):
-        if req.method == 'GET':
-            return super(FormPage, cls).request(req)
-        elif req.method == 'POST':
-            try:
-                data = cls.validate(req.POST)
-                resp = cls.validated_request(req, data)
-            except twc.ValidationError, e:
-                resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
-                resp.body = e.widget.display().encode('utf-8')
-            return resp
-
-    @classmethod
-    def validated_request(cls, req, data):
-        resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
-        resp.body = 'Form posted successfully'
-        return resp
-
-
 #--
 # Basic Fields
 #--
@@ -67,10 +39,13 @@ class LabelHiddenField(InputField):
 
 class CheckBox(InputField):
     type = "checkbox"
-    #validator = validators.Bool
+    validator = twc.BoolValidator
     def prepare(self):
         super(CheckBox, self).prepare()
+        if 'attrs' not in self.__dict__:
+            self.attrs = self.attrs.copy()
         self.attrs['checked'] = 'true' if self.value else None
+        self.value = None
 
 
 class RadioButton(InputField):
@@ -83,12 +58,6 @@ class PasswordField(InputField):
 
 class FileField(InputField):
     type = "file"
-    # TBD file_upload = True
-    # TBD
-    def adapt_value(self, value):
-        # This is needed because genshi doesn't seem to like displaying
-        # cgi.FieldStorage instances
-        return None
 
 
 class Button(InputField):
@@ -387,3 +356,31 @@ class TableFieldSet(FieldSet):
 class ListFieldSet(FieldSet):
     """This is equivalent to a FieldSet containing a ListLayout. children of the ListFieldSet become children of the ListLayout."""
     child = ListLayout
+
+
+
+class FormPage(twc.Page):
+    """
+    A page that contains a form. The :meth:`request` method performs validation,
+    redisplaying the form on errors. On success, it calls
+    :meth:`validated_request`.
+    """
+
+    @classmethod
+    def request(cls, req):
+        if req.method == 'GET':
+            return super(FormPage, cls).request(req)
+        elif req.method == 'POST':
+            try:
+                data = cls.validate(req.POST)
+                resp = cls.validated_request(req, data)
+            except twc.ValidationError, e:
+                resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
+                resp.body = e.widget.display().encode('utf-8')
+            return resp
+
+    @classmethod
+    def validated_request(cls, req, data):
+        resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
+        resp.body = 'Form posted successfully'
+        return resp

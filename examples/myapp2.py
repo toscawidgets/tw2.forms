@@ -17,7 +17,7 @@ class TestPage(twf.FormPage):
             cbl = twf.CheckBoxList(options=opts, validator=twc.Required)
             rbl = twf.RadioButtonList(options=opts, validator=twc.Required)
             validator = twc.MatchValidator('email', 'confirm_email')
-
+            a = twf.CheckBox(value=True)
 
 def app(environ, start_response):
     req = wo.Request(environ)
