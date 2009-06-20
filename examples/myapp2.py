@@ -10,14 +10,15 @@ class TestPage(twf.FormPage):
     class child(twf.Form):
         class child(twf.TableLayout):
             id = 'xx'
-            email = twf.TextField(validator=twc.EmailValidator(required=True))
-            confirm_email = twf.TextField()
-            select = twf.SingleSelectField(options=['']+opts, validator=twc.Required)
-            msel = twf.MultipleSelectField(options=opts, validator=twc.Required)
-            cbl = twf.CheckBoxList(options=opts, validator=twc.Required)
-            rbl = twf.RadioButtonList(options=opts, validator=twc.Required)
-            validator = twc.MatchValidator('email', 'confirm_email')
-            a = twf.CheckBox(value=True)
+#            email = twf.TextField(validator=twc.EmailValidator(required=True))
+#            confirm_email = twf.TextField()
+            select = twf.SingleSelectField(options=list(enumerate(['']+opts)), validator=twc.Required, item_validator=twc.IntValidator())
+            msel = twf.MultipleSelectField(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
+#            cbl = twf.CheckBoxList(options=list(enumerate(opts)), validator=twc.Required)
+#            rbl = twf.RadioButtonList(options=list(enumerate(opts)), validator=twc.Required)
+#            validator = twc.MatchValidator('email', 'confirm_email')
+            a = twf.CheckBox(validator=twc.BoolValidator(required=True))
+#            b = twf.FileField()
 
 def app(environ, start_response):
     req = wo.Request(environ)
@@ -26,6 +27,6 @@ def app(environ, start_response):
 
 
 if __name__ == "__main__":
-    mw = twc.TwMiddleware(app)
+    mw = twc.TwMiddleware(app, debug=True)
     mw.controllers.register(TestPage, 'test')
     wrs.make_server('', 8000, mw).serve_forever()

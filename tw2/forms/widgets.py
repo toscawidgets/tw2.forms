@@ -114,6 +114,7 @@ class SelectionField(FormField):
     """
 
     options = twc.Param('Options to be displayed')
+    item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=twc.Validator())
 
     selected_verb = twc.Variable(default='selected')
     field_type = twc.Variable()
@@ -125,7 +126,6 @@ class SelectionField(FormField):
         grouped_options = []
         options = []
         counter = itertools.count(0)
-        # TBD: if displaying errors, validate value
         value = self.value
         if self.multiple and not value:
             value = []
@@ -162,6 +162,21 @@ class SelectionField(FormField):
         self.options = options
         self.grouped_options = grouped_options if grouped_options else [(None, options)]
 
+    def _validate(self, value):
+        """
+        To redisplay correctly on error, selection fields must have the
+        :attr:`item_validator` applies to their value. This function does this
+        in a way that will never raise an exception, before calling the main
+        validator.
+        """
+        if self.multiple:
+            value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
+            value = [v for v in value if v is not twc.Invalid]
+        else:
+            value = twc.safe_validate(self.item_validator, value)
+            if value is twc.Invalid:
+                value = None
+        return super(SelectionField, self)._validate(value)
 
     def _iterate_options(self, optlist):
         for option in optlist:
@@ -383,4 +398,6 @@ class FormPage(twc.Page):
     def validated_request(cls, req, data):
         resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
         resp.body = 'Form posted successfully'
+        if twc.core.request_local()['middleware'].config.debug:
+            resp.body += ' ' + repr(data)
         return resp
