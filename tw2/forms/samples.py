@@ -64,11 +64,11 @@ class DemoButton(twf.Button):
     value = 'Click me'
     attrs = {'onclick': 'alert("Hello")'}
 
-#class DemoGridLayout(twf.GridLayout):
-#    id = 'x'
-#    extra_reps = 3
-#    title = twf.TextField()
-#    priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
+class DemoGridLayout(twf.GridLayout):
+    id = 'x'
+    extra_reps = 3
+    title = twf.TextField()
+    priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
 
 class DemoImageButton(twf.ImageButton):
     modname = 'tw2.forms'
