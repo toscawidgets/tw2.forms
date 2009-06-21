@@ -55,10 +55,10 @@ class DemoLabel(twf.TableLayout):
 
 class DemoFieldSet(twf.FieldSet):
     legend = 'FieldSet'
-    child = DemoTableLayout(id='x')
+    child = DemoTableLayout()
 
 class DemoForm(twf.Form):
-    child = DemoTableLayout(id='x')
+    child = DemoTableLayout()
 
 class DemoButton(twf.Button):
     value = 'Click me'

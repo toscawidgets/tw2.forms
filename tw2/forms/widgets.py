@@ -4,7 +4,7 @@ import tw2.core as twc, re, itertools, webob
 # Basic Fields
 #--
 class FormField(twc.Widget):
-    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s._compound_id(), lambda s, v: 1))
+    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id, lambda s, v: 1))
 
 
 class InputField(FormField):
@@ -73,7 +73,7 @@ class SubmitButton(Button):
     type = "submit"
     @classmethod
     def post_define(cls):
-        if cls.id_elem == 'submit':
+        if getattr(cls, 'id', None) == 'submit':
             raise twc.ParameterError("A SubmitButton cannot have the id 'submit'")
 
 
@@ -146,8 +146,8 @@ class SelectionField(FormField):
                 if self.field_type:
                     option_attrs['type'] = self.field_type
                     # TBD: These are only needed for SelectionList
-                    option_attrs['name'] = self._compound_id()
-                    option_attrs['id'] = self._compound_id() + ':' + str(counter.next())
+                    option_attrs['name'] = self.compound_id
+                    option_attrs['id'] = self.compound_id + ':' + str(counter.next())
                 if ((self.multiple and option[0] in value) or
                         (not self.multiple and option[0] == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
@@ -287,7 +287,7 @@ class BaseLayout(twc.CompoundWidget):
         super(BaseLayout, self).prepare()
         for c in self.children:
             if c.label is twc.Auto:
-                c.label = twc.util.name2label(c.id_elem) if c.id_elem else ''
+                c.label = twc.util.name2label(c.id) if c.id else ''
 
 
 class TableLayout(BaseLayout):
