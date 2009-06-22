@@ -10,16 +10,17 @@ class TestPage(twf.FormPage):
     class child(twf.Form):
         class child(twf.TableLayout):
             id = 'xx'
+            q = twf.FileField(validator=twf.FileValidator(required=True, extention='.html'))
 #            email = twf.TextField(validator=twc.EmailValidator(required=True))
 #            confirm_email = twf.TextField()
 #            select = twf.SingleSelectField(options=list(enumerate(['']+opts)), validator=twc.Required, item_validator=twc.IntValidator())
-            msel = twf.MultipleSelectField(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
-            cbl = twf.CheckBoxList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
-            rbl = twf.RadioButtonList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
+#            msel = twf.MultipleSelectField(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
+#            cbl = twf.CheckBoxList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
+#            rbl = twf.RadioButtonList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
 #            validator = twc.MatchValidator('email', 'confirm_email')
-            a = twf.CheckBox(validator=twc.BoolValidator(required=True))
+#            a = twf.CheckBox(validator=twc.BoolValidator(required=True))
 #            b = twf.FileField()
-            x = twf.TextField(validator=fe.validators.Regex('^\w+$'))
+#            x = twf.TextField(validator=fe.validators.Regex('^\w+$'))
 
 def app(environ, start_response):
     req = wo.Request(environ)

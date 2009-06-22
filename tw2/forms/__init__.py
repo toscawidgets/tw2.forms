@@ -3,4 +3,4 @@ from widgets import (Button, CheckBox, FieldSet, FileField, Form, HiddenField, I
     RadioButton, ResetButton, SubmitButton, TextField, TextArea,
     SingleSelectField, MultipleSelectField, RadioButtonList, CheckBoxList,
     RadioButtonTable, CheckBoxTable, GridLayout, RowLayout, TableForm, ListForm,
-    TableFieldSet, ListFieldSet, FormPage, SelectionList, SelectionTable)
+    TableFieldSet, ListFieldSet, FormPage, SelectionList, SelectionTable, FileValidator)

@@ -1,4 +1,4 @@
-import tw2.core as twc, re, itertools, webob
+import tw2.core as twc, re, itertools, webob, cgi
 
 #--
 # Basic Fields
@@ -56,9 +56,36 @@ class PasswordField(InputField):
     type = 'password'
 
 
+class FileValidator(twc.Validator):
+    """Base class for validators
+
+    `extention`
+        Allowed extention for the file
+    """
+    extention = None
+    msgs = {
+        'badext': "File name must have '$extention' extension",
+    }
+
+    def validate_python(self, value, outer_call=None):
+        if isinstance(value, cgi.FieldStorage):
+            if self.extention and not value.filename.endswith(self.extention):
+                raise twc.ValidationError('badext', self)
+        elif self.required:
+            raise twc.ValidationError('required', self)
+
+
+
 class FileField(InputField):
     type = "file"
+    validator = FileValidator
 
+    def _validate(self, value):
+        try:
+            super(FileField, self)._validate(value)
+        except twc.ValidationError:
+            self.value = None
+            raise
 
 class Button(InputField):
     """Generic button. You can override the text using :attr:`value` and define
@@ -279,7 +306,7 @@ class BaseLayout(twc.CompoundWidget):
     label = twc.ChildParam('Label for the field. If this is Auto, it is automatically derived from the id. If this is None, it supresses the label.', default=twc.Auto)
     help_text = twc.ChildParam('A longer description of the field', default=None)
     hover_help = twc.Param('Whether to display help text as hover tips', default=False)
-    container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default=None)
+    container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default={})
 
     resources = [twc.CSSLink(modname='tw2.forms', filename='static/forms.css')]
 
@@ -347,6 +374,7 @@ class Form(twc.DisplayOnlyWidget):
     action = twc.Param('URL to submit form data to. If this is None, the form submits to the same URL it was displayed on.', default=None, attribute=True)
     method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
     submit_text = twc.Param('Text for the submit button. If this is None, no submit button is generated.', default='Save')
+    attrs = {'enctype': 'multipart/form-data'}
 
 
 class FieldSet(twc.DisplayOnlyWidget):
