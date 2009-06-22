@@ -25,18 +25,6 @@ class TextArea(FormField):
     template = "genshi:tw2.forms.templates.textarea"
 
 
-class HiddenField(InputField):
-    type = 'hidden'
-
-
-class LabelHiddenField(InputField):
-    """
-    A hidden field, with a label showing its contents.
-    """
-    type = 'hidden'
-    template = "genshi:tw2.forms.templates.label_hidden"
-
-
 class CheckBox(InputField):
     type = "checkbox"
     validator = twc.BoolValidator
@@ -75,7 +63,6 @@ class FileValidator(twc.Validator):
             raise twc.ValidationError('required', self)
 
 
-
 class FileField(InputField):
     type = "file"
     validator = FileValidator
@@ -86,6 +73,42 @@ class FileField(InputField):
         except twc.ValidationError:
             self.value = None
             raise
+
+
+class HiddenField(InputField):
+    type = 'hidden'
+
+
+class LabelHiddenField(InputField):
+    """
+    A hidden field, with a label showing its contents.
+    """
+    type = 'hidden'
+    template = "genshi:tw2.forms.templates.label_hidden"
+
+
+class LabelField(LabelHiddenField):
+    """
+    A read-only label showing the value of a field
+    """
+    def _validate(self, value):
+        super(LabelField, self)._validate(value)
+        return twc.EmptyField
+
+
+class LinkField(twc.Widget):
+    """
+    A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value.
+    """
+    template = "genshi:tw2.forms.templates.link_field"
+    link = twc.Param('Link target')
+    text = twc.Param('Link text')
+    def prepare(self):
+        super(LinkField, self).prepare()
+        self.safe_modify('attrs')
+        self.attrs['href'] = link.replace('$', self.value)
+        self.text = self.text.replace('$', self.value)
+
 
 class Button(InputField):
     """Generic button. You can override the text using :attr:`value` and define
