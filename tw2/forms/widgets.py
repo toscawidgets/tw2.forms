@@ -106,8 +106,8 @@ class LinkField(twc.Widget):
     def prepare(self):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['href'] = link.replace('$', self.value)
-        self.text = self.text.replace('$', self.value)
+        self.attrs['href'] = self.link.replace('$', str(self.value or ''))
+        self.text = self.text.replace('$', str(self.value or ''))
 
 
 class Button(InputField):
