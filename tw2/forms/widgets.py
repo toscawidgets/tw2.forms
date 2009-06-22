@@ -374,6 +374,7 @@ class Form(twc.DisplayOnlyWidget):
     action = twc.Param('URL to submit form data to. If this is None, the form submits to the same URL it was displayed on.', default=None, attribute=True)
     method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
     submit_text = twc.Param('Text for the submit button. If this is None, no submit button is generated.', default='Save')
+    submit_attrs = twc.Param('Attributes for the submit button.', default={})
     attrs = {'enctype': 'multipart/form-data'}
 
 
@@ -385,21 +386,24 @@ class FieldSet(twc.DisplayOnlyWidget):
     legend = twc.Param('Text for the legend', default=None)
 
 class TableForm(Form):
-    """This is equivalent to a Form containing a TableLayout. children of the TableForm become children of the TableLayout."""
-    child = TableLayout
+    """Equivalent to a Form containing a TableLayout."""
+    child = twc.Variable(default=TableLayout)
+    children = twc.Required
 
 class ListForm(Form):
-    """This is equivalent to a Form containing a ListLayout. children of the ListForm become children of the ListLayout."""
-    child = ListLayout
+    """Equivalent to a Form containing a ListLayout."""
+    child = twc.Variable(default=ListLayout)
+    children = twc.Required
 
 class TableFieldSet(FieldSet):
-    """This is equivalent to a FieldSet containing a TableLayout. children of the TableFieldSet become children of the TableLayout."""
-    child = TableLayout
+    """Equivalent to a FieldSet containing a TableLayout."""
+    child = twc.Variable(default=TableLayout)
+    children = twc.Required
 
 class ListFieldSet(FieldSet):
-    """This is equivalent to a FieldSet containing a ListLayout. children of the ListFieldSet become children of the ListLayout."""
-    child = ListLayout
-
+    """Equivalent to a FieldSet containing a ListLayout."""
+    child = twc.Variable(default=ListLayout)
+    children = twc.Required
 
 
 class FormPage(twc.Page):
