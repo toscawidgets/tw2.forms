@@ -1,4 +1,7 @@
 <tr xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs" class="${w.repetition % 2 and 'even' or 'odd'}">
-    <td py:for="c in w.children_non_hidden">${c.display()}</td>
+    <td py:for="c in w.children_non_hidden">
+        ${c.display()}
+        <py:if test="c.error_msg"><img src="${w.resources.error.link}" title="${c.error_msg}"/></py:if>
+    </td>
     <td><py:for each="c in w.children_hidden">${c.display()}</py:for></td>
 </tr>

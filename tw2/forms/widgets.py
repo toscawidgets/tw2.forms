@@ -372,6 +372,9 @@ class RowLayout(BaseLayout):
     Arrange widgets in a table row. This is normally only useful as a child to
     :class:`GridLayout`.
     """
+    resources = [
+        twc.Link(id='error', modname='tw2.forms', filename='static/dialog-warning.png'),
+    ]
     template = "genshi:tw2.forms.templates.row_layout"
 
 
