@@ -239,6 +239,11 @@ class SelectionField(FormField):
 class SingleSelectField(SelectionField):
     template = "genshi:tw2.forms.templates.select_field"
 
+    def prepare(self):
+        super(SingleSelectField, self).prepare()
+        if self.options[0][1] and not self.grouped_options[0][0]:
+            self.options = [(None, '')] + self.options
+            self.grouped_options = [(None, self.options)]
 
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
