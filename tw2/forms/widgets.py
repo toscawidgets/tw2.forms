@@ -326,7 +326,7 @@ class BaseLayout(twc.CompoundWidget):
         If the field contains a validation error.
     """
 
-    label = twc.ChildParam('Label for the field. If this is Auto, it is automatically derived from the id. If this is None, it supresses the label.', default=twc.Auto)
+    label = twc.ChildParam('Label for the field. Auto generates this from the id; None supresses the label.', default=twc.Auto)
     help_text = twc.ChildParam('A longer description of the field', default=None)
     hover_help = twc.Param('Whether to display help text as hover tips', default=False)
     container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default={})
@@ -367,6 +367,7 @@ class GridLayout(twc.RepeatingWidget):
     Arrange labels and multiple rows of widgets in a grid.
     """
     child = RowLayout
+    children = twc.Required
     template = "genshi:tw2.forms.templates.grid_layout"
 
 

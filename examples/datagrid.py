@@ -1,6 +1,5 @@
 import webob as wo, wsgiref.simple_server as wrs
-import tw2.core as twc, tw2.forms as twf, os
-import formencode as fe
+import tw2.core as twc, tw2.forms as twf
 
 opts = ['Red', 'Yellow', 'Green', 'Blue']
 
