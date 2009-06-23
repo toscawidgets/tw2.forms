@@ -1,5 +1,5 @@
 <table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
-    <tr py:for="i,c in enumerate(w.children)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and c.validator.required) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs" id="${c.compound_id}:container">
+    <tr py:for="i,c in enumerate(w.children_non_hidden)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and c.validator.required) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs" id="${c.compound_id}:container">
         <th py:if="c.label">$c.label</th>
         <td py:attrs="None if c.label else dict(colspan='2')">
             ${c.display()}
@@ -7,7 +7,8 @@
             <span py:if="c.error_msg" py:content="c.error_msg"/>
         </td>
     </tr>
-    <tr py:if="w.error_msg" class="error"><td colspan="2">
+    <tr class="error"><td colspan="2">
+        <py:for each="c in w.children_hidden">${c.display()}</py:for>
         <span py:content="w.error_msg"/>
     </td></tr>
 </table>

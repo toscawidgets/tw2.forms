@@ -333,6 +333,14 @@ class BaseLayout(twc.CompoundWidget):
 
     resources = [twc.CSSLink(modname='tw2.forms', filename='static/forms.css')]
 
+    @property
+    def children_hidden(self):
+        return [c for c in self.children if isinstance(c, HiddenField)]
+
+    @property
+    def children_non_hidden(self):
+        return [c for c in self.children if not isinstance(c, HiddenField)]
+
     def prepare(self):
         super(BaseLayout, self).prepare()
         for c in self.children:
