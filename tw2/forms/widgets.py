@@ -76,21 +76,21 @@ class FileField(InputField):
 
 
 class HiddenField(InputField):
-    type = 'hidden'
-
-
-class LabelHiddenField(InputField):
     """
-    A hidden field, with a label showing its contents.
+    A hidden field. The value is never included in validated data.
     """
     type = 'hidden'
-    template = "genshi:tw2.forms.templates.label_hidden"
+    def _validate(self, value):
+        super(HiddenField, self)._validate(value)
+        return twc.EmptyField
 
 
-class LabelField(LabelHiddenField):
+class LabelField(InputField):
     """
-    A read-only label showing the value of a field
+    A read-only label showing the value of a field. The value is stored in a hidden field, so it remains through validation failures. However, the value is never included in validated data.
     """
+    type = 'hidden'
+    template = "genshi:tw2.forms.templates.label_field"
     def _validate(self, value):
         super(LabelField, self)._validate(value)
         return twc.EmptyField
