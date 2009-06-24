@@ -40,7 +40,19 @@ class RadioButton(InputField):
 
 
 class PasswordField(InputField):
+    """
+    A password field. This never displays a value passed into the widget,
+    although it does redisplay entered values on validation failure. If no
+    password is entered, this validates as EmptyField.
+    """
     type = 'password'
+    def prepare(self):
+        super(PasswordField, self).prepare()
+        self.safe_modify('attrs')
+        self.attrs['value'] = None
+    def _validate(self, value):
+        value = super(PasswordField, self)._validate(value)
+        return value or twc.EmptyField
 
 
 class FileValidator(twc.Validator):
