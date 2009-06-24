@@ -14,8 +14,7 @@ class InputField(FormField):
 
 
 class TextField(InputField):
-    size = twc.Param('Size of the text field', default=None, attribute=True)
-    maxlength = twc.Param('Maximum length of input', default=None, attribute=True)
+    size = twc.Param('Size of the field', default=None, attribute=True)
     type = 'text'
 
 
