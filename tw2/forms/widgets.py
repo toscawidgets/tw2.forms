@@ -51,6 +51,7 @@ class FileValidator(twc.Validator):
     """
     extention = None
     msgs = {
+        'required': ('file_required', 'Select a file'),
         'badext': "File name must have '$extention' extension",
     }
 
@@ -241,6 +242,7 @@ class SingleSelectField(SelectionField):
             self.options = [(None, '')] + self.options
             self.grouped_options = [(None, self.options)]
 
+
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
     multiple = twc.Param(default=True, attribute=True)
@@ -251,24 +253,14 @@ class SelectionList(SelectionField):
     selected_verb = "checked"
     template = "genshi:tw2.forms.templates.selection_list"
 
-class RadioButtonValidator(twc.Validator):
-    msgs = {
-        'required': 'Please pick one'
-    }
-
-class CheckBoxValidator(twc.Validator):
-    msgs = {
-        'required': 'Please pick at least one'
-    }
 
 class RadioButtonList(SelectionList):
     field_type = "radio"
-    validator = RadioButtonValidator()
+
 
 class CheckBoxList(SelectionList):
     field_type = "checkbox"
     multiple = True
-    validator = CheckBoxValidator()
 
 
 class SelectionTable(SelectionField):
@@ -301,13 +293,11 @@ class SelectionTable(SelectionField):
 
 class RadioButtonTable(SelectionTable):
     field_type = 'radio'
-    validator = RadioButtonValidator
 
 
 class CheckBoxTable(SelectionTable):
     field_type = 'checkbox'
     multiple = True
-    validator = CheckBoxValidator
 
 
 #--

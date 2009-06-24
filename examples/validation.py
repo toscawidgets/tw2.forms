@@ -4,16 +4,17 @@ import formencode as fe
 
 opts = ['Red', 'Yellow', 'Green', 'Blue']
 
+mw = twc.TwMiddleware(None, controller_prefix='/')
 
-class TestPage(twf.FormPage):
-    title = 'ToscaWidgets Tutorial'
+class Index(twf.FormPage):
+    title = 'tw2.forms Validation'
+    id = 'index'
     class child(twf.Form):
         class child(twf.TableLayout):
-            id = 'xx'
-            q = twf.FileField(validator=twf.FileValidator(required=True, extention='.html'))
-#            email = twf.TextField(validator=twc.EmailValidator(required=True))
+            file = twf.FileField(validator=twf.FileValidator(required=True, extention='.html'))
+            email = twf.TextField(validator=twc.EmailValidator(required=True))
 #            confirm_email = twf.TextField()
-#            select = twf.SingleSelectField(options=list(enumerate(['']+opts)), validator=twc.Required, item_validator=twc.IntValidator())
+            select = twf.SingleSelectField(options=list(enumerate(opts)), validator=twc.Validator(required=True), item_validator=twc.IntValidator())
 #            msel = twf.MultipleSelectField(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
 #            cbl = twf.CheckBoxList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
 #            rbl = twf.RadioButtonList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
@@ -21,14 +22,7 @@ class TestPage(twf.FormPage):
 #            a = twf.CheckBox(validator=twc.BoolValidator(required=True))
 #            b = twf.FileField()
 #            x = twf.TextField(validator=fe.validators.Regex('^\w+$'))
-
-def app(environ, start_response):
-    req = wo.Request(environ)
-    resp = wo.Response(status="404 Not Found")
-    return resp(environ, start_response)
-
+mw.controllers.register(Index, 'index')
 
 if __name__ == "__main__":
-    mw = twc.TwMiddleware(app, debug=True)
-    mw.controllers.register(TestPage, 'test')
     wrs.make_server('', 8000, mw).serve_forever()
