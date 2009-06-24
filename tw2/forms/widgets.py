@@ -4,7 +4,7 @@ import tw2.core as twc, re, itertools, webob, cgi
 # Basic Fields
 #--
 class FormField(twc.Widget):
-    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id, lambda s, v: 1))
+    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id))
 
 
 class InputField(FormField):
@@ -120,10 +120,7 @@ class Button(InputField):
 class SubmitButton(Button):
     """Button to submit a form."""
     type = "submit"
-    @classmethod
-    def post_define(cls):
-        if getattr(cls, 'id', None) == 'submit':
-            raise twc.ParameterError("A SubmitButton cannot have the id 'submit'")
+    name = None
 
 
 class ResetButton(Button):
@@ -412,9 +409,22 @@ class Form(twc.DisplayOnlyWidget):
     template = "genshi:tw2.forms.templates.form"
     action = twc.Param('URL to submit form data to. If this is None, the form submits to the same URL it was displayed on.', default=None, attribute=True)
     method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
-    submit_text = twc.Param('Text for the submit button. If this is None, no submit button is generated.', default='Save')
-    submit_attrs = twc.Param('Attributes for the submit button.', default={})
+    submit = twc.Param('Submit button widget. If this is None, no submit button is generated.', default=SubmitButton(id='submit', value='Save'))
     attrs = {'enctype': 'multipart/form-data'}
+
+    @classmethod
+    def post_define(cls):
+        cls.submit = cls.submit(parent=cls)
+
+    def __init__(self, **kw):
+        super(Form, self).__init__(**kw)
+        if self.submit:
+            self.submit = self.submit.req()
+
+    def prepare(self):
+        super(Form, self).prepare()
+        if self.submit:
+            self.submit.prepare()
 
 
 class FieldSet(twc.DisplayOnlyWidget):

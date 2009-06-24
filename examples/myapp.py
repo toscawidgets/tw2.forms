@@ -8,6 +8,7 @@ class TestPage(twc.Page):
     title = 'ToscaWidgets Tutorial'
     class child(twf.TableForm):
         id = 'xx'
+        submit = twf.SubmitButton(value='Go!')
         name = twf.TextField(validator=twc.Required)
         group = twf.SingleSelectField(options=['', 'Red', 'Green', 'Blue'])
         notes = twf.TextArea(validator=twc.StringLengthValidator(min=10))
