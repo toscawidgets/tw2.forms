@@ -1,27 +1,20 @@
-.. tw.forms documentation master file.
+.. tw2.forms documentation master file, created by sphinx-quickstart on Thu Jun 25 14:20:18 2009.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to tw.forms documentation!
-=========================================================
+tw2.forms
+=========
 
-Contents
---------
+This is a package of ToscaWidgets for creating forms.
+
+
+Contents:
 
 .. toctree::
    :maxdepth: 2
 
-
-:class:`tw.forms.Forms`
-----------------------------------------------------------
-
-.. autoclass:: tw.forms.Forms
-.. widgetbrowser:: tw.forms.Forms
-
-.. note::
-    See http://toscawidgets.org/documentation/WidgetBrowser to learn how to
-    customize the ``widgetbrowser`` directive.
-
+   validation
+   elixir
 
 Indices and tables
 ==================
@@ -29,3 +22,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
