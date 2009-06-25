@@ -64,7 +64,7 @@ class FileValidator(twc.Validator):
     extention = None
     msgs = {
         'required': ('file_required', 'Select a file'),
-        'badext': "File name must have '$extention' extension",
+        'badext': "File name must have '$extention' extention",
     }
 
     def validate_python(self, value, outer_call=None):
