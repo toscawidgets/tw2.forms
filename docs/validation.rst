@@ -25,4 +25,3 @@ To enable validation we also need to modify the application to handle POST reque
 
 If you submit the form with some invalid fields, you should see this:
 
-.. image:: tut4.png
