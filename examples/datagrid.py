@@ -1,9 +1,7 @@
-import webob as wo, wsgiref.simple_server as wrs
+"""
+A data grid can be achieved using a GridLayout that contains LabelField widgets.
+"""
 import tw2.core as twc, tw2.forms as twf
-
-opts = ['Red', 'Yellow', 'Green', 'Blue']
-
-mw = twc.TwMiddleware(None, controller_prefix='/')
 
 class Index(twc.Page):
     title = 'Data Grid'
@@ -16,6 +14,6 @@ class Index(twc.Page):
     def fetch_data(self, req):
         self.value = [{'id':1, 'a':'paj','b':'bob'}, {'id':2, 'a':'joe','b':'jill'}]
 
-
-mw.controllers.register(Index, 'index')
-wrs.make_server('', 8000, mw).serve_forever()
+if __name__ == '__main__':
+    import wsgiref.simple_server as wrs
+    wrs.make_server('', 8000, twc.make_middleware(controller_prefix='/')).serve_forever()
