@@ -25,3 +25,17 @@ To enable validation we also need to modify the application to handle POST reque
 
 If you submit the form with some invalid fields, you should see this:
 
+
+
+**Whole Form Message**
+
+If you want to display a message at the top of the form, when there are any errors, define the following validator::
+
+    class MyFormValidator(twc.Validator):
+        msgs = {
+            'childerror': ('form_childerror', 'There were problems with the details you entered. Review the messages below to correct your submission.'),
+        }
+
+And in your form::
+
+    validator = MyFormValidator()

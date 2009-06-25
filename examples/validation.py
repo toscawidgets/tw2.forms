@@ -10,6 +10,14 @@ class Index(twf.FormPage):
             file = twf.FileField(validator=twf.FileValidator(required=True, extention='.html'))
             email = twf.TextField(validator=twc.EmailValidator(required=True))
 #            confirm_email = twf.TextField()
+
+            class fred(twf.GridLayout):
+                repetitions = 3
+                class child(twf.RowLayout):
+                    bob = twf.TextField()
+                    rob = twf.TextField()
+                    validator = twc.MatchValidator('bob', 'rob')
+
             select = twf.SingleSelectField(options=list(enumerate(opts)), validator=twc.Validator(required=True), item_validator=twc.IntValidator())
 #            msel = twf.MultipleSelectField(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())
 #            cbl = twf.CheckBoxList(options=list(enumerate(opts)), validator=twc.Required, item_validator=twc.IntValidator())

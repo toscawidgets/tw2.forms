@@ -1,4 +1,5 @@
 <form xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+     <span class="error" py:content="w.error_msg"/>
     ${w.child.display()}
     <py:if test="w.submit">${w.submit.display()}</py:if>
 </form>

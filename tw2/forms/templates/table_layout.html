@@ -4,11 +4,11 @@
         <td py:attrs="None if c.label else dict(colspan='2')">
             ${c.display()}
             <py:if test="not w.hover_help">$c.help_text</py:if>
-            <span py:if="c.error_msg" py:content="c.error_msg"/>
+            <span id="${c.compound_id}:error" py:content="c.error_msg"/>
         </td>
     </tr>
     <tr class="error"><td colspan="2">
         <py:for each="c in w.children_hidden">${c.display()}</py:for>
-        <span py:content="w.error_msg"/>
+        <span id="${w.compound_id}:error" py:content="w.error_msg"/>
     </td></tr>
 </table>

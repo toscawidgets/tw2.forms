@@ -3,5 +3,8 @@
         ${c.display()}
         <py:if test="c.error_msg"><img src="${w.resources.error.link}" title="${c.error_msg}"/></py:if>
     </td>
-    <td><py:for each="c in w.children_hidden">${c.display()}</py:for></td>
+    <td>
+        <py:for each="c in w.children_hidden">${c.display()}</py:for>
+        <py:if test="w.error_msg"><img src="${w.resources.error.link}" title="${w.error_msg}"/></py:if>
+    </td>
 </tr>
