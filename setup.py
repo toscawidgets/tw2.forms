@@ -21,7 +21,6 @@ setup(
         [tw2.widgets]
         # Register your widgets so they can be listed in the WidgetBrowser
         tw2.forms = tw2.forms
-        tw2.forms.samples = tw2.forms.samples
     """,
     keywords = [
         'toscawidgets.widgets',

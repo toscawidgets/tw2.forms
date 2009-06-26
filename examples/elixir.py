@@ -65,4 +65,4 @@ class OrderForm(twf.FormPage):
 
 if __name__ == '__main__':
     import wsgiref.simple_server as wrs
-    wrs.make_server('', 8000, mw).serve_forever()
+    wrs.make_server('', 8000, twc.make_middleware(controller_prefix='/')).serve_forever()
