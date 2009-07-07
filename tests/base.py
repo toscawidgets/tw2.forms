@@ -144,6 +144,6 @@ class WidgetTest(object):
         global_engines._engine_name_cache = {}
         assert_eq_xml(self.expected, r)
 
-    def test_compare_all_possible_renderings(self):
+    def test_display(self):
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine

@@ -14,22 +14,19 @@ class _TestFormField(WidgetTest):
         assert r == None, r
 
 class TestInputField(WidgetTest):
-    
     widget = InputField
-    attrs = {'type':'foo'}
+    attrs = {'type':'foo', 'css_class':'something'}
     params = {'value':6}
-    expected = '<input type="foo" value="6"/>'
-    
-    def test_display_override_css_class(self):
-        class MyInputField(InputField):
-            css_class = 'something'
-            
-        r = MyInputField(type='foo').display()
-        assert_eq_xml('<input class="something" type="foo"/>', r)
-    
-        
-    def test_display_override_value(self):
-        r = self.widget(type='foo').display(value="something")
-        assert_eq_xml('<input value="something" type="foo"/>', r)
+    expected = '<input type="foo" class="something" value="6"/>'
 
+class TestTextField(WidgetTest):
+    widget = TextField
+    attrs = {'css_class':'something', 'size':'60'}
+    params = {'value':6}
+    expected = '<input type="text" class="something" value="6" size="60"/>'
 
+class TestTextArea(WidgetTest):
+    widget = TextArea
+    attrs = {'css_class':'something', 'size':'60'}
+    params = {'value':6}
+    expected = '<textarea class="something">6</textarea>'
