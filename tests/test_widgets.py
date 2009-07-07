@@ -27,13 +27,13 @@ class TestTextField(WidgetTest):
 
 class TestTextArea(WidgetTest):
     widget = TextArea
-    attrs = {'css_class':'something', 'size':'60'}
+    attrs = {'css_class':'something', 'rows':6, 'cols':10}
     params = {'value':6}
-    expected = '<textarea class="something">6</textarea>'
+    expected = '<textarea class="something" rows="6" cols="10">6</textarea>'
     
 class TestCheckbox(WidgetTest):
     widget = CheckBox
-    attrs = {'css_class':'something', 'size':'60'}
+    attrs = {'css_class':'something'}
     params = {'value':True}
     expected = '<input checked="checked" value="True" type="checkbox" class="something"/>'
     
@@ -42,3 +42,17 @@ class TestCheckbox(WidgetTest):
         expected = '<input value="False" type="checkbox" class="something">'
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
+
+class TestRadioButton(WidgetTest):
+    widget = RadioButton
+    attrs = {'css_class':'something'}
+    params = {'value':True}
+    expected = '<input value="True" type="radio" class="something"/>'
+
+    def test_value_false(self):
+        params = {'value':False}
+        expected = '<input value="False" type="radio" class="something">'
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
+            
+
