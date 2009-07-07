@@ -136,15 +136,16 @@ class WidgetTest(object):
                 if(os.path.isfile(rm.resource_filename(split[0], '.'.join((split[1], ext))))):
                     yield engine
 
-    def _check_rendering_vs_expected(self, engine):
+    def _check_rendering_vs_expected(self, engine, attrs, params, expected):
         _request_id = None
         mw = make_middleware(None, preferred_rendering_engines=[engine])
         self.request(1, mw)
-        r = self.widget(**self.attrs).display(**self.params)
+        r = self.widget(**attrs).display(**params)
         # reset the cache as not to affect other tests
         global_engines._engine_name_cache = {}
-        assert_eq_xml(self.expected, r)
+        assert_eq_xml(expected, r)
 
+            
     def test_display(self):
         for engine in self._get_all_possible_engines():
-            yield self._check_rendering_vs_expected, engine
+            yield self._check_rendering_vs_expected, engine, self.attrs, self.params, self.expected

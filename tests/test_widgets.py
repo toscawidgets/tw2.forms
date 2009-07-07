@@ -36,3 +36,9 @@ class TestCheckbox(WidgetTest):
     attrs = {'css_class':'something', 'size':'60'}
     params = {'value':True}
     expected = '<input checked="checked" value="True" type="checkbox" class="something"/>'
+    
+    def test_value_false(self):
+        params = {'value':False}
+        expected = '<input value="False" type="checkbox" class="something">'
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
