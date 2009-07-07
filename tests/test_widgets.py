@@ -30,3 +30,9 @@ class TestTextArea(WidgetTest):
     attrs = {'css_class':'something', 'size':'60'}
     params = {'value':6}
     expected = '<textarea class="something">6</textarea>'
+    
+class TestCheckbox(WidgetTest):
+    widget = CheckBox
+    attrs = {'css_class':'something', 'size':'60'}
+    params = {'value':True}
+    expected = '<input checked="checked" value="True" type="checkbox" class="something"/>'

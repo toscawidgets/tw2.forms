@@ -47,7 +47,8 @@ def fix_xml(needle):
     # I HAVE NO IDEA why genshi does this shit.
     if needle.startswith('<input') and not (needle.endswith('</input>') or needle.endswith('/>')):
         needle += '</input>'
-    
+    if ' checked ' in needle:
+        needle = needle.replace(' checked ', ' checked="checked" ')
     try:
         needle_node = etree.fromstring(needle)
     except ExpatError:
