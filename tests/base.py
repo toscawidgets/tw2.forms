@@ -1,15 +1,19 @@
-import os, re
+import os, re, pkg_resources as pk
 from copy import copy
 from difflib import unified_diff
 from cStringIO import StringIO
 from cgi import FieldStorage
 from tw2.core.middleware import make_middleware
+from tw2.core.template import global_engines
 
 #try:
 import xml.etree.ElementTree as etree
 from xml.parsers.expat import ExpatError
 #except ImportError:
 #    import cElementTree as etree
+
+rendering_extension_lookup = {'mako':'mak', 'genshi':'html', 'cheetah':'tmpl', 'kid':'kid'}
+rm = pk.ResourceManager()
 
 def remove_whitespace_nodes(node):
     new_node = copy(node)
@@ -38,6 +42,12 @@ def replace_escape_chars(needle):
 
 def fix_xml(needle):
     needle = replace_escape_chars(needle)
+    
+    # hack to handle weird rendering of <input something="something">
+    # I HAVE NO IDEA why genshi does this shit.
+    if needle.startswith('<input') and not (needle.endswith('</input>') or needle.endswith('/>')):
+        needle += '</input>'
+    
     try:
         needle_node = etree.fromstring(needle)
     except ExpatError:
@@ -92,13 +102,19 @@ class WidgetTest(object):
     
     template_engine = 'string'
     params_as_vars = True
+    widget = None
+    attrs = {}
+    params = {}
+    expected = ""
     
-    def request(self, requestid):
+    def request(self, requestid, mw=None):
+        if mw is None:
+            mw = self.mw
         global _request_id
         _request_id = requestid
         rl = request_local()
         rl.clear()
-        rl['middleware'] = self.mw
+        rl['middleware'] = mw
         return request_local_tst()
 
     def setup(self):
@@ -107,5 +123,27 @@ class WidgetTest(object):
         _request_id = None
         self.mw = make_middleware(None, default_engine=self.template_engine)
         return self.request(1)
-
     
+    def _get_all_possible_engines(self):
+        template = self.widget.template
+        try:
+            engine, template_name = template.split(':', 1)
+            yield engine
+        except:
+            for engine, ext in rendering_extension_lookup.iteritems():
+                split = template.rsplit('.', 1)
+                if(os.path.isfile(rm.resource_filename(split[0], '.'.join((split[1], ext))))):
+                    yield engine
+
+    def _check_rendering_vs_expected(self, engine):
+        _request_id = None
+        mw = make_middleware(None, preferred_rendering_engines=[engine])
+        self.request(1, mw)
+        r = self.widget(**self.attrs).display(**self.params)
+        # reset the cache as not to affect other tests
+        global_engines._engine_name_cache = {}
+        assert_eq_xml(self.expected, r)
+
+    def test_compare_all_possible_renderings(self):
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine

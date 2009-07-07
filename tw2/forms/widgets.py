@@ -10,7 +10,7 @@ class FormField(twc.Widget):
 class InputField(FormField):
     type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
     value = twc.Param(attribute=True)
-    template = "genshi:tw2.forms.templates.input_field"
+    template = "tw2.forms.templates.input_field"
 
 
 class TextField(InputField):
