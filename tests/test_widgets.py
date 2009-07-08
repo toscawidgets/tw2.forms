@@ -79,3 +79,8 @@ class TestLabelField(WidgetTest):
     widget = LabelField
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
     expected = '<span>info<input class="something" type="hidden" value="info" name="hidden_name"/></span>'
+
+class TestLinkField(WidgetTest):
+    widget = LinkField
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'text':'some $', 'link':'/some/$'}
+    expected = '<a href="/some/info" class="something">some info</a>'

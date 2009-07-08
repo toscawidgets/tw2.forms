@@ -99,7 +99,6 @@ def fix_xml(needle):
     
     #then we close all the open-ended tags to make sure it will compare properly
     needle = bs(needle).prettify()
-    print needle
     try:
         needle_node = etree.fromstring(needle)
     except ExpatError:

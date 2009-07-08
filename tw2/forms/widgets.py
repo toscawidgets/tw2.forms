@@ -113,9 +113,12 @@ class LinkField(twc.Widget):
     """
     A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value.
     """
-    template = "genshi:tw2.forms.templates.link_field"
-    link = twc.Param('Link target')
-    text = twc.Param('Link text')
+    template = "tw2.forms.templates.link_field"
+    link = twc.Variable('Link target', default='')
+    text = twc.Variable('Link text', default='')
+    css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
+    value = twc.Variable("value to replace $ with in the link/text")
+    
     def prepare(self):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
