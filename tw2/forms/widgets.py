@@ -213,6 +213,7 @@ class SelectionField(FormField):
                     # TBD: These are only needed for SelectionList
                     option_attrs['name'] = self.compound_id
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
+                #import pdb; pdb.set_trace()
                 if ((self.multiple and option[0] in value) or
                         (not self.multiple and option[0] == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
@@ -263,10 +264,11 @@ class SingleSelectField(SelectionField):
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
     multiple = twc.Param(default=True, attribute=True)
-    template = "genshi:tw2.forms.templates.select_field"
+    template = "tw2.forms.templates.select_field"
 
 
 class SelectionList(SelectionField):
+    field_type = True
     selected_verb = "checked"
     template = "genshi:tw2.forms.templates.selection_list"
 
@@ -281,7 +283,8 @@ class CheckBoxList(SelectionList):
 
 
 class SelectionTable(SelectionField):
-    field_type = twc.Param()
+    field_type = True
+#    field_type = twc.Param()
     selected_verb = "checked"
     template = "genshi:tw2.forms.templates.selection_table"
     cols = twc.Param('Number of columns', default=1)

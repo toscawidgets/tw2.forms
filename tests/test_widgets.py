@@ -138,3 +138,52 @@ class TestSingleSelectField(WidgetTest):
         attrs = {'css_class':'something', 'options':('a', 'b','c')}
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
+class TestMultipleSelectField(WidgetTest):
+    widget = MultipleSelectField
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3))}
+    expected = """<select class="something" multiple="multiple">
+                      <option value="a">1</option>
+                      <option value="b">2</option>
+                      <option value="c">3</option>
+                  </select>"""
+
+class TestSelectionList(WidgetTest):
+    widget = SelectionList
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    expected = """<ul class="something" id="something" name="something">
+    <li>
+        <input type="True" name="something" value="a" id="something:0">
+        <label for="something:0">1</label>
+    </li><li>
+        <input type="True" name="something" value="b" id="something:1">
+        <label for="something:1">2</label>
+    </li><li>
+        <input type="True" name="something" value="c" id="something:2">
+        <label for="something:2">3</label>
+    </li>
+</ul>"""
+
+class TestSelectionTable(WidgetTest):
+    widget = SelectionTable
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    expected = """<table class="something" id="something" name="something">
+    <tbody>
+    <tr>
+        <td>
+            <input type="True" name="something" value="a" id="something:0">
+            <label for="something:0">1</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input type="True" name="something" value="b" id="something:1">
+            <label for="something:1">2</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input type="True" name="something" value="c" id="something:2">
+            <label for="something:2">3</label>
+        </td>
+    </tr>
+    </tbody>
+</table>"""

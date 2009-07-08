@@ -95,8 +95,13 @@ def replace_boolean_attrs(needle):
 def fix_xml(needle):
     needle = replace_escape_chars(needle)
     #first, we need to make sure the needle is valid html
-    validate_html(needle)
-    
+    """
+    try:
+        validate_html(needle)
+    except HTMLParser.HTMLParseError:
+        print "error with: %s"%needle
+        raise
+    """
     #then we close all the open-ended tags to make sure it will compare properly
     needle = bs(needle).prettify()
     try:
