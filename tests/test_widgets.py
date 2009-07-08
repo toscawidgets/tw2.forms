@@ -153,13 +153,13 @@ class TestSelectionList(WidgetTest):
     attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
     expected = """<ul class="something" id="something" name="something">
     <li>
-        <input type="True" name="something" value="a" id="something:0">
+        <input name="something" value="a" id="something:0">
         <label for="something:0">1</label>
     </li><li>
-        <input type="True" name="something" value="b" id="something:1">
+        <input name="something" value="b" id="something:1">
         <label for="something:1">2</label>
     </li><li>
-        <input type="True" name="something" value="c" id="something:2">
+        <input name="something" value="c" id="something:2">
         <label for="something:2">3</label>
     </li>
 </ul>"""
@@ -204,17 +204,17 @@ class TestSelectionTable(WidgetTest):
     <tbody>
     <tr>
         <td>
-            <input type="True" name="something" value="a" id="something:0">
+            <input name="something" value="a" id="something:0">
             <label for="something:0">1</label>
         </td>
     </tr><tr>
         <td>
-            <input type="True" name="something" value="b" id="something:1">
+            <input name="something" value="b" id="something:1">
             <label for="something:1">2</label>
         </td>
     </tr><tr>
         <td>
-            <input type="True" name="something" value="c" id="something:2">
+            <input name="something" value="c" id="something:2">
             <label for="something:2">3</label>
         </td>
     </tr>

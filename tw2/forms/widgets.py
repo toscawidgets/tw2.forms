@@ -182,7 +182,7 @@ class SelectionField(FormField):
     item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=twc.Validator())
 
     selected_verb = twc.Variable(default='selected')
-    field_type = twc.Variable()
+    field_type = twc.Variable(default=False)
     multiple = twc.Variable(default=False)
     grouped_options = twc.Variable()
 
@@ -209,7 +209,7 @@ class SelectionField(FormField):
                     option_attrs = dict(option[2])
                 option_attrs['value'] = option[0]
                 if self.field_type:
-                    option_attrs['type'] = self.field_type
+                    option_attrs['type'] = isinstance(self.field_type, basestring) and self.field_type or None
                     # TBD: These are only needed for SelectionList
                     option_attrs['name'] = self.compound_id
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
@@ -283,8 +283,7 @@ class CheckBoxList(SelectionList):
 
 
 class SelectionTable(SelectionField):
-    field_type = True
-#    field_type = twc.Param()
+    field_type = twc.Variable(default=True)
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_table"
     cols = twc.Param('Number of columns', default=1)
