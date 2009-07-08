@@ -286,7 +286,7 @@ class SelectionTable(SelectionField):
     field_type = True
 #    field_type = twc.Param()
     selected_verb = "checked"
-    template = "genshi:tw2.forms.templates.selection_table"
+    template = "tw2.forms.templates.selection_table"
     cols = twc.Param('Number of columns', default=1)
     options_rows = twc.Variable()
     grouped_options_rows = twc.Variable()
