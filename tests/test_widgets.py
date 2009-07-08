@@ -54,5 +54,28 @@ class TestRadioButton(WidgetTest):
         expected = '<input checked="checked" type="radio" class="something">'
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
-            
 
+class TestPasswordField(WidgetTest):
+    widget = PasswordField
+    attrs = {'css_class':'something'}
+    expected = '<input type="password" class="something"/>'
+
+    def test_no_value(self):
+        params = {'value':'something'}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, self.attrs, params, self.expected
+
+class TestFileField(WidgetTest):
+    widget = FileField
+    attrs = {'css_class':'something'}
+    expected = '<input type="file" class="something"/>'
+
+class TestHiddenField(WidgetTest):
+    widget = HiddenField
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
+    expected = '<input type="hidden" class="something" value="info" name="hidden_name"/>'
+
+class TestLabelField(WidgetTest):
+    widget = LabelField
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
+    expected = '<span>info<input class="something" type="hidden" value="info" name="hidden_name"/></span>'

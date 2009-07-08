@@ -5,6 +5,7 @@ from cStringIO import StringIO
 from cgi import FieldStorage
 from tw2.core.middleware import make_middleware
 from tw2.core.template import global_engines
+from BeautifulSoup import BeautifulSoup as bs
 
 #try:
 import xml.etree.ElementTree as etree
@@ -15,6 +16,42 @@ from xml.parsers.expat import ExpatError
 rendering_extension_lookup = {'mako':'mak', 'genshi':'html', 'cheetah':'tmpl', 'kid':'kid'}
 rm = pk.ResourceManager()
 
+# code from Tom Lynn on #pythonpaste
+
+import HTMLParser
+
+SELF_CLOSING_TAGS = ['br', 'hr', 'input', 'img', 'meta',
+                     'spacer', 'link', 'frame', 'base']
+
+class Parser(HTMLParser.HTMLParser):
+    def __init__(self, self_closing=SELF_CLOSING_TAGS):
+        HTMLParser.HTMLParser.__init__(self)
+        self.tags = []
+        self.self_closing = self_closing
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append(tag)
+
+    def handle_endtag(self, tag):
+        line, col = self.getpos()
+        if not self.tags:
+            raise HTMLParser.HTMLParseError(
+                "Unopened tag %r at line %s column %s" % (tag, line, col))
+        prevtag = self.tags.pop()
+        if prevtag != tag and prevtag not in self.self_closing and tag!=None:
+            raise HTMLParser.HTMLParseError(
+                "Unclosed tag %r at line %s column %s" % (prevtag, line, col))
+
+    def close(self):
+        while self.tags:
+            self.handle_endtag(None)
+
+def validate_html(html):
+    p = Parser()
+    p.feed(html)
+    p.close()
+    return html
+# end Tom Lynn code
 
 def remove_whitespace_nodes(node):
     new_node = copy(node)
@@ -52,17 +89,17 @@ def replace_boolean_attrs(needle):
     for attr in _BOOLEAN_ATTRS:
         eyelet = ' %s '%attr
         if eyelet in needle:
-            needle = needle.replace(eyelet, ' %s="%s" '%(attr, attr))
+            needle = needle.replace(eyelet, '%s="%s" '%(attr, attr))
     return needle
 
 def fix_xml(needle):
     needle = replace_escape_chars(needle)
+    #first, we need to make sure the needle is valid html
+    validate_html(needle)
     
-    # hack to handle weird rendering of <input something="something">
-    # I HAVE NO IDEA why genshi does this shit.
-    if needle.startswith('<input') and not (needle.endswith('</input>') or needle.endswith('/>')):
-        needle += '</input>'
-    needle = replace_boolean_attrs(needle)
+    #then we close all the open-ended tags to make sure it will compare properly
+    needle = bs(needle).prettify()
+    print needle
     try:
         needle_node = etree.fromstring(needle)
     except ExpatError:

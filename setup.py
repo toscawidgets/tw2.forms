@@ -25,6 +25,7 @@ setup(
     keywords = [
         'toscawidgets.widgets',
     ],
+    tests_require = ['BeautifulSoup'],
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
