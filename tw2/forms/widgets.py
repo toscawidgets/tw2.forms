@@ -252,7 +252,7 @@ class SelectionField(FormField):
 
 
 class SingleSelectField(SelectionField):
-    template = "mako:tw2.forms.templates.select_field"
+    template = "tw2.forms.templates.select_field"
 
     def prepare(self):
         super(SingleSelectField, self).prepare()
