@@ -2,3 +2,4 @@ regexp:.*pyc$
 glob:tw2.forms.egg-info
 glob:docs/.output/
 glob:.coverage
+glob:*/.noseids

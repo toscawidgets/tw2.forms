@@ -270,7 +270,7 @@ class MultipleSelectField(SelectionField):
 class SelectionList(SelectionField):
     field_type = True
     selected_verb = "checked"
-    template = "genshi:tw2.forms.templates.selection_list"
+    template = "tw2.forms.templates.selection_list"
 
 
 class RadioButtonList(SelectionList):
