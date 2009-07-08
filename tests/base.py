@@ -15,6 +15,7 @@ from xml.parsers.expat import ExpatError
 rendering_extension_lookup = {'mako':'mak', 'genshi':'html', 'cheetah':'tmpl', 'kid':'kid'}
 rm = pk.ResourceManager()
 
+
 def remove_whitespace_nodes(node):
     new_node = copy(node)
     new_node._children = []
@@ -40,6 +41,20 @@ def replace_escape_chars(needle):
     needle = needle.replace(u'\xa0', ' ')
     return needle
 
+_BOOLEAN_ATTRS = frozenset(['selected', 'checked', 'compact', 'declare',
+                            'defer', 'disabled', 'ismap', 'multiple',
+                            'nohref', 'noresize', 'noshade', 'nowrap'])
+
+def replace_boolean_attrs(needle):
+    """
+    makes boolean attributes xml safe.
+    """
+    for attr in _BOOLEAN_ATTRS:
+        eyelet = ' %s '%attr
+        if eyelet in needle:
+            needle = needle.replace(eyelet, ' %s="%s" '%(attr, attr))
+    return needle
+
 def fix_xml(needle):
     needle = replace_escape_chars(needle)
     
@@ -47,8 +62,7 @@ def fix_xml(needle):
     # I HAVE NO IDEA why genshi does this shit.
     if needle.startswith('<input') and not (needle.endswith('</input>') or needle.endswith('/>')):
         needle += '</input>'
-    if ' checked ' in needle:
-        needle = needle.replace(' checked ', ' checked="checked" ')
+    needle = replace_boolean_attrs(needle)
     try:
         needle_node = etree.fromstring(needle)
     except ExpatError:
