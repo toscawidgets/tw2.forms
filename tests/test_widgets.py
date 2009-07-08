@@ -164,6 +164,39 @@ class TestSelectionList(WidgetTest):
     </li>
 </ul>"""
 
+class TestRadioButtonList(WidgetTest):
+    widget = RadioButtonList
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    expected = """<ul class="something" id="something" name="something">
+    <li>
+        <input type="radio" name="something" value="a" id="something:0">
+        <label for="something:0">1</label>
+    </li><li>
+        <input type="radio" name="something" value="b" id="something:1">
+        <label for="something:1">2</label>
+    </li><li>
+        <input type="radio" name="something" value="c" id="something:2">
+        <label for="something:2">3</label>
+    </li>
+</ul>"""
+
+class TestCheckBoxList(WidgetTest):
+    widget = CheckBoxList
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    expected = """<ul class="something" id="something" name="something">
+    <li>
+        <input type="checkbox" name="something" value="a" id="something:0">
+        <label for="something:0">1</label>
+    </li><li>
+        <input type="checkbox" name="something" value="b" id="something:1">
+        <label for="something:1">2</label>
+    </li><li>
+        <input type="checkbox" name="something" value="c" id="something:2">
+        <label for="something:2">3</label>
+    </li>
+</ul>
+"""
+
 class TestSelectionTable(WidgetTest):
     widget = SelectionTable
     attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
@@ -187,3 +220,52 @@ class TestSelectionTable(WidgetTest):
     </tr>
     </tbody>
 </table>"""
+
+class TestRadioButtonTable(WidgetTest):
+    widget = RadioButtonTable
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    expected = """<table class="something" id="something" name="something">
+    <tbody>
+    <tr>
+        <td>
+            <input type="radio" name="something" value="a" id="something:0">
+            <label for="something:0">1</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input type="radio" name="something" value="b" id="something:1">
+            <label for="something:1">2</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input type="radio" name="something" value="c" id="something:2">
+            <label for="something:2">3</label>
+        </td>
+    </tr>
+    </tbody>
+</table>"""
+
+class TestCheckBoxTable(WidgetTest):
+    widget = CheckBoxTable
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    expected = """<table class="something" id="something" name="something">
+    <tbody>
+    <tr>
+        <td>
+            <input type="checkbox" name="something" value="a" id="something:0">
+            <label for="something:0">1</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input type="checkbox" name="something" value="b" id="something:1">
+            <label for="something:1">2</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input type="checkbox" name="something" value="c" id="something:2">
+            <label for="something:2">3</label>
+        </td>
+    </tr>
+    </tbody>
+</table>"""
+
