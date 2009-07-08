@@ -100,6 +100,11 @@ class TestResetButton(WidgetTest):
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
     expected = '<input class="something" type="reset" value="info" name="hidden_name">'
 
+class TestImageButton(WidgetTest):
+    widget = ImageButton
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'link':'/somewhere.gif'}
+    expected = '<input src="/somewhere.gif" name="hidden_name" value="info" alt="" type="image" class="something">'
+
 class TestSingleSelectField(WidgetTest):
     widget = SingleSelectField
     attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3))}
@@ -164,6 +169,7 @@ class TestSelectionList(WidgetTest):
     </li>
 </ul>"""
 
+
 class TestRadioButtonList(WidgetTest):
     widget = RadioButtonList
     attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
@@ -196,6 +202,23 @@ class TestCheckBoxList(WidgetTest):
     </li>
 </ul>
 """
+    def test_option_has_value(self):
+        expected = """<ul class="something" id="something" name="something">
+    <li>
+        <input type="checkbox" name="something" value="a" id="something:0" checked>
+        <label for="something:0">a</label>
+    </li><li>
+        <input type="checkbox" name="something" value="b" id="something:1">
+        <label for="something:1">b</label>
+    </li><li>
+        <input type="checkbox" name="something" value="c" id="something:2">
+        <label for="something:2">c</label>
+    </li>
+</ul>"""
+        attrs = {'css_class':'something', 'options':('a', 'b','c'), 'id':'something'}
+        params = {'value':'a',}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, params, expected
 
 class TestSelectionTable(WidgetTest):
     widget = SelectionTable
@@ -268,4 +291,61 @@ class TestCheckBoxTable(WidgetTest):
     </tr>
     </tbody>
 </table>"""
+    
+
+class TestListLayout(WidgetTest):
+    widget = ListLayout
+    attrs = {'children': [TextField(id='field1'),
+                          TextField(id='field2'),
+                          TextField(id='field3')]}
+    expected = """<ul>
+    <li class="odd">
+        Field1
+        <input name="field1" id="field1" type="text">
+        <span id="field1:error"></span>
+    </li><li class="even">
+        Field2
+        <input name="field2" id="field2" type="text">
+        <span id="field2:error"></span>
+    </li><li class="odd">
+        Field3
+        <input name="field3" id="field3" type="text">
+        <span id="field3:error"></span>
+    </li>
+    <li class="error"><span id=":error"></span></li>
+</ul>"""
+    declarative = True
+    
+
+class TestTableLayout(WidgetTest):
+    widget = TableLayout
+    attrs = {'children': [TextField(id='field1'),
+                          TextField(id='field2'),
+                          TextField(id='field3')]}
+    expected = """<table>
+    <tr class="odd" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr><tr class="even" id="field2:container">
+        <th>Field2</th>
+        <td>
+            <input name="field2" id="field2" type="text">
+            <span id="field2:error"></span>
+        </td>
+    </tr><tr class="odd" id="field3:container">
+        <th>Field3</th>
+        <td>
+            <input name="field3" id="field3" type="text">
+            <span id="field3:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id=":error"></span>
+    </td></tr>
+</table>"""
+    declarative = True
+    
 

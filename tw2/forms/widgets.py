@@ -31,8 +31,9 @@ class CheckBox(InputField):
     validator = twc.BoolValidator
     def prepare(self):
         super(CheckBox, self).prepare()
-        if 'attrs' not in self.__dict__:
-            self.attrs = self.attrs.copy()
+        # TBD: is this really needed?
+        #if 'attrs' not in self.__dict__:
+        #    self.attrs = self.attrs.copy()
         self.attrs['checked'] = 'true' if self.value else None
         self.value = None
 
@@ -194,6 +195,8 @@ class SelectionField(FormField):
         value = self.value
         if self.multiple and not value:
             value = []
+        if self.multiple and not isinstance(value, (list, tuple)):
+            value = [value,]
         for optgroup in self._iterate_options(self.options):
             xxx = []
             if isinstance(optgroup[1], (list,tuple)):
@@ -205,15 +208,16 @@ class SelectionField(FormField):
             for option in self._iterate_options(optlist):
                 if len(option) is 2:
                     option_attrs = {}
-                elif len(option) is 3:
-                    option_attrs = dict(option[2])
+                # when is the option length going to be 3 according to the spec?
+                #elif len(option) is 3:
+                #    option_attrs = dict(option[2])
                 option_attrs['value'] = option[0]
                 if self.field_type:
                     option_attrs['type'] = isinstance(self.field_type, basestring) and self.field_type or None
                     # TBD: These are only needed for SelectionList
                     option_attrs['name'] = self.compound_id
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
-                #import pdb; pdb.set_trace()
+
                 if ((self.multiple and option[0] in value) or
                         (not self.multiple and option[0] == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
@@ -396,7 +400,7 @@ class Spacer(FormField):
     """
     A blank widget, used to insert a blank row in a layout.
     """
-    template = "genshi:tw2.forms.templates.spacer"
+    template = "tw2.forms.templates.spacer"
     id = None
     label = None
 

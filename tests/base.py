@@ -154,6 +154,13 @@ from tw2.core.core import request_local
 _request_local=None
 _request_id=None
 
+
+def TW2WidgetBuilder(widget, **attrs):
+    class MyTestWidget(widget): pass
+    for key, value in attrs.iteritems():
+        setattr(MyTestWidget, key, value)
+    return MyTestWidget
+
 class WidgetTest(object):
     
     template_engine = 'string'
@@ -162,6 +169,7 @@ class WidgetTest(object):
     attrs = {}
     params = {}
     expected = ""
+    declarative = False
     
     def request(self, requestid, mw=None):
         if mw is None:
@@ -178,6 +186,8 @@ class WidgetTest(object):
         _request_local = {}
         _request_id = None
         self.mw = make_middleware(None, default_engine=self.template_engine)
+        if self.declarative:
+            self.widget = TW2WidgetBuilder(self.widget, **self.attrs)
         return self.request(1)
     
     def _get_all_possible_engines(self):
@@ -195,6 +205,7 @@ class WidgetTest(object):
         _request_id = None
         mw = make_middleware(None, preferred_rendering_engines=[engine])
         self.request(1, mw)
+            
         r = self.widget(**attrs).display(**params)
         # reset the cache as not to affect other tests
         global_engines._engine_name_cache = {}
