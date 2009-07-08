@@ -103,7 +103,7 @@ class LabelField(InputField):
     A read-only label showing the value of a field. The value is stored in a hidden field, so it remains through validation failures. However, the value is never included in validated data.
     """
     type = 'hidden'
-    template = "genshi:tw2.forms.templates.label_field"
+    template = "tw2.forms.templates.label_field"
     def _validate(self, value):
         super(LabelField, self)._validate(value)
         return twc.EmptyField
