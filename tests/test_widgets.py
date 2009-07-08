@@ -109,3 +109,32 @@ class TestSingleSelectField(WidgetTest):
                         <option value="b">2</option>
                         <option value="c">3</option>
                   </select>"""
+
+    def test_option_group(self):
+        expected = """<select class="something">
+                          <optgroup label="group">
+                              <option value=""></option>
+                              <option value="1">Red</option>
+                              <option value="2">Blue</option>
+                          </optgroup>
+                          <optgroup label="group2">
+                              <option value=""></option>
+                              <option value="Pink">Pink</option>
+                              <option value="Yellow">Yellow</option>
+                          </optgroup>
+                      </select>"""
+        attrs = {'css_class':'something', 'options':[('group', ['', (1, 'Red'), (2, 'Blue')]),
+                                                     ('group2', ['', 'Pink', 'Yellow'])]}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
+    def test_option_no_values(self):
+        expected = """<select class="something">
+                         <option></option>
+                         <option value="a">a</option>
+                         <option value="b">b</option>
+                         <option value="c">c</option>
+                      </select>"""
+        attrs = {'css_class':'something', 'options':('a', 'b','c')}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
