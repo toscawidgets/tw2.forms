@@ -37,6 +37,7 @@ class CheckBox(InputField):
 
 class RadioButton(InputField):
     type = "radio"
+    checked = twc.Param(attribute=True)
 
 
 class PasswordField(InputField):

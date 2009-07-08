@@ -46,12 +46,12 @@ class TestCheckbox(WidgetTest):
 class TestRadioButton(WidgetTest):
     widget = RadioButton
     attrs = {'css_class':'something'}
-    params = {'value':True}
-    expected = '<input value="True" type="radio" class="something"/>'
+    params = {'checked':None}
+    expected = '<input type="radio" class="something"/>'
 
-    def test_value_false(self):
-        params = {'value':False}
-        expected = '<input value="False" type="radio" class="something">'
+    def test_checked(self):
+        params = {'checked':True}
+        expected = '<input checked="checked" type="radio" class="something">'
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
             
