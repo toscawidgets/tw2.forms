@@ -84,3 +84,28 @@ class TestLinkField(WidgetTest):
     widget = LinkField
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'text':'some $', 'link':'/some/$'}
     expected = '<a href="/some/info" class="something">some info</a>'
+    
+class TestButton(WidgetTest):
+    widget = Button
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
+    expected = '<input class="something" type="button" value="info" name="hidden_name">'
+
+class TestSubmitButton(WidgetTest):
+    widget = SubmitButton
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
+    expected = '<input class="something" type="submit" value="info" name="hidden_name">'
+
+class TestResetButton(WidgetTest):
+    widget = ResetButton
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
+    expected = '<input class="something" type="reset" value="info" name="hidden_name">'
+
+class TestSingleSelectField(WidgetTest):
+    widget = SingleSelectField
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3))}
+    expected = """<select class="something">
+                        <option></option>
+                        <option value="a">1</option>
+                        <option value="b">2</option>
+                        <option value="c">3</option>
+                  </select>"""

@@ -6,6 +6,8 @@ import tw2.core as twc, re, itertools, webob, cgi
 class FormField(twc.Widget):
     name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id))
     css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
+    def prepare(self):
+        super(FormField, self).prepare()
 
 class InputField(FormField):
     type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
@@ -215,7 +217,7 @@ class SelectionField(FormField):
                         (not self.multiple and option[0] == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
 
-                xxx.append((option_attrs, option[1]))
+                xxx.append((option_attrs, unicode(option[1])))
             options.extend(xxx)
             if group:
                 grouped_options.append((optgroup[0], xxx))
@@ -250,14 +252,13 @@ class SelectionField(FormField):
 
 
 class SingleSelectField(SelectionField):
-    template = "genshi:tw2.forms.templates.select_field"
+    template = "mako:tw2.forms.templates.select_field"
 
     def prepare(self):
         super(SingleSelectField, self).prepare()
         if self.options[0][1] and not self.grouped_options[0][0]:
             self.options = [(None, '')] + self.options
             self.grouped_options = [(None, self.options)]
-
 
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
