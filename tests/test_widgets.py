@@ -1,5 +1,5 @@
 from tw2.forms.widgets import *
-from webob import Request
+from webob import Request, NestedMultiDict
 from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
 from cStringIO import StringIO
@@ -606,7 +606,7 @@ class TestFormPage(WidgetTest):
 </body>
 </html>""")
 
-    def test_request_post(self):
+    def test_request_post_invalid(self):
         environ = {'REQUEST_METHOD': 'POST',
                    'wsgi.input': StringIO(''),
 
@@ -644,3 +644,16 @@ class TestFormPage(WidgetTest):
     <input type="submit" id="submit" value="Save">
 </form></body>
 </html>""")
+
+    def test_request_post_valid(self):
+        environ = {'wsgi.input': StringIO(''),
+                   }
+        req=Request(environ)
+        req.method = 'POST'
+        req.body='formpage:field1=a&formpage:field2=b&formpage:field3=c'
+        req.environ['CONTENT_LENGTH'] = str(len(req.body)) 
+        req.environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+        
+        self.mw.config.debug = True
+        r = self.widget().request(req)
+        assert r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""", r.body
