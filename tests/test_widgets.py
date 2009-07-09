@@ -3,17 +3,7 @@ from webob import Request
 from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
 from cStringIO import StringIO
-
-class _TestFormField(WidgetTest):
-    # place your widget at the TestWidget attribute
-    TestWidget = FormField
-
-    @raises(AttributeError)
-    def test_display(self):
-        # Asserts 'foo' and 'test' (the test widget's id) appear in rendered 
-        # string when 'foo' is passed as value to render
-        r = self.TestWidget().display()
-        assert r == None, r
+from tw2.core import EmptyField
 
 class TestInputField(WidgetTest):
     widget = InputField
@@ -69,18 +59,21 @@ class TestPasswordField(WidgetTest):
 
 class TestFileField(WidgetTest):
     widget = FileField
-    attrs = {'css_class':'something'}
-    expected = '<input type="file" class="something"/>'
+    attrs = {'css_class':'something', 'id':'hid'}
+    expected = '<input id="hid" type="file" class="something" name="hid"/>'
+    validate_params = [[None, {'hid':'b'}, None]]
 
 class TestHiddenField(WidgetTest):
     widget = HiddenField
-    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
-    expected = '<input type="hidden" class="something" value="info" name="hidden_name"/>'
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
+    expected = '<input type="hidden" class="something" value="info" name="hidden_name" id="hid", name="hid"/>'
+    validate_params = [[None, {'hid':'b'}, EmptyField]]
 
 class TestLabelField(WidgetTest):
     widget = LabelField
-    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
-    expected = '<span>info<input class="something" type="hidden" value="info" name="hidden_name"/></span>'
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
+    expected = '<span>info<input class="something" type="hidden" value="info" name="hidden_name" id="hid"/></span>'
+    validate_params = [[None, {'hid':'b'}, EmptyField]]
 
 class TestLinkField(WidgetTest):
     widget = LinkField
