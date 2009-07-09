@@ -249,6 +249,31 @@ class TestSelectionTable(WidgetTest):
     </tbody>
 </table>"""
 
+    def test_option_leftover_chunk(self):
+        expected = """<table class="something" id="something" name="something">
+    <tbody>
+    <tr>
+        <td>
+            <input checked name="something" value="a" id="something:0">
+            <label for="something:0">a</label>
+        </td><td>
+            <input name="something" value="b" id="something:1">
+            <label for="something:1">b</label>
+        </td>
+    </tr><tr>
+        <td>
+            <input name="something" value="c" id="something:2">
+            <label for="something:2">c</label>
+        </td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>"""
+        attrs = {'css_class':'something', 'cols':2, 'options':(('group1', ('a', 'b')),'c'), 'id':'something'}
+        params = {'value':'a',}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, params, expected
+
 class TestRadioButtonTable(WidgetTest):
     widget = RadioButtonTable
     attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
