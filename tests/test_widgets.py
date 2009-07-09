@@ -381,3 +381,14 @@ class TestGridLayout(WidgetTest):
     </td></tr>
 </table>"""
     declarative = True
+
+class TestSpacer(WidgetTest):
+    widget = Spacer
+    attrs = {}
+    expected = """<div></div>"""
+
+class TestLabel(WidgetTest):
+    widget = Label
+    attrs = {'text':'something'}
+    expected = """<span>something</span>"""
+

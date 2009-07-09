@@ -409,7 +409,7 @@ class Label(twc.Widget):
     """
     A textual label. This disables any label that would be displayed by a parent layout.
     """
-    template = 'genshi:tw2.forms.templates.label'
+    template = 'tw2.forms.templates.label'
     text = twc.Param('Text to appear in label')
     label = None
     id = None
