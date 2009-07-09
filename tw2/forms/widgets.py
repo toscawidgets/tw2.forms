@@ -419,7 +419,7 @@ class Form(twc.DisplayOnlyWidget):
     """
     A form, with a submit button. It's common to pass a TableLayout or ListLayout widget as the child.
     """
-    template = "genshi:tw2.forms.templates.form"
+    template = "tw2.forms.templates.form"
     action = twc.Param('URL to submit form data to. If this is None, the form submits to the same URL it was displayed on.', default=None, attribute=True)
     method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
     submit = twc.Param('Submit button widget. If this is None, no submit button is generated.', default=SubmitButton(id='submit', value='Save'))
@@ -438,7 +438,6 @@ class Form(twc.DisplayOnlyWidget):
         super(Form, self).prepare()
         if self.submit:
             self.submit.prepare()
-
 
 class FieldSet(twc.DisplayOnlyWidget):
     """
