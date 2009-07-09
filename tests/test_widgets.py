@@ -1,6 +1,6 @@
 from tw2.forms.widgets import *
 from webob import Request
-from base import assert_in_xml, assert_eq_xml, WidgetTest
+from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
 from cStringIO import StringIO
 
