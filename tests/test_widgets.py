@@ -347,5 +347,24 @@ class TestTableLayout(WidgetTest):
     </td></tr>
 </table>"""
     declarative = True
-    
+
+class TestRowLayout(WidgetTest):
+    widget = RowLayout
+    attrs = {'children': [TextField(id='field1'),
+                          TextField(id='field2'),
+                          TextField(id='field3')],
+             'repetition': 1,
+             }
+    expected = """<tr class="even">
+    <td>
+        <input name="field1" id="field1" type="text">
+    </td><td>
+        <input name="field2" id="field2" type="text">
+    </td><td>
+        <input name="field3" id="field3" type="text">
+    </td>
+    <td>
+    </td>
+</tr>"""
+    declarative = True
 

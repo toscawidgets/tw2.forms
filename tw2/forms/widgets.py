@@ -384,7 +384,7 @@ class RowLayout(BaseLayout):
     resources = [
         twc.Link(id='error', modname='tw2.forms', filename='static/dialog-warning.png'),
     ]
-    template = "genshi:tw2.forms.templates.row_layout"
+    template = "tw2.forms.templates.row_layout"
 
 
 class GridLayout(twc.RepeatingWidget):
