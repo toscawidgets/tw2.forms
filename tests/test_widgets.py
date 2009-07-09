@@ -1,6 +1,8 @@
 from tw2.forms.widgets import *
+from webob import Request
 from base import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
+from cStringIO import StringIO
 
 class _TestFormField(WidgetTest):
     # place your widget at the TestWidget attribute
@@ -557,3 +559,85 @@ class TestFormPage(WidgetTest):
 </form></body>
 </html>"""
     
+    declarative = True
+    def test_request_get(self):
+        environ = {'REQUEST_METHOD': 'GET',
+                   }
+        req=Request(environ)
+        r = self.widget().request(req)
+        assert_eq_xml(r.body, """<html>
+<head><title>some title</title></head>
+<body><h1>some title</h1><form method="post" enctype="multipart/form-data"/>
+     <span class="error"></span>
+    <table id="formpage">
+    <tr class="odd"  id="formpage:field1:container">
+        <th>Field1</th>
+        <td >
+            <input name="formpage:field1" id="formpage:field1" type="text"/>
+            
+            <span id="formpage:field1:error"></span>
+        </td>
+    </tr>
+    <tr class="even"  id="formpage:field2:container">
+        <th>Field2</th>
+        <td >
+            <input name="formpage:field2" id="formpage:field2" type="text"/>
+            
+            <span id="formpage:field2:error"></span>
+        </td>
+    </tr>
+    <tr class="odd"  id="formpage:field3:container">
+        <th>Field3</th>
+        <td >
+            <input name="formpage:field3" id="formpage:field3" type="text"/>
+            
+            <span id="formpage:field3:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id="formpage:error"></span>
+    </td></tr>
+</table>
+    <input type="submit" id="submit" value="Save"/>
+</form>
+</body>
+</html>""")
+
+    def test_request_post(self):
+        environ = {'REQUEST_METHOD': 'POST',
+                   'wsgi.input': StringIO(''),
+
+                   }
+        req=Request(environ)
+        r = self.widget().request(req)
+        assert_eq_xml(r.body, """<html>
+<head><title>some title</title></head>
+<body><h1>some title</h1><form method="post" enctype="multipart/form-data">
+     <span class="error"></span>
+    <table id="formpage">
+    <tr class="odd" id="formpage:field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="formpage:field1" id="formpage:field1" type="text">
+            <span id="formpage:field1:error"></span>
+        </td>
+    </tr><tr class="even" id="formpage:field2:container">
+        <th>Field2</th>
+        <td>
+            <input name="formpage:field2" id="formpage:field2" type="text">
+            <span id="formpage:field2:error"></span>
+        </td>
+    </tr><tr class="odd" id="formpage:field3:container">
+        <th>Field3</th>
+        <td>
+            <input name="formpage:field3" id="formpage:field3" type="text">
+            <span id="formpage:field3:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id="formpage:error"></span>
+    </td></tr>
+</table>
+    <input type="submit" id="submit" value="Save">
+</form></body>
+</html>""")

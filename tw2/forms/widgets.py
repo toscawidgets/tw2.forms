@@ -476,6 +476,8 @@ class FormPage(twc.Page):
 
     @classmethod
     def request(cls, req):
+        print '*'*80
+        print req.method
         if req.method == 'GET':
             return super(FormPage, cls).request(req)
         elif req.method == 'POST':
