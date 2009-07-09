@@ -4,7 +4,7 @@ from difflib import unified_diff
 from cStringIO import StringIO
 from cgi import FieldStorage
 from tw2.core.middleware import make_middleware
-from tw2.core.template import global_engines
+from tw2.core.template import global_engines, engine_name_cache
 from BeautifulSoup import BeautifulSoup as bs
 
 #try:
@@ -203,12 +203,13 @@ class WidgetTest(object):
 
     def _check_rendering_vs_expected(self, engine, attrs, params, expected):
         _request_id = None
+        global engine_name_cache
+        engine_name_cache = {}
         mw = make_middleware(None, preferred_rendering_engines=[engine])
         self.request(1, mw)
             
         r = self.widget(**attrs).display(**params)
         # reset the cache as not to affect other tests
-        global_engines._engine_name_cache = {}
         assert_eq_xml(expected, r)
 
             
