@@ -373,7 +373,7 @@ class ListLayout(BaseLayout):
     __doc__ = """
     Arrange widgets and labels in a list.
     """ + BaseLayout.__doc__
-    template = "genshi:tw2.forms.templates.list_layout"
+    template = "tw2.forms.templates.list_layout"
 
 
 class RowLayout(BaseLayout):
