@@ -65,16 +65,17 @@ class FileValidator(twc.Validator):
     `extention`
         Allowed extention for the file
     """
-    extention = None
+    extension = None
     msgs = {
         'required': ('file_required', 'Select a file'),
-        'badext': "File name must have '$extention' extention",
+        'badext': "File name must have '$extension' extension",
     }
 
     def validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
-            if self.extention and not value.filename.endswith(self.extention):
-                raise twc.ValidationError('badext', self)
+            if self.extension is not None:
+                if not value.filename.endswith(str(self.extension)):
+                    raise twc.ValidationError('badext', self)
         elif self.required:
             raise twc.ValidationError('required', self)
 
@@ -476,8 +477,6 @@ class FormPage(twc.Page):
 
     @classmethod
     def request(cls, req):
-        print '*'*80
-        print req.method
         if req.method == 'GET':
             return super(FormPage, cls).request(req)
         elif req.method == 'POST':

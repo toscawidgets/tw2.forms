@@ -3,7 +3,9 @@ from webob import Request
 from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
 from cStringIO import StringIO
-from tw2.core import EmptyField
+from tw2.core import EmptyField, IntValidator, ValidationError
+from cgi import FieldStorage
+
 
 class TestInputField(WidgetTest):
     widget = InputField
@@ -49,8 +51,9 @@ class TestRadioButton(WidgetTest):
 
 class TestPasswordField(WidgetTest):
     widget = PasswordField
-    attrs = {'css_class':'something'}
-    expected = '<input type="password" class="something"/>'
+    attrs = {'css_class':'something', 'id':'hid'}
+    expected = '<input type="password" class="something" id="hid" name="hid"/>'
+    validate_params = [[None, {'hid':'b'}, 'b']]
 
     def test_no_value(self):
         params = {'value':'something'}
@@ -59,9 +62,11 @@ class TestPasswordField(WidgetTest):
 
 class TestFileField(WidgetTest):
     widget = FileField
-    attrs = {'css_class':'something', 'id':'hid'}
+    attrs = {'css_class':'something', 'id':'hid', 'validator':FileValidator(extension="bdb", required=True)}
     expected = '<input id="hid" type="file" class="something" name="hid"/>'
-    validate_params = [[None, {'hid':'b'}, None]]
+    dummy_file = FieldStorage(StringIO(''))
+    dummy_file.filename = 'something.ext'
+    validate_params = [[None, {'hid':'b'}, None, ValidationError], [None, {'hid':dummy_file}, None, ValidationError]]
 
 class TestHiddenField(WidgetTest):
     widget = HiddenField
@@ -102,13 +107,17 @@ class TestImageButton(WidgetTest):
 
 class TestSingleSelectField(WidgetTest):
     widget = SingleSelectField
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3))}
-    expected = """<select class="something">
+    attrs = {'css_class':'something', 
+             'options':((1, 'a'), (2, 'b'), (3, 'c')), 'id':'hid',
+             'item_validator':IntValidator(),
+             }
+    expected = """<select class="something" id="hid" name="hid">
                         <option></option>
-                        <option value="a">1</option>
-                        <option value="b">2</option>
-                        <option value="c">3</option>
+                        <option value="1">a</option>
+                        <option value="2">b</option>
+                        <option value="3">c</option>
                   </select>"""
+    validate_params = [[None, {'hid':'b'}, None],[None, {'hid':'1'}, 1]]
 
     def test_option_group(self):
         expected = """<select class="something">
@@ -141,12 +150,13 @@ class TestSingleSelectField(WidgetTest):
 
 class TestMultipleSelectField(WidgetTest):
     widget = MultipleSelectField
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3))}
-    expected = """<select class="something" multiple="multiple">
+    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':"hid"}
+    expected = """<select class="something" multiple="multiple" id="hid" name="hid">
                       <option value="a">1</option>
                       <option value="b">2</option>
                       <option value="c">3</option>
                   </select>"""
+    validate_params = [[None, {'hid':'b'}, [u'b']]]
 
 class TestSelectionList(WidgetTest):
     widget = SelectionList
