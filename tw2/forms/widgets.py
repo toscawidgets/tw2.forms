@@ -393,7 +393,7 @@ class GridLayout(twc.RepeatingWidget):
     """
     child = RowLayout
     children = twc.Required
-    template = "genshi:tw2.forms.templates.grid_layout"
+    template = "tw2.forms.templates.grid_layout"
 
 
 class Spacer(FormField):

@@ -368,3 +368,16 @@ class TestRowLayout(WidgetTest):
 </tr>"""
     declarative = True
 
+class TestGridLayout(WidgetTest):
+    widget = GridLayout
+    attrs = {'children': [TextField(id='field1'),
+                          TextField(id='field2'),
+                          TextField(id='field3')],
+             'repetition': 1,
+             }
+    expected = """<table>
+    <tr><th>Auto</th><th>Auto</th><th>Auto</th></tr>
+    <tr class="error"><td colspan="0" id=":error">
+    </td></tr>
+</table>"""
+    declarative = True
