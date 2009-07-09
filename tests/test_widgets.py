@@ -517,3 +517,43 @@ class TestListFieldset(WidgetTest):
 </ul>
 </fieldset>"""
     declarative = True
+
+class TestFormPage(WidgetTest):
+    widget = FormPage
+    attrs = {'child':TableForm(children=[TextField(id='field1'),
+                                         TextField(id='field2'),
+                                         TextField(id='field3'),]),
+             'title':'some title'
+             }
+    expected = """<html>
+<head><title>some title</title></head>
+<body><h1>some title</h1><form method="post" enctype="multipart/form-data">
+     <span class="error"></span>
+    <table id="formpage">
+    <tr class="odd" id="formpage:field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="formpage:field1" id="formpage:field1" type="text">
+            <span id="formpage:field1:error"></span>
+        </td>
+    </tr><tr class="even" id="formpage:field2:container">
+        <th>Field2</th>
+        <td>
+            <input name="formpage:field2" id="formpage:field2" type="text">
+            <span id="formpage:field2:error"></span>
+        </td>
+    </tr><tr class="odd" id="formpage:field3:container">
+        <th>Field3</th>
+        <td>
+            <input name="formpage:field3" id="formpage:field3" type="text">
+            <span id="formpage:field3:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id="formpage:error"></span>
+    </td></tr>
+</table>
+    <input type="submit" id="submit" value="Save">
+</form></body>
+</html>"""
+    
