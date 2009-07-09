@@ -443,7 +443,7 @@ class FieldSet(twc.DisplayOnlyWidget):
     """
     A field set. It's common to pass a TableLayout or ListLayout widget as the child.
     """
-    template = "genshi:tw2.forms.templates.fieldset"
+    template = "tw2.forms.templates.fieldset"
     legend = twc.Param('Text for the legend', default=None)
 
 class TableForm(Form):
