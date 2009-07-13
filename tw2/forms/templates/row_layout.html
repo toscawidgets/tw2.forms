@@ -1,4 +1,12 @@
-<tr xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs" class="${w.repetition % 2 and 'even' or 'odd'}">
+<?python
+attrs = w.attrs
+row_class = (w.repetition % 2 and 'even') or 'odd'
+if attrs['class'] is None:
+    attrs['class'] = ''
+if row_class not in attrs['class']:
+    attrs['class'] = ' '.join((attrs['class'], row_class)).strip()
+?>
+<tr xmlns:py="http://genshi.edgewall.org/"  py:attrs="w.attrs">
     <td py:for="c in w.children_non_hidden">
         ${c.display()}
         <py:if test="c.error_msg"><img src="${w.resources.error.link}" title="${c.error_msg}"/></py:if>

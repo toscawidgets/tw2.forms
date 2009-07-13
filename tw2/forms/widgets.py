@@ -5,7 +5,6 @@ import tw2.core as twc, re, itertools, webob, cgi
 #--
 class FormField(twc.Widget):
     name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id))
-    css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
     def prepare(self):
         super(FormField, self).prepare()
 
