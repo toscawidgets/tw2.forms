@@ -30,10 +30,8 @@ class CheckBox(InputField):
     validator = twc.BoolValidator
     def prepare(self):
         super(CheckBox, self).prepare()
-        # TBD: is this really needed?
-        #if 'attrs' not in self.__dict__:
-        #    self.attrs = self.attrs.copy()
-        self.attrs['checked'] = 'true' if self.value else None
+        self.safe_modify('attrs')
+        self.attrs['checked'] = 'checked' if self.value else None
         self.value = None
 
 
@@ -120,7 +118,7 @@ class LinkField(twc.Widget):
     text = twc.Variable('Link text', default='')
     css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
     value = twc.Variable("value to replace $ with in the link/text")
-    
+
     def prepare(self):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
