@@ -470,6 +470,7 @@ class FormPage(twc.Page):
     redisplaying the form on errors. On success, it calls
     :meth:`validated_request`.
     """
+    _no_autoid = True
 
     @classmethod
     def request(cls, req):
