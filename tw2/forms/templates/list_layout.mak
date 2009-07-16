@@ -1,5 +1,5 @@
 <%namespace name="tw" module="tw2.core.mako_util"/>\
-<ul\
+<ul \
 ${tw.attrs(attrs=w.attrs)}>
    % for i,c in enumerate(w.children):
     <li \
@@ -9,11 +9,11 @@ title="${c.help_text}" \
      % endif
 ${tw.attrs(attrs=c.container_attrs)}\
 >
-        ${c.label or ''} 
+        ${c.label or ''}
         ${c.display() | n}
         % if not w.hover_help:
 ${c.help_text or ''}\
-        % endif 
+        % endif
         <span id="${c.compound_id or ''}:error">${c.error_msg or ''}</span>
     </li>
    % endfor
