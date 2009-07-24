@@ -557,30 +557,30 @@ class TestFormPage(WidgetTest):
              }
     expected = """<html>
 <head><title>some title</title></head>
-<body><h1>some title</h1><form method="post" enctype="multipart/form-data">
+<body id="mytestwidget"><h1>some title</h1><form method="post" id="mytestwidget" enctype="multipart/form-data">
      <span class="error"></span>
-    <table id="formpage">
-    <tr class="odd" id="formpage:field1:container">
+    <table id="mytestwidget">
+    <tr class="odd" id="mytestwidget:field1:container">
         <th>Field1</th>
         <td>
-            <input name="formpage:field1" id="formpage:field1" type="text">
-            <span id="formpage:field1:error"></span>
+            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text">
+            <span id="mytestwidget:field1:error"></span>
         </td>
-    </tr><tr class="even" id="formpage:field2:container">
+    </tr><tr class="even" id="mytestwidget:field2:container">
         <th>Field2</th>
         <td>
-            <input name="formpage:field2" id="formpage:field2" type="text">
-            <span id="formpage:field2:error"></span>
+            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text">
+            <span id="mytestwidget:field2:error"></span>
         </td>
-    </tr><tr class="odd" id="formpage:field3:container">
+    </tr><tr class="odd" id="mytestwidget:field3:container">
         <th>Field3</th>
         <td>
-            <input name="formpage:field3" id="formpage:field3" type="text">
-            <span id="formpage:field3:error"></span>
+            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text">
+            <span id="mytestwidget:field3:error"></span>
         </td>
     </tr>
     <tr class="error"><td colspan="2">
-        <span id="formpage:error"></span>
+        <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
     <input type="submit" id="submit" value="Save">
@@ -595,40 +595,34 @@ class TestFormPage(WidgetTest):
         r = self.widget().request(req)
         assert_eq_xml(r.body, """<html>
 <head><title>some title</title></head>
-<body><h1>some title</h1><form method="post" enctype="multipart/form-data"/>
+<body id="mytestwidget"><h1>some title</h1><form method="post" id="mytestwidget" enctype="multipart/form-data">
      <span class="error"></span>
-    <table id="formpage">
-    <tr class="odd"  id="formpage:field1:container">
+    <table id="mytestwidget">
+    <tr class="odd" id="mytestwidget:field1:container">
         <th>Field1</th>
-        <td >
-            <input name="formpage:field1" id="formpage:field1" type="text"/>
-            
-            <span id="formpage:field1:error"></span>
+        <td>
+            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text">
+            <span id="mytestwidget:field1:error"></span>
         </td>
-    </tr>
-    <tr class="even"  id="formpage:field2:container">
+    </tr><tr class="even" id="mytestwidget:field2:container">
         <th>Field2</th>
-        <td >
-            <input name="formpage:field2" id="formpage:field2" type="text"/>
-            
-            <span id="formpage:field2:error"></span>
+        <td>
+            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text">
+            <span id="mytestwidget:field2:error"></span>
         </td>
-    </tr>
-    <tr class="odd"  id="formpage:field3:container">
+    </tr><tr class="odd" id="mytestwidget:field3:container">
         <th>Field3</th>
-        <td >
-            <input name="formpage:field3" id="formpage:field3" type="text"/>
-            
-            <span id="formpage:field3:error"></span>
+        <td>
+            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text">
+            <span id="mytestwidget:field3:error"></span>
         </td>
     </tr>
     <tr class="error"><td colspan="2">
-        <span id="formpage:error"></span>
+        <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
-    <input type="submit" id="submit" value="Save"/>
-</form>
-</body>
+    <input type="submit" id="submit" value="Save">
+</form></body>
 </html>""")
 
     def test_request_post_invalid(self):
@@ -640,30 +634,30 @@ class TestFormPage(WidgetTest):
         r = self.widget().request(req)
         assert_eq_xml(r.body, """<html>
 <head><title>some title</title></head>
-<body><h1>some title</h1><form method="post" enctype="multipart/form-data">
+<body id="mytestwidget"><h1>some title</h1><form method="post" id="mytestwidget" enctype="multipart/form-data">
      <span class="error"></span>
-    <table id="formpage">
-    <tr class="odd" id="formpage:field1:container">
+    <table id="mytestwidget">
+    <tr class="odd" id="mytestwidget:field1:container">
         <th>Field1</th>
         <td>
-            <input name="formpage:field1" id="formpage:field1" type="text">
-            <span id="formpage:field1:error"></span>
+            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text">
+            <span id="mytestwidget:field1:error"></span>
         </td>
-    </tr><tr class="even" id="formpage:field2:container">
+    </tr><tr class="even" id="mytestwidget:field2:container">
         <th>Field2</th>
         <td>
-            <input name="formpage:field2" id="formpage:field2" type="text">
-            <span id="formpage:field2:error"></span>
+            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text">
+            <span id="mytestwidget:field2:error"></span>
         </td>
-    </tr><tr class="odd" id="formpage:field3:container">
+    </tr><tr class="odd" id="mytestwidget:field3:container">
         <th>Field3</th>
         <td>
-            <input name="formpage:field3" id="formpage:field3" type="text">
-            <span id="formpage:field3:error"></span>
+            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text">
+            <span id="mytestwidget:field3:error"></span>
         </td>
     </tr>
     <tr class="error"><td colspan="2">
-        <span id="formpage:error"></span>
+        <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
     <input type="submit" id="submit" value="Save">
@@ -675,7 +669,7 @@ class TestFormPage(WidgetTest):
                    }
         req=Request(environ)
         req.method = 'POST'
-        req.body='formpage:field1=a&formpage:field2=b&formpage:field3=c'
+        req.body='mytestwidget:field1=a&mytestwidget:field2=b&mytestwidget:field3=c'
         req.environ['CONTENT_LENGTH'] = str(len(req.body)) 
         req.environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
         
