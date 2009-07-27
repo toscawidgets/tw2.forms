@@ -421,6 +421,7 @@ class Form(twc.DisplayOnlyWidget):
     method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
     submit = twc.Param('Submit button widget. If this is None, no submit button is generated.', default=SubmitButton(id='submit', value='Save'))
     attrs = {'enctype': 'multipart/form-data'}
+    id_suffix = 'form'
 
     @classmethod
     def post_define(cls):
@@ -442,6 +443,7 @@ class FieldSet(twc.DisplayOnlyWidget):
     """
     template = "tw2.forms.templates.fieldset"
     legend = twc.Param('Text for the legend', default=None)
+    id_suffix = 'fieldset'
 
 class TableForm(Form):
     """Equivalent to a Form containing a TableLayout."""
