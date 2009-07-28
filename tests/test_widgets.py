@@ -71,7 +71,7 @@ class TestFileField(WidgetTest):
 class TestHiddenField(WidgetTest):
     widget = HiddenField
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
-    expected = '<input type="hidden" class="something" value="info" name="hidden_name" id="hid", name="hid"/>'
+    expected = '<input class="something" type="hidden" id="hid" value="info" name="hidden_name">'
     validate_params = [[None, {'hid':'b'}, EmptyField]]
 
 class TestLabelField(WidgetTest):
@@ -557,7 +557,7 @@ class TestFormPage(WidgetTest):
              }
     expected = """<html>
 <head><title>some title</title></head>
-<body id="mytestwidget"><h1>some title</h1><form method="post" id="mytestwidget" enctype="multipart/form-data">
+<body id="mytestwidget:page"><h1>some title</h1><form method="post" id="mytestwidget:form" enctype="multipart/form-data">
      <span class="error"></span>
     <table id="mytestwidget">
     <tr class="odd" id="mytestwidget:field1:container">
@@ -595,7 +595,7 @@ class TestFormPage(WidgetTest):
         r = self.widget().request(req)
         assert_eq_xml(r.body, """<html>
 <head><title>some title</title></head>
-<body id="mytestwidget"><h1>some title</h1><form method="post" id="mytestwidget" enctype="multipart/form-data">
+<body id="mytestwidget:page"><h1>some title</h1><form method="post" id="mytestwidget:form" enctype="multipart/form-data">
      <span class="error"></span>
     <table id="mytestwidget">
     <tr class="odd" id="mytestwidget:field1:container">
@@ -634,7 +634,7 @@ class TestFormPage(WidgetTest):
         r = self.widget().request(req)
         assert_eq_xml(r.body, """<html>
 <head><title>some title</title></head>
-<body id="mytestwidget"><h1>some title</h1><form method="post" id="mytestwidget" enctype="multipart/form-data">
+<body id="mytestwidget:page"><h1>some title</h1><form method="post" id="mytestwidget:form" enctype="multipart/form-data">
      <span class="error"></span>
     <table id="mytestwidget">
     <tr class="odd" id="mytestwidget:field1:container">
