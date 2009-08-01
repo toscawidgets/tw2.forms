@@ -383,6 +383,11 @@ class RowLayout(BaseLayout):
     ]
     template = "tw2.forms.templates.row_layout"
 
+    def prepare(self):
+        row_class = (self.repetition % 2 and 'even') or 'odd'
+        if not self.css_class or row_class not in self.css_class:
+            self.css_class = ' '.join((self.css_class or '', row_class)).strip()
+        super(self, RowLayout).prepare()
 
 class GridLayout(twc.RepeatingWidget):
     """

@@ -1,7 +1,6 @@
 <%namespace name="tw" module="tw2.core.mako_util"/>\
 <tr\
- ${tw.attrs(attrs=w.attrs)}\
- class="${w.repetition % 2 and 'even' or 'odd'}">
+ ${tw.attrs(attrs=w.attrs)}>
    % for c in w.children_non_hidden:
     <td>
         ${c.display() | n}
