@@ -2,9 +2,9 @@ import webob as wo, wsgiref.simple_server as ws
 import tw.forms as twf, tw.core as twc
 
 #twc.framework.framework = twc.framework.FrameworkInterface()
-twc.framework.framework._request_id = None
+#twc.framework.framework._request_id = None
 
-a = twf.Form(child=twf.TableLayout(id='a', children=twc.WidgetBunch([
+a = twf.Form(child=twf.TableForm(id='a', children=twc.WidgetBunch([
    twf.TextArea(id='b'),
    twf.Label(text='this is a test'),
     twf.TextField(id='c'),
