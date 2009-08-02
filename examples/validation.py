@@ -1,4 +1,3 @@
-import wsgiref.simple_server as wrs
 import tw2.core as twc, tw2.forms as twf
 
 opts = ['Red', 'Yellow', 'Green', 'Blue']
@@ -28,4 +27,4 @@ class Index(twf.FormPage):
 #            x = twf.TextField(validator=fe.validators.Regex('^\w+$'))
 
 if __name__ == "__main__":
-    wrs.make_server('', 8000, twc.make_middleware(controller_prefix='/')).serve_forever()
+    twc.dev_server()

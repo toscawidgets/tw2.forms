@@ -31,7 +31,7 @@ class CheckBox(InputField):
     def prepare(self):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['checked'] = 'checked' if self.value else None
+        self.attrs['checked'] = self.value and 'checked' or None
         self.value = None
 
 
@@ -227,7 +227,7 @@ class SelectionField(FormField):
         # group, useful for backward compatibility and simpler widgets
         # TBD: needed?
         self.options = options
-        self.grouped_options = grouped_options if grouped_options else [(None, options)]
+        self.grouped_options = grouped_options or [(None, options)]
 
     def _validate(self, value):
         """
@@ -356,7 +356,7 @@ class BaseLayout(twc.CompoundWidget):
         super(BaseLayout, self).prepare()
         for c in self.children:
             if c.label is twc.Auto:
-                c.label = twc.util.name2label(c.id) if c.id else ''
+                c.label = c.id and twc.util.name2label(c.id) or ''
 
 
 class TableLayout(BaseLayout):
