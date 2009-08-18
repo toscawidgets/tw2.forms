@@ -1,9 +1,11 @@
 <ul xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
     <li py:for="i,c in enumerate(w.children)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and c.validator.required) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs">
-        $c.label
+        <py:if test="not c.type == hidden">
+        <label>$c.label</label>
+        </py:if>
         ${c.display()}
         <py:if test="not w.hover_help">$c.help_text</py:if>
-        <span id="${c.compound_id}:error" py:content="c.error_msg"/>
+        <span id="${c.compound_id}:error" class="error"py:content="c.error_msg"/>
     </li>
-    <li class="error"><span id="${w.compound_id}:error" py:content="w.error_msg"/></li>
+    <li class="error"><span id="${w.compound_id}:error" class="error" py:content="w.error_msg"/></li>
 </ul>
