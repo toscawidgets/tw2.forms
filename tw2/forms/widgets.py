@@ -179,6 +179,7 @@ class SelectionField(FormField):
     options = twc.Param('Options to be displayed')
     item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=twc.Validator())
 
+    default_selected = twc.Param('Default value(s) applied to the select box if there is no value.', default=None)
     selected_verb = twc.Variable(default='selected')
     field_type = twc.Variable(default=False)
     multiple = twc.Variable(default=False)
@@ -215,6 +216,12 @@ class SelectionField(FormField):
                     option_attrs['name'] = self.compound_id
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
 
+                #handle default_selected value
+                if ((self.multiple and self.default_selected and option[0] in self.default_selected) or
+                        (not self.multiple and self.default_selected and option[0] == self.default_selected)):
+                    option_attrs[self.selected_verb] = self.selected_verb
+                
+                #override if the widget was given an actual value
                 if ((self.multiple and option[0] in value) or
                         (not self.multiple and option[0] == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
