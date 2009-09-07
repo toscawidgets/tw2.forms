@@ -82,7 +82,7 @@ class FileField(InputField):
 
     def _validate(self, value):
         try:
-            super(FileField, self)._validate(value)
+            return super(FileField, self)._validate(value)
         except twc.ValidationError:
             self.value = None
             raise
