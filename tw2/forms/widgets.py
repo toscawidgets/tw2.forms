@@ -22,7 +22,7 @@ class TextField(InputField):
 class TextArea(FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
-    template = "genshi:tw2.forms.templates.textarea"
+    template = "tw2.forms.templates.textarea"
 
 
 class CheckBox(InputField):
