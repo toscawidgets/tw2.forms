@@ -243,9 +243,9 @@ class SelectionField(FormField):
         in a way that will never raise an exception, before calling the main
         validator.
         """
-        if isinstance(value, basestring):
-            value = [value,]
         if self.multiple:
+            if isinstance(value, basestring):
+                value = [value,]
             value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
             value = [v for v in value if v is not twc.Invalid]
         else:
