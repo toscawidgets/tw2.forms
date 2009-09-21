@@ -250,6 +250,7 @@ class SelectionField(FormField):
             value = [v for v in value if v is not twc.Invalid]
         else:
             value = twc.safe_validate(self.item_validator, value)
+            self.value = value
             if value is twc.Invalid:
                 value = None
         return super(SelectionField, self)._validate(value)

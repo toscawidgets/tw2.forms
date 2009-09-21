@@ -9,7 +9,7 @@ title="${c.help_text}" \
      % endif
 ${tw.attrs(attrs=c.container_attrs)}\
 >
-     % if not (c.type == 'hidden'):
+     % if hasattr(c, 'type') and (c.type != 'hidden'):
      <label>${c.label or ''}</label>
      % endif
         ${c.display() | n}
