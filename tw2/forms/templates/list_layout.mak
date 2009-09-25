@@ -19,5 +19,5 @@ ${c.help_text or ''}\
         <span id="${c.compound_id or ''}:error" class="error">${c.error_msg or ''}</span>
     </li>
    % endfor
-    <li class="error"><span id="${w.compound_id or ''}:error">${w.error_msg or ''}</span></li>
+    <li class="error"><span id="${w.compound_id or ''}:error" class="error">${w.error_msg or ''}</span></li>
 </ul>
