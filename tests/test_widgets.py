@@ -72,6 +72,12 @@ class TestHiddenField(WidgetTest):
     widget = HiddenField
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
     expected = '<input class="something" type="hidden" id="hid" value="info" name="hidden_name">'
+    validate_params = [[None, {'hid':'b'}, 'b']]
+
+class TestIgnoredField(WidgetTest):
+    widget = IgnoredField
+    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
+    expected = '<input class="something" type="hidden" id="hid" value="info" name="hidden_name">'
     validate_params = [[None, {'hid':'b'}, EmptyField]]
 
 class TestLabelField(WidgetTest):

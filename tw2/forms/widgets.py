@@ -90,15 +90,21 @@ class FileField(InputField):
 
 class HiddenField(InputField):
     """
-    A hidden field. The value is never included in validated data.
+    A hidden field.
     """
     type = 'hidden'
+
+
+class IgnoredField(HiddenField):
+    """
+    A hidden field. The value is never included in validated data.
+    """
     def _validate(self, value):
-        super(HiddenField, self)._validate(value)
+        super(IgnoredField, self)._validate(value)
         return twc.EmptyField
 
 
-class LabelField(InputField):
+class LabelField(HiddenField):
     """
     A read-only label showing the value of a field. The value is stored in a hidden field, so it remains through validation failures. However, the value is never included in validated data.
     """
