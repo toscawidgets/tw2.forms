@@ -368,6 +368,13 @@ class BaseLayout(twc.CompoundWidget):
     def children_non_hidden(self):
         return [c for c in self.children if not isinstance(c, HiddenField)]
 
+    @property
+    def rollup_errors(self):
+        errors = [c.error_msg for c in self.children if isinstance(c, HiddenField) and c.error_msg]
+        if self.error_msg:
+            errors.insert(0, self.error_msg)
+        return errors
+
     def prepare(self):
         super(BaseLayout, self).prepare()
         for c in self.children:

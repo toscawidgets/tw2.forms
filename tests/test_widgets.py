@@ -353,6 +353,18 @@ class TestListLayout(WidgetTest):
 </ul>"""
     declarative = True
     
+class TestListLayoutErrors(TestListLayout):
+    attrs = {'children': [TextField(id='field1'), ],
+             'error_msg': 'bogus error'}
+    expected = """\
+<ul>
+    <li class="odd">
+        <label>Field1</label>
+        <input name="field1" id="field1" type="text">
+        <span id="field1:error" class="error"></span>
+    </li>
+    <li class="error"><span id=":error" class="error"><p>bogus error</p></span></li>
+</ul>"""
 
 class TestTableLayout(WidgetTest):
     widget = TableLayout
