@@ -247,6 +247,7 @@ class SelectionField(FormField):
         in a way that will never raise an exception, before calling the main
         validator.
         """
+            
         if self.multiple:
             if isinstance(value, basestring):
                 value = [value,]
@@ -269,11 +270,12 @@ class SelectionField(FormField):
 
 class SingleSelectField(SelectionField):
     template = "tw2.forms.templates.select_field"
+    null_text = twc.Param('Value To display if nothing is selected', '')
 
     def prepare(self):
         super(SingleSelectField, self).prepare()
         if self.options[0][1] and not self.grouped_options[0][0]:
-            self.options = [(None, '')] + self.options
+            self.options = [(None, self.null_text)] + self.options
             self.grouped_options = [(None, self.options)]
 
 class MultipleSelectField(SelectionField):
