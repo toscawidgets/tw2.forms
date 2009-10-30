@@ -497,10 +497,11 @@ class FormPage(twc.Page):
         elif req.method == 'POST':
             try:
                 data = cls.validate(req.POST)
-                resp = cls.validated_request(req, data)
             except twc.ValidationError, e:
                 resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
                 resp.body = e.widget.display().encode('utf-8')
+            else:
+                resp = cls.validated_request(req, data)
             return resp
 
     @classmethod
