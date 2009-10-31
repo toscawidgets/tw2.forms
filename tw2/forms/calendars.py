@@ -47,14 +47,17 @@ class DateTimeConverter(FancyValidator):
     Converts Python date and datetime objects into string representation and back.
     """
     messages = {
-        'badFormat': 'Invalid datetime format',
-        'empty': 'Empty values not allowed',
+        'badFormat': 'Invalid datetime format.',
+        'empty': 'Please Enter a Date.',
     }
     if_missing = None
     def __init__(self, format = "%Y/%m/%d %H:%M", tzinfo=None, *args, **kwargs):
         super(FancyValidator, self).__init__(*args, **kwargs)
         self.format = format
         self.tzinfo = tzinfo
+        
+    def validate_python(self, value, state):
+        return self.to_python(value, state)
 
     def _to_python(self, value, state):
         """ parse a string and return a datetime object. """
@@ -174,15 +177,21 @@ class CalendarDatePicker(FormField):
         return twc.JSLink(modname='tw2.forms',
                       filename=fname)
 
-    def prepare(self):
-        if self.default is None and self.not_empty:
-            self.default = lambda: datetime.now()
-        self.validator = self.validator or DateTimeConverter(
-            format=self.date_format, not_empty=self.not_empty,
-            tzinfo=self.tzinfo
+    @classmethod
+    def post_define(cls):
+        if cls.default is None and cls.not_empty:
+            cls.default = lambda: datetime.now()
+        cls.validator = cls.validator or DateTimeConverter(
+            format=cls.date_format, not_empty=cls.not_empty,
+            tzinfo=cls.tzinfo
             )
+
+    def prepare(self):
+#        if not self.value:
+#            self.value = self.default()
         super(CalendarDatePicker, self).prepare()
         log.debug("Value received by Calendar: %r", self.value)
+        
         try:
             self.strdate = self.value.strftime(self.date_format)
         except AttributeError:
@@ -204,5 +213,9 @@ class CalendarDateTimePicker(CalendarDatePicker):
     time.
     The date_format is in mm/dd/yyyy hh:mm unless otherwise specified
     """
+    messages = {
+        'badFormat': 'Invalid datetime format.',
+        'empty': 'Please Enter a Date and Time.',
+    }
     date_format = "%Y/%m/%d %H:%M"
     picker_shows_time = True
