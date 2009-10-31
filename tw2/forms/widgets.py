@@ -35,7 +35,7 @@ class CheckBox(InputField):
 
 class RadioButton(InputField):
     type = "radio"
-    checked = twc.Param(attribute=True)
+    checked = twc.Param(attribute=True, default=False)
 
 
 class PasswordField(InputField):
@@ -274,10 +274,13 @@ class SingleSelectField(SelectionField):
 
     def prepare(self):
         super(SingleSelectField, self).prepare()
-        if self.options[0][1] and not self.grouped_options[0][0]:
+        if len(self.options) > 0 and self.options[0][1] and not self.grouped_options[0][0]:
             self.options = [(None, self.null_text)] + self.options
             self.grouped_options = [(None, self.options)]
-
+        elif self.null_text:
+            self.options = [(None, self.null_text)] + self.options
+            self.grouped_options = [(None, self.options)]
+            
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
     multiple = twc.Param(default=True, attribute=True)
