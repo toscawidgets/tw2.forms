@@ -180,17 +180,16 @@ class CalendarDatePicker(FormField):
     @classmethod
     def post_define(cls):
         if cls.default is None and cls.not_empty:
-            cls.default = lambda: datetime.now()
+            cls.default = lambda(x): datetime.now()
         cls.validator = cls.validator or DateTimeConverter(
             format=cls.date_format, not_empty=cls.not_empty,
             tzinfo=cls.tzinfo
             )
 
     def prepare(self):
-#        if not self.value:
-#            self.value = self.default()
         super(CalendarDatePicker, self).prepare()
-        log.debug("Value received by Calendar: %r", self.value)
+        if not self.value:
+            self.value = self.default()
         
         try:
             self.strdate = self.value.strftime(self.date_format)
