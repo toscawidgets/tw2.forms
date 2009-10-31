@@ -181,7 +181,6 @@ class CalendarDatePicker(FormField):
             not_empty=self.not_empty,
             tzinfo=self.tzinfo
             )
-        print self.validator
         super(CalendarDatePicker, self).__init__(*args, **kw)
 
     def prepare(self):
