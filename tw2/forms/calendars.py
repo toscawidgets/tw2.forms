@@ -26,7 +26,8 @@ tw.forms codebase written primarily by Alberto Valaverde
 
 """
 import re
-from datetime import datetime
+from datetime import datetime, date
+import time
 import logging
 
 import tw2.core as twc
@@ -56,9 +57,6 @@ class DateTimeConverter(FancyValidator):
         self.format = format
         self.tzinfo = tzinfo
         
-    def validate_python(self, value, state):
-        return self.to_python(value, state)
-
     def _to_python(self, value, state):
         """ parse a string and return a datetime object. """
         if value and isinstance(value, (date, datetime)):
@@ -106,7 +104,6 @@ def strftime_before1900(dt, fmt):
 
     @see: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/306860
     """
-    import datetime
     if _illegal_s.search(fmt):
         raise TypeError("This strftime implementation does not handle %s")
     if dt.year > 1900:
@@ -177,19 +174,20 @@ class CalendarDatePicker(FormField):
         return twc.JSLink(modname='tw2.forms',
                       filename=fname)
 
-    @classmethod
-    def post_define(cls):
-        if cls.default is None and cls.not_empty:
-            cls.default = lambda(x): datetime.now()
-        cls.validator = cls.validator or DateTimeConverter(
-            format=cls.date_format, not_empty=cls.not_empty,
-            tzinfo=cls.tzinfo
+    def __init__(self, *args, **kw):
+        if self.validator is None:
+            self.validator = DateTimeConverter(
+            format=self.date_format, 
+            not_empty=self.not_empty,
+            tzinfo=self.tzinfo
             )
+        print self.validator
+        super(CalendarDatePicker, self).__init__(*args, **kw)
 
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
         if not self.value:
-            self.value = self.default()
+            self.value = datetime.now()
         
         try:
             self.strdate = self.value.strftime(self.date_format)
