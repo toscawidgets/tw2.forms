@@ -10,6 +10,6 @@
     <input type="button" class="date_field_button" ${tw.attrs(
         [('id', '%s_trigger' % w.id),
          ('value', w.button_text)],
-        attrs=w.attrs
+        ##attrs=w.attrs
     )} />
 </div>\

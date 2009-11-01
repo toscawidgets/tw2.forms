@@ -226,8 +226,8 @@ class SelectionField(FormField):
                     option_attrs[self.selected_verb] = self.selected_verb
                 
                 #override if the widget was given an actual value
-                if ((self.multiple and option[0] in value) or
-                        (not self.multiple and option[0] == value)):
+                if ((self.multiple and unicode(option[0]) in value) or
+                        (not self.multiple and unicode(option[0]) == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
 
                 xxx.append((option_attrs, unicode(option[1])))
@@ -275,11 +275,11 @@ class SingleSelectField(SelectionField):
     def prepare(self):
         super(SingleSelectField, self).prepare()
         if len(self.options) > 0 and self.options[0][1] and not self.grouped_options[0][0]:
-            self.options = [(None, self.null_text)] + self.options
-            self.grouped_options = [(None, self.options)]
+            self.options = [({'value':""}, self.null_text)] + self.options
+            self.grouped_options = [("", self.options)]
         elif self.null_text:
-            self.options = [(None, self.null_text)] + self.options
-            self.grouped_options = [(None, self.options)]
+            self.options = [({'value':""}, self.null_text)] + self.options
+            self.grouped_options = [("", self.options)]
             
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
