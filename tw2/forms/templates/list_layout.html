@@ -1,6 +1,6 @@
 <ul xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
     <li py:for="i,c in enumerate(w.children)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and c.validator.required) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs">
-        <py:if test="not c.type == 'hidden'">
+        <py:if test="hasattr(c, 'type') and c.type != 'hidden'">
         <label>$c.label</label>
         </py:if>
         ${c.display()}
