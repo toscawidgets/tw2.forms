@@ -181,7 +181,7 @@ class SelectionField(FormField):
     """
 
     options = twc.Param('Options to be displayed')
-    item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=twc.Validator())
+    item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=None)
 
     default_selected = twc.Param('Default value(s) applied to the select box if there is no value.', default=None)
     selected_verb = twc.Variable(default='selected')
@@ -247,17 +247,23 @@ class SelectionField(FormField):
         in a way that will never raise an exception, before calling the main
         validator.
         """
-            
         if self.multiple:
+            self.value = value
             if isinstance(value, basestring):
                 value = [value,]
-            value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
-            value = [v for v in value if v is not twc.Invalid]
+            if self.item_validator:
+                value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
+                value = [v for v in value if v is not twc.Invalid]
+            elif self.validator:
+                value = twc.safe_validate(self.validator, value)
         else:
-            value = twc.safe_validate(self.item_validator, value)
-            self.value = value
+            if self.item_validator:
+                value = twc.safe_validate(self.item_validator, value)
+            elif self.validator:
+                value = twc.safe_validate(self.validator, value)
             if value is twc.Invalid:
                 value = None
+        self.value = value
         return super(SelectionField, self)._validate(value)
 
     def _iterate_options(self, optlist):
