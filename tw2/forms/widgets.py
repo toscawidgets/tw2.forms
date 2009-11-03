@@ -248,9 +248,9 @@ class SelectionField(FormField):
         validator.
         """
         if self.multiple:
-            self.value = value
             if isinstance(value, basestring):
                 value = [value,]
+            self.value = value
             if self.item_validator:
                 value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
                 value = [v for v in value if v is not twc.Invalid]
