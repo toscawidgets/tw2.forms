@@ -226,8 +226,8 @@ class SelectionField(FormField):
                     option_attrs[self.selected_verb] = self.selected_verb
                 
                 #override if the widget was given an actual value
-                if ((self.multiple and unicode(option[0]) in value) or
-                        (not self.multiple and unicode(option[0]) == value)):
+                if ((self.multiple and unicode(option[0]) in [unicode(val) for val in value]) or
+                        (not self.multiple and unicode(option[0]) == unicode(value))):
                     option_attrs[self.selected_verb] = self.selected_verb
 
                 xxx.append((option_attrs, unicode(option[1])))
