@@ -118,7 +118,7 @@ class TestSingleSelectField(WidgetTest):
              'item_validator':IntValidator(),
              }
     expected = """<select class="something" id="hid" name="hid">
-                        <option></option>
+                        <option value=""></option>
                         <option value="1">a</option>
                         <option value="2">b</option>
                         <option value="3">c</option>
@@ -145,7 +145,7 @@ class TestSingleSelectField(WidgetTest):
 
     def test_option_no_values(self):
         expected = """<select class="something">
-                         <option></option>
+                         <option value=""></option>
                          <option value="a">a</option>
                          <option value="b">b</option>
                          <option value="c">c</option>
