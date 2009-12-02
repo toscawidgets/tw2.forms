@@ -276,15 +276,16 @@ class SelectionField(FormField):
 
 class SingleSelectField(SelectionField):
     template = "tw2.forms.templates.select_field"
-    null_text = twc.Param('Value To display if nothing is selected', '')
+    null_text = twc.Param('Text to display if nothing is selected', '')
+    null_value = twc.Param('Value accompanying null_text if nothing is selected', '')
 
     def prepare(self):
         super(SingleSelectField, self).prepare()
         if len(self.options) > 0 and self.options[0][1] and not self.grouped_options[0][0]:
-            self.options = [({'value':""}, self.null_text)] + self.options
+            self.options = [({'value':self.null_value}, self.null_text)] + self.options
             self.grouped_options = [("", self.options)]
         elif self.null_text:
-            self.options = [({'value':""}, self.null_text)] + self.options
+            self.options = [({'value':self.null_value}, self.null_text)] + self.options
             self.grouped_options = [("", self.options)]
             
 class MultipleSelectField(SelectionField):
