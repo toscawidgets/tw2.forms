@@ -12,6 +12,12 @@ class InputField(FormField):
     template = "tw2.forms.templates.input_field"
 
 
+class PostlabeledInputField(InputField):
+    """Inherits :class:`InputField`, but with a :attr:`text` label that follows the input field"""
+    text = twc.Param('Text to display after the field')
+    template = "tw2.forms.templates.postlabeled_input_field"
+
+
 class TextField(InputField):
     size = twc.Param('Size of the field', default=None, attribute=True)
     type = 'text'
