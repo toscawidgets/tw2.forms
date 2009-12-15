@@ -1,4 +1,5 @@
 import tw2.core as twc, re, itertools, webob, cgi
+import math
 
 #--
 # Basic Fields
@@ -341,16 +342,75 @@ class SelectionTable(SelectionField):
         super(SelectionTable, self).prepare()
         self.options_rows = self._group_rows(self.options, self.cols)
         self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
+        
+class VerticalSelectionTable(SelectionField):
+    field_type = twc.Variable(default=True)
+    selected_verb = "checked"
+    template = "tw2.forms.templates.vertical_selection_table"
+    cols = twc.Param('Number of columns. If the options are grouped, this is overidden.', default=1)
+    options_rows = twc.Variable()
 
+    def _gen_row_single(self, single, cols):
+        row_count = int(math.ceil(float(len(single)) / float(cols)))
+        # spacer_count = (row_count * cols) - len(single)
+        # single.extend([(None, None)] * spacer_count)
+        col_iters = []
+        for i in range(cols):
+            start = i * row_count
+            col_iters.append(iter(single[start:start+row_count]))
+        
+        while True:
+            row = []
+            try:
+                for col_iter in col_iters:
+                    row.append(col_iter.next())
+                yield row
+            except StopIteration:
+                if row:
+                    yield row
+                break
+    
+    def _gen_row_grouped(self, grouped_options):
+        row_count = max([len(o) for g, o in grouped_options])
+        col_iters = []
+        for g, o in grouped_options:
+            spacer_count = row_count - len(o)
+            o.extend([(None, None)] * spacer_count)
+            col_iters.append(hasattr(o, 'next') and o or iter(o))
+
+        while True:
+            row = []
+            try:
+                for col_iter in col_iters:
+                    row.append(col_iter.next())
+                yield row
+            except StopIteration:
+                if row:
+                    yield row
+                break
+
+    def prepare(self):
+        super(VerticalSelectionTable, self).prepare()
+        if self.grouped_options[0][0]:
+            self.options_rows =  self._gen_row_grouped(self.grouped_options)
+        else:
+            self.options_rows = self._gen_row_single(self.options, self.cols)
+        # assert False, [r for r in self.options_rows]
 
 class RadioButtonTable(SelectionTable):
+    field_type = 'radio'
+
+class VerticalRadioButtonTable(VerticalSelectionTable):
     field_type = 'radio'
 
 
 class CheckBoxTable(SelectionTable):
     field_type = 'checkbox'
     multiple = True
-
+    
+class VerticalCheckBoxTable(VerticalSelectionTable):
+    field_type = 'checkbox'
+    multiple = True
 
 #--
 # Layout widgets

@@ -1,0 +1,17 @@
+<table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs" >
+    <thead py:if="w.grouped_options[0][0]">
+        <tr>
+            <th py:for="group_name, options in w.grouped_options">${group_name}</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr py:for="row in w.options_rows">
+        <td py:for="attrs, desc in row" py:if="attrs and desc">
+            <input py:attrs="attrs" />
+            <label for="${attrs['id']}" py:content="desc" />
+        </td>
+        <td py:if="attrs is None and desc is None" />
+        <td py:for="j in xrange(w.cols - len(row))" />
+    </tr>
+    </tbody>
+</table>
