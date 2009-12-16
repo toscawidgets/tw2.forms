@@ -193,7 +193,7 @@ class CalendarDatePicker(FormField):
         except AttributeError:
             self.strdate = self.value
         options = dict(
-            inputField = self.id,
+            inputField = self.compound_id,
             ifFormat = self.date_format,
             button = self.id + '_trigger',
             showsTime = self.picker_shows_time,
