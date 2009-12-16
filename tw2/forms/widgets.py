@@ -15,7 +15,8 @@ class InputField(FormField):
 
 class PostlabeledInputField(InputField):
     """Inherits :class:`InputField`, but with a :attr:`text` label that follows the input field"""
-    text = twc.Param('Text to display after the field')
+    text = twc.Param('Text to display after the field.')
+    text_attrs = twc.Param('Dict of attributes to inject into the label.', default={})
     template = "tw2.forms.templates.postlabeled_input_field"
 
 
@@ -38,7 +39,9 @@ class CheckBox(InputField):
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
         self.value = None
-
+        
+class PostlabeledCheckBox(CheckBox, PostlabeledInputField):
+    pass
 
 class RadioButton(InputField):
     type = "radio"
