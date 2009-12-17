@@ -136,8 +136,6 @@ def strftime_before1900(dt, fmt):
         s = s[:site] + syear + s[site+4:]
     return s
 
-setup_calendar = twc.JSFuncCall(function="Calendar.setup")
-
 log = logging.getLogger(__name__)
 
 calendar_css = twc.CSSLink(
@@ -162,7 +160,7 @@ class CalendarDatePicker(FormField):
     picker_shows_time = twc.Param('Picker Shows Time', default=False)
     tzinfo = twc.Param('Time Zone Information', default=None)
 #    validator = None
-    default = twc.Param('Default value for the widget', default=None)
+    default = twc.Param('Default value (datetime) for the widget.  If set to a function, it will be called each time before displaying.', default=datetime.now)
 
     def get_calendar_lang_file_link(self, lang):
         """
@@ -186,8 +184,10 @@ class CalendarDatePicker(FormField):
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
         if not self.value:
-            self.value = datetime.now()
-        
+            if callable(self.default):
+                self.value = self.default()
+            else:
+                self.value = self.default
         try:
             self.strdate = self.value.strftime(self.date_format)
         except AttributeError:
@@ -198,6 +198,7 @@ class CalendarDatePicker(FormField):
             button = self.id + '_trigger',
             showsTime = self.picker_shows_time,
             )
+        setup_calendar = twc.JSFuncCall(function="Calendar.setup")
         setup_calendar.args = options
         self.resources.append(setup_calendar)
         self.resources.append(self.get_calendar_lang_file_link(self.calendar_lang))
