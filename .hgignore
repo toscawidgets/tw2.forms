@@ -3,3 +3,6 @@ glob:tw2.forms.egg-info
 glob:docs/.output/
 glob:.coverage
 glob:*/.noseids
+glob:*.orig
+glob:*.rej
+tags
