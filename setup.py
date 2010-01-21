@@ -8,7 +8,7 @@ setup(
     author_email='paj@pajhome.org.uk',
     url='',
     install_requires=[
-        "tw2.core",
+        "tw2.core>=2.0a2",
         ## Add other requirements here
         # "Genshi",
         ],
