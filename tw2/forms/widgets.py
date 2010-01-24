@@ -39,7 +39,7 @@ class CheckBox(InputField):
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
         self.value = None
-        
+
 class PostlabeledCheckBox(CheckBox, PostlabeledInputField):
     pass
 
@@ -234,7 +234,7 @@ class SelectionField(FormField):
                 if ((self.multiple and self.default_selected and option[0] in self.default_selected) or
                         (not self.multiple and self.default_selected and option[0] == self.default_selected)):
                     option_attrs[self.selected_verb] = self.selected_verb
-                
+
                 #override if the widget was given an actual value
                 if ((self.multiple and unicode(option[0]) in [unicode(val) for val in value]) or
                         (not self.multiple and unicode(option[0]) == unicode(value))):
@@ -297,7 +297,7 @@ class SingleSelectField(SelectionField):
         elif self.null_text:
             self.options = [({'value':self.null_value}, self.null_text)] + self.options
             self.grouped_options = [("", self.options)]
-            
+
 class MultipleSelectField(SelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
     multiple = twc.Param(default=True, attribute=True)
@@ -345,7 +345,7 @@ class SelectionTable(SelectionField):
         super(SelectionTable, self).prepare()
         self.options_rows = self._group_rows(self.options, self.cols)
         self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
-        
+
 class VerticalSelectionTable(SelectionField):
     field_type = twc.Variable(default=True)
     selected_verb = "checked"
@@ -361,7 +361,7 @@ class VerticalSelectionTable(SelectionField):
         for i in range(cols):
             start = i * row_count
             col_iters.append(iter(single[start:start+row_count]))
-        
+
         while True:
             row = []
             try:
@@ -372,7 +372,7 @@ class VerticalSelectionTable(SelectionField):
                 if row:
                     yield row
                 break
-    
+
     def _gen_row_grouped(self, grouped_options):
         row_count = max([len(o) for g, o in grouped_options])
         col_iters = []
@@ -410,7 +410,7 @@ class VerticalRadioButtonTable(VerticalSelectionTable):
 class CheckBoxTable(SelectionTable):
     field_type = 'checkbox'
     multiple = True
-    
+
 class VerticalCheckBoxTable(VerticalSelectionTable):
     field_type = 'checkbox'
     multiple = True
