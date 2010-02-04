@@ -1,5 +1,6 @@
 from tw2.forms.widgets import *
-from webob import Request, NestedMultiDict
+from webob import Request
+from webob.multidict import NestedMultiDict
 from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
 from cStringIO import StringIO
@@ -24,13 +25,13 @@ class TestTextArea(WidgetTest):
     attrs = {'css_class':'something', 'rows':6, 'cols':10}
     params = {'value':6}
     expected = '<textarea class="something" rows="6" cols="10">6</textarea>'
-    
+
 class TestCheckbox(WidgetTest):
     widget = CheckBox
     attrs = {'css_class':'something'}
     params = {'value':True}
     expected = '<input checked="checked" value="True" type="checkbox" class="something"/>'
-    
+
     def test_value_false(self):
         params = {'value':False}
         expected = '<input value="False" type="checkbox" class="something">'
@@ -90,7 +91,7 @@ class TestLinkField(WidgetTest):
     widget = LinkField
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'text':'some $', 'link':'/some/$'}
     expected = '<a href="/some/info" class="something">some info</a>'
-    
+
 class TestButton(WidgetTest):
     widget = Button
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name'}
@@ -113,7 +114,7 @@ class TestImageButton(WidgetTest):
 
 class TestSingleSelectField(WidgetTest):
     widget = SingleSelectField
-    attrs = {'css_class':'something', 
+    attrs = {'css_class':'something',
              'options':((1, 'a'), (2, 'b'), (3, 'c')), 'id':'hid',
              'item_validator':IntValidator(),
              }
@@ -327,7 +328,7 @@ class TestCheckBoxTable(WidgetTest):
     </tr>
     </tbody>
 </table>"""
-    
+
 
 class TestListLayout(WidgetTest):
     widget = ListLayout
@@ -352,7 +353,7 @@ class TestListLayout(WidgetTest):
     <li class="error"><span id=":error" class="error"></span></li>
 </ul>"""
     declarative = True
-    
+
 class TestListLayoutErrors(TestListLayout):
     attrs = {'children': [TextField(id='field1'), ],
              'error_msg': 'bogus error'}
@@ -609,7 +610,7 @@ class TestFormPage(WidgetTest):
     <input type="submit" id="submit" value="Save">
 </form></body>
 </html>"""
-    
+
     declarative = True
     def test_request_get(self):
         environ = {'REQUEST_METHOD': 'GET',
@@ -649,7 +650,7 @@ class TestFormPage(WidgetTest):
 </html>""")
 
     def _test_request_post_invalid(self):
-        # i have commented this because the post is in fact 
+        # i have commented this because the post is in fact
         # valid, there are no arguments sent to the post, but the
         # widget does not require them
         environ = {'REQUEST_METHOD': 'POST',
@@ -696,9 +697,9 @@ class TestFormPage(WidgetTest):
         req=Request(environ)
         req.method = 'POST'
         req.body='mytestwidget:field1=a&mytestwidget:field2=b&mytestwidget:field3=c'
-        req.environ['CONTENT_LENGTH'] = str(len(req.body)) 
+        req.environ['CONTENT_LENGTH'] = str(len(req.body))
         req.environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
-        
+
         self.mw.config.debug = True
         r = self.widget().request(req)
         assert r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""", r.body
