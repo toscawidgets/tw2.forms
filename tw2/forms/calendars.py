@@ -159,6 +159,7 @@ class CalendarDatePicker(FormField):
     date_format = twc.Param("Date Display Format", default="%m/%d/%Y")
     picker_shows_time = twc.Param('Picker Shows Time', default=False)
     tzinfo = twc.Param('Time Zone Information', default=None)
+    setup_options = twc.Param('Calendar.setup(...) options', default={})
 #    validator = None
     default = twc.Param('Default value (datetime) for the widget.  If set to a function, it will be called each time before displaying.', default=datetime.now)
 
@@ -192,14 +193,14 @@ class CalendarDatePicker(FormField):
             self.strdate = self.value.strftime(self.date_format)
         except AttributeError:
             self.strdate = self.value
-        options = dict(
+        self.setup_options.update(dict(
             inputField = self.compound_id,
             ifFormat = self.date_format,
             button = self.id + '_trigger',
             showsTime = self.picker_shows_time,
-            )
+        ))
         setup_calendar = twc.JSFuncCall(function="Calendar.setup")
-        setup_calendar.args = options
+        setup_calendar.args = self.setup_options
         self.resources.append(setup_calendar)
         self.resources.append(self.get_calendar_lang_file_link(self.calendar_lang))
 

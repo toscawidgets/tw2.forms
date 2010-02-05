@@ -355,8 +355,9 @@ class VerticalSelectionTable(SelectionField):
 
     def _gen_row_single(self, single, cols):
         row_count = int(math.ceil(float(len(single)) / float(cols)))
-        # spacer_count = (row_count * cols) - len(single)
-        # single.extend([(None, None)] * spacer_count)
+        # This shouldn't really need spacers. It's hackish. (Problem: 4 items in a 3 column table)
+        spacer_count = (row_count * cols) - len(single)
+        single.extend([(None, None)] * spacer_count)
         col_iters = []
         for i in range(cols):
             start = i * row_count
@@ -398,7 +399,6 @@ class VerticalSelectionTable(SelectionField):
             self.options_rows =  self._gen_row_grouped(self.grouped_options)
         else:
             self.options_rows = self._gen_row_single(self.options, self.cols)
-        # assert False, [r for r in self.options_rows]
 
 class RadioButtonTable(SelectionTable):
     field_type = 'radio'

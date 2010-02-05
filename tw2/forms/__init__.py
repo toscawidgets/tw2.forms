@@ -3,7 +3,7 @@ This package contains the basic form widgets.
 """
 
 from widgets import (Button, CheckBox, PostlabeledCheckBox,
-    FieldSet, FileField, Form, HiddenField, ImageButton,
+    FieldSet, FileField, Form, HiddenField, IgnoredField, ImageButton,
     Label, Spacer, ListLayout, TableLayout, PasswordField,
     RadioButton, ResetButton, SubmitButton, TextField, TextArea,
     SingleSelectField, MultipleSelectField, RadioButtonList, CheckBoxList,
