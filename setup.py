@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='tw2.forms',
-    version='2.0a2',
+    version='2.0b1',
     description='',
     author='Paul Johnston, Christopher Perkins & contributors',
     author_email='paj@pajhome.org.uk',
