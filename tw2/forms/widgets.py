@@ -257,6 +257,7 @@ class SelectionField(FormField):
         in a way that will never raise an exception, before calling the main
         validator.
         """
+            
         if self.multiple:
             if isinstance(value, basestring):
                 value = [value,]
