@@ -1,4 +1,7 @@
-import tw2.core as twc, re, itertools, webob, cgi
+import tw2.core as twc
+import itertools
+import webob
+import cgi
 import math
 
 #--
@@ -39,9 +42,6 @@ class CheckBox(InputField):
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
         self.value = None
-
-class PostlabeledCheckBox(CheckBox, PostlabeledInputField):
-    pass
 
 class RadioButton(InputField):
     type = "radio"

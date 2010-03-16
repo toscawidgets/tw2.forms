@@ -35,10 +35,8 @@ from widgets import FormField
 
 import formencode
 from formencode.validators import *
-from formencode.foreach import ForEach
 from formencode.compound import *
-from formencode.api import Invalid, NoDefault
-from formencode.schema import Schema
+from formencode.api import Invalid
 
 __all__ = ["CalendarDatePicker", "CalendarDateTimePicker", "calendar_js", "calendar_setup"]
 

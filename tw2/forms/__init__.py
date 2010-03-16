@@ -2,7 +2,7 @@
 This package contains the basic form widgets.
 """
 
-from widgets import (Button, CheckBox, PostlabeledCheckBox,
+from widgets import (Button, CheckBox,
     FieldSet, FileField, Form, HiddenField, IgnoredField, ImageButton,
     Label, Spacer, ListLayout, TableLayout, PasswordField,
     RadioButton, ResetButton, SubmitButton, TextField, TextArea,
@@ -11,4 +11,5 @@ from widgets import (Button, CheckBox, PostlabeledCheckBox,
     VerticalRadioButtonTable, VerticalCheckBoxTable,
     TableFieldSet, ListFieldSet, FormPage, FileValidator,
     LabelField, LinkField)
+from mashups import PostlabeledCheckBox, PostlabeledPartialRadioButton
 from calendars import CalendarDatePicker, CalendarDateTimePicker
