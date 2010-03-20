@@ -140,8 +140,7 @@ calendar_css = twc.CSSLink(
     modname='tw2.forms', filename='static/calendar/calendar-system.css')
 calendar_js = twc.JSLink(
     modname='tw2.forms', filename='static/calendar/calendar.js')
-calendar_setup = twc.JSLink(
-    resources=[calendar_js],
+calendar_setup = twc.JSLink(resources=[calendar_js],
     modname='tw2.forms', filename='static/calendar/calendar-setup.js')
 
 class CalendarDatePicker(FormField):
@@ -149,7 +148,6 @@ class CalendarDatePicker(FormField):
     Uses a javascript calendar system to allow picking of calendar dates.
     The date_format is in mm/dd/yyyy unless otherwise specified
     """
-    resources = [calendar_css, calendar_js, calendar_setup]
     template = "tw2.forms.templates.calendar"
     calendar_lang = twc.Param("Default Language to use in the Calendar", default='en')
     not_empty = twc.Param("Allow this field to be empty", default=True)
@@ -182,6 +180,7 @@ class CalendarDatePicker(FormField):
 
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
+        self.resources = [calendar_css, calendar_js, calendar_setup]
         if not self.value:
             if callable(self.default):
                 self.value = self.default()
@@ -191,15 +190,17 @@ class CalendarDatePicker(FormField):
             self.strdate = self.value.strftime(self.date_format)
         except AttributeError:
             self.strdate = self.value
-        self.setup_options.update(dict(
-            inputField = self.compound_id,
-            ifFormat = self.date_format,
-            button = self.id + '_trigger',
-            showsTime = self.picker_shows_time,
-        ))
-        setup_calendar = twc.JSFuncCall(function="Calendar.setup")
-        setup_calendar.args = self.setup_options
-        self.resources.append(setup_calendar)
+        # print 'CalendarDatePicker.prepare: self.compound_id = ', self.compound_id
+        # print 'CalendarDatePicker.prepare: len(self.resources) = ', len(self.resources)
+        # self.setup_options.update(dict(
+        #     inputField = self.compound_id,
+        #     ifFormat = self.date_format,
+        #     button = self.id + '_trigger',
+        #     showsTime = self.picker_shows_time,
+        # ))
+        # setup_calendar = twc.JSFuncCall(function="Calendar.setup", args=self.setup_options)
+        # setup_calendar.src = '"Whoa-%s"' % self.compound_id
+        # self.resources.append(setup_calendar)
         self.resources.append(self.get_calendar_lang_file_link(self.calendar_lang))
 
 
