@@ -90,13 +90,12 @@ class FileField(InputField):
 
 class HiddenField(InputField):
     """
-    A hidden field. The value is never included in validated data.
+    A hidden field. The default validator avoids the value being included in 
+    validated data. This helps prevent against parameter tampering attacks.
     """
     type = 'hidden'
-    def _validate(self, value):
-        super(HiddenField, self)._validate(value)
-        return twc.EmptyField
-
+    validator = twc.BlankValidator
+    
 
 class LabelField(InputField):
     """
@@ -104,9 +103,7 @@ class LabelField(InputField):
     """
     type = 'hidden'
     template = "tw2.forms.templates.label_field"
-    def _validate(self, value):
-        super(LabelField, self)._validate(value)
-        return twc.EmptyField
+    validator = twc.BlankValidator
 
 
 class LinkField(twc.Widget):
@@ -118,6 +115,7 @@ class LinkField(twc.Widget):
     text = twc.Variable('Link text', default='')
     css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
     value = twc.Variable("value to replace $ with in the link/text")
+    validator = twc.BlankValidator
 
     def prepare(self):
         super(LinkField, self).prepare()
