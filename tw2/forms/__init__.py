@@ -8,4 +8,4 @@ from widgets import (Button, CheckBox, FieldSet, FileField, Form, HiddenField, I
     SingleSelectField, MultipleSelectField, RadioButtonList, CheckBoxList,
     RadioButtonTable, CheckBoxTable, GridLayout, RowLayout, TableForm, ListForm,
     TableFieldSet, ListFieldSet, FormPage, FileValidator,
-    LabelField, LinkField)
+    LabelField, LinkField, InputField)
