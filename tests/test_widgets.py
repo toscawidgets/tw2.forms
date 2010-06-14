@@ -1,11 +1,16 @@
 from tw2.forms.widgets import *
-from webob import Request, NestedMultiDict
+from webob import Request
 from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
 from nose.tools import raises
 from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
 
+import webob
+if hasattr(webob, 'NestedMultiDict'):
+    from webob import NestedMultiDict
+else:
+    from webob.multidict import NestedMultiDict
 
 class TestInputField(WidgetTest):
     widget = InputField
