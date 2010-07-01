@@ -114,7 +114,7 @@ class TestSingleSelectField(WidgetTest):
     widget = SingleSelectField
     attrs = {'css_class':'something', 
              'options':((1, 'a'), (2, 'b'), (3, 'c')), 'id':'hid',
-             'item_validator':IntValidator(),
+             'validator':IntValidator(),
              }
     expected = """<select class="something" id="hid" name="hid">
                         <option></option>
@@ -122,7 +122,7 @@ class TestSingleSelectField(WidgetTest):
                         <option value="2">b</option>
                         <option value="3">c</option>
                   </select>"""
-    validate_params = [[None, {'hid':'b'}, None],[None, {'hid':'1'}, 1]]
+    validate_params = [[None, {'hid':''}, None],[None, {'hid':'1'}, 1]]
 
     def test_option_group(self):
         expected = """<select class="something">
@@ -688,4 +688,4 @@ class TestFormPage(WidgetTest):
         
         self.mw.config.debug = True
         r = self.widget().request(req)
-        assert r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""", r.body
+        assert r.body == """Form posted successfully {'field2': u'b', 'field3': u'c', 'field1': u'a'}""", r.body

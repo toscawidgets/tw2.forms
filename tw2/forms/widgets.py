@@ -162,13 +162,15 @@ class SelectionField(FormField):
     """
     Base class for single and multiple selection fields.
 
-    The `options` parameter must be an interable; it can take several formats:
+    The `options` parameter must be a list; it can take several formats:
 
      * A list of values, e.g. ['', 'Red', 'Blue']
      * A list of (code, value) tuples, e.g.
        [(0, ''), (1, 'Red'), (2, 'Blue')]
      * A mixed list of values and tuples. If the code is not specified, it
        defaults to the value. e.g. ['', (1, 'Red'), (2, 'Blue')]
+     * Attributes can be passed to individual items, e.g.
+       [(0, ''), (1, 'Red', {'style':'background-color:red'})]
      * A list of groups, e.g.
         [('group', ['', (1, 'Red'), (2, 'Blue')]),
          ('group2', ['', 'Pink', 'Yellow'])]
@@ -193,6 +195,11 @@ class SelectionField(FormField):
             value = []
         if self.multiple and not isinstance(value, (list, tuple)):
             value = [value,]
+        if not hasattr(self, '_validated'):
+            if self.multiple:
+                value = [unicode(self.item_validator.from_python(v)) for v in value]
+            else:
+                value = unicode(value)
         for optgroup in self._iterate_options(self.options):
             xxx = []
             if isinstance(optgroup[1], (list,tuple)):
@@ -204,9 +211,8 @@ class SelectionField(FormField):
             for option in self._iterate_options(optlist):
                 if len(option) is 2:
                     option_attrs = {}
-                # when is the option length going to be 3 according to the spec?
-                #elif len(option) is 3:
-                #    option_attrs = dict(option[2])
+                elif len(option) is 3:
+                    option_attrs = dict(option[2])
                 option_attrs['value'] = option[0]
                 if self.field_type:
                     option_attrs['type'] = isinstance(self.field_type, basestring) and self.field_type or None
@@ -215,15 +221,15 @@ class SelectionField(FormField):
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
 
                 #handle default_selected value
-                if ((self.multiple and self.default_selected and option[0] in self.default_selected) or
-                        (not self.multiple and self.default_selected and option[0] == self.default_selected)):
+                optv = unicode(option[0])
+                if ((self.multiple and self.default_selected and optv in self.default_selected) or
+                        (not self.multiple and self.default_selected and optv == self.default_selected)):
                     option_attrs[self.selected_verb] = self.selected_verb
                 
-                #override if the widget was given an actual value
-                if ((self.multiple and option[0] in value) or
-                        (not self.multiple and option[0] == value)):
+                #override if the widget was given an actual value                
+                if ((self.multiple and optv in value) or
+                        (not self.multiple and optv == value)):
                     option_attrs[self.selected_verb] = self.selected_verb
-
                 xxx.append((option_attrs, unicode(option[1])))
             options.extend(xxx)
             if group:
@@ -241,17 +247,13 @@ class SelectionField(FormField):
         in a way that will never raise an exception, before calling the main
         validator.
         """
+        value = super(SelectionField, self)._validate(value)
         if self.multiple:
             if isinstance(value, basestring):
                 value = [value,]
             value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
             value = [v for v in value if v is not twc.Invalid]
-        else:
-            value = twc.safe_validate(self.item_validator, value)
-            self.value = value
-            if value is twc.Invalid:
-                value = None
-        return super(SelectionField, self)._validate(value)
+        return value
 
     def _iterate_options(self, optlist):
         for option in optlist:
