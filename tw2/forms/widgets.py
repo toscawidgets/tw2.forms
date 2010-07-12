@@ -51,8 +51,8 @@ class PasswordField(InputField):
         super(PasswordField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['value'] = None
-    def _validate(self, value):
-        value = super(PasswordField, self)._validate(value)
+    def _validate(self, value, state=None):
+        value = super(PasswordField, self)._validate(value, state)
         return value or twc.EmptyField
 
 
@@ -80,9 +80,9 @@ class FileField(InputField):
     type = "file"
     validator = FileValidator
 
-    def _validate(self, value):
+    def _validate(self, value, state=None):
         try:
-            return super(FileField, self)._validate(value)
+            return super(FileField, self)._validate(value, state)
         except twc.ValidationError:
             self.value = None
             raise
@@ -113,15 +113,14 @@ class LinkField(twc.Widget):
     template = "tw2.forms.templates.link_field"
     link = twc.Variable('Link target', default='')
     text = twc.Variable('Link text', default='')
-    css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
-    value = twc.Variable("value to replace $ with in the link/text")
+    value = twc.Variable("Value to replace $ with in the link/text")
     validator = twc.BlankValidator
 
     def prepare(self):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['href'] = self.link.replace('$', str(self.value or ''))
-        self.text = self.text.replace('$', str(self.value)) if self.value else ''
+        self.attrs['href'] = self.link.replace('$', unicode(self.value or ''))
+        self.text = self.text.replace('$', unicode(self.value or ''))
 
 
 class Button(InputField):
@@ -240,14 +239,14 @@ class SelectionField(FormField):
         self.options = options
         self.grouped_options = grouped_options or [(None, options)]
 
-    def _validate(self, value):
+    def _validate(self, value, state=None):
         """
         To redisplay correctly on error, selection fields must have the
         :attr:`item_validator` applies to their value. This function does this
         in a way that will never raise an exception, before calling the main
         validator.
         """
-        value = super(SelectionField, self)._validate(value)
+        value = super(SelectionField, self)._validate(value, state)
         if self.multiple:
             if isinstance(value, basestring):
                 value = [value,]
