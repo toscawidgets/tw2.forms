@@ -5,8 +5,6 @@ import tw2.core as twc, re, itertools, webob, cgi
 #--
 class FormField(twc.Widget):
     name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id))
-    def prepare(self):
-        super(FormField, self).prepare()
 
 class InputField(FormField):
     type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
