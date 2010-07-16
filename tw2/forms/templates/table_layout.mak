@@ -6,7 +6,7 @@
       title="${c.help_text}" \
      %endif
 ${tw.attrs(attrs=c.container_attrs)} \
-id="${c.compound_id}:container">
+id="${c.compound_id or ''}:container">
        % if c.label:
         <th>${c.label}</th>
        % endif
@@ -19,7 +19,7 @@ colspan="2"\
            % if not w.hover_help:
             ${c.help_text or ''}
            % endif
-            <span id="${c.compound_id}:error">${c.error_msg or ''}</span>
+            <span id="${c.compound_id or ''}:error">${c.error_msg or ''}</span>
         </td>
     </tr>
    % endfor
