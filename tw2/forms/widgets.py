@@ -57,7 +57,7 @@ class PasswordField(InputField):
 
 
 class FileValidator(twc.Validator):
-    """Base class for validators
+    """Base class for file validators
 
     `extention`
         Allowed extention for the file
@@ -152,6 +152,7 @@ class ImageButton(twc.Link, InputField):
     def prepare(self):
         super(ImageButton, self).prepare()
         self.src = self.link
+        self.safe_modify('attrs')
         self.attrs['src'] = self.src # TBD: hack!
 
 #--
@@ -176,83 +177,46 @@ class SelectionField(FormField):
     """
 
     options = twc.Param('Options to be displayed')
-    item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=twc.Validator())
+    prompt_text = twc.Param('Text to prompt user to select an option.', default=None)
 
-    default_selected = twc.Param('Default value(s) applied to the select box if there is no value.', default=None)
     selected_verb = twc.Variable(default='selected')
     field_type = twc.Variable(default=False)
-    multiple = twc.Variable(default=False)
     grouped_options = twc.Variable()
 
     def prepare(self):
         super(SelectionField, self).prepare()
-        grouped_options = []
-        options = []
+        options = self.options
+        self.options = []
+        self.grouped_options = []        
         counter = itertools.count(0)
-        value = self.value
-        if self.multiple and not value:
-            value = []
-        if self.multiple and not isinstance(value, (list, tuple)):
-            value = [value,]
-        if not hasattr(self, '_validated'):
-            if self.multiple:
-                value = [unicode(self.item_validator.from_python(v)) for v in value]
-            else:
-                value = unicode(value)
-        for optgroup in self._iterate_options(self.options):
-            xxx = []
-            if isinstance(optgroup[1], (list,tuple)):
-                group = True
-                optlist = optgroup[1][:]
-            else:
-                group = False
-                optlist = [optgroup]
-            for option in self._iterate_options(optlist):
+
+        for optgroup in self._iterate_options(options):
+            opts = []
+            group = isinstance(optgroup[1], (list,tuple))
+            for option in self._iterate_options(group and optgroup[1] or [optgroup]):
                 if len(option) is 2:
                     option_attrs = {}
                 elif len(option) is 3:
                     option_attrs = dict(option[2])
                 option_attrs['value'] = option[0]
                 if self.field_type:
-                    option_attrs['type'] = isinstance(self.field_type, basestring) and self.field_type or None
-                    # TBD: These are only needed for SelectionList
-                    option_attrs['name'] = self.compound_id
+                    option_attrs['type'] = self.field_type
+                    option_attrs['name'] = self.compound_id                                    
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
-
-                #handle default_selected value
-                optv = unicode(option[0])
-                if ((self.multiple and self.default_selected and optv in self.default_selected) or
-                        (not self.multiple and self.default_selected and optv == self.default_selected)):
+                if self._opt_matches_value(option[0]):
                     option_attrs[self.selected_verb] = self.selected_verb
-                
-                #override if the widget was given an actual value                
-                if ((self.multiple and optv in value) or
-                        (not self.multiple and optv == value)):
-                    option_attrs[self.selected_verb] = self.selected_verb
-                xxx.append((option_attrs, unicode(option[1])))
-            options.extend(xxx)
+                opts.append((option_attrs, unicode(option[1])))
+            self.options.extend(opts)
             if group:
-                grouped_options.append((optgroup[0], xxx))
-        # options provides a list of *flat* options leaving out any eventual
-        # group, useful for backward compatibility and simpler widgets
-        # TBD: needed?
-        self.options = options
-        self.grouped_options = grouped_options or [(None, options)]
+                self.grouped_options.append((unicode(optgroup[0]), opts))            
 
-    def _validate(self, value, state=None):
-        """
-        To redisplay correctly on error, selection fields must have the
-        :attr:`item_validator` applies to their value. This function does this
-        in a way that will never raise an exception, before calling the main
-        validator.
-        """
-        value = super(SelectionField, self)._validate(value, state)
-        if self.multiple:
-            if isinstance(value, basestring):
-                value = [value,]
-            value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
-            value = [v for v in value if v is not twc.Invalid]
-        return value
+        if self.prompt_text is not None: # TBD and self.options[0][1]: # and not self.grouped_options[0][0]:
+            self.options = [('', self.prompt_text)] + self.options
+        if not self.grouped_options:        
+            self.grouped_options = [(None, self.options)]
+
+    def _opt_matches_value(self, opt):
+        return unicode(opt) == self.value
 
     def _iterate_options(self, optlist):
         for option in optlist:
@@ -262,23 +226,40 @@ class SelectionField(FormField):
                 yield option
 
 
-class SingleSelectField(SelectionField):
-    template = "tw2.forms.templates.select_field"
+class MultipleSelectionField(SelectionField):
+    item_validator = twc.Param('Validator that applies to each item', default=twc.Validator())
 
     def prepare(self):
-        super(SingleSelectField, self).prepare()
-        if self.options[0][1] and not self.grouped_options[0][0]:
-            self.options = [(None, '')] + self.options
-            self.grouped_options = [(None, self.options)]
+        if not self.value:
+            self.value = []
+        if not isinstance(self.value, (list, tuple)):
+            self.value = [self.value]
+        if not hasattr(self, '_validated') and self.item_validator:
+            self.value = [self.item_validator.from_python(v) for v in self.value]
+        super(MultipleSelectionField, self).prepare()
 
-class MultipleSelectField(SelectionField):
+    def _opt_matches_value(self, opt):
+        return unicode(opt) in self.value
+
+    def _validate(self, value, state=None):
+        if value and not isinstance(value, (list, tuple)):
+            value = [value]
+        value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
+        return [v for v in value if v is not twc.Invalid]
+
+
+class SingleSelectField(SelectionField):
+    template = "tw2.forms.templates.select_field"
+    prompt_text = ''
+
+
+class MultipleSelectField(MultipleSelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
-    multiple = twc.Param(default=True, attribute=True)
+    multiple = twc.Variable(attribute=True, default='multiple')
     template = "tw2.forms.templates.select_field"
 
 
 class SelectionList(SelectionField):
-    field_type = True
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_list"
 
@@ -287,13 +268,11 @@ class RadioButtonList(SelectionList):
     field_type = "radio"
 
 
-class CheckBoxList(SelectionList):
+class CheckBoxList(SelectionList, MultipleSelectionField):
     field_type = "checkbox"
-    multiple = True
 
 
 class SelectionTable(SelectionField):
-    field_type = twc.Variable(default=True)
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_table"
     cols = twc.Param('Number of columns', default=1)
@@ -324,9 +303,8 @@ class RadioButtonTable(SelectionTable):
     field_type = 'radio'
 
 
-class CheckBoxTable(SelectionTable):
+class CheckBoxTable(SelectionTable, MultipleSelectionField):
     field_type = 'checkbox'
-    multiple = True
 
 
 #--

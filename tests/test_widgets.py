@@ -165,16 +165,16 @@ class TestMultipleSelectField(WidgetTest):
 
 class TestSelectionList(WidgetTest):
     widget = SelectionList
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
     expected = """<ul class="something" id="something" name="something">
     <li>
-        <input name="something" value="a" id="something:0">
+        <input type="test" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
     </li><li>
-        <input name="something" value="b" id="something:1">
+        <input type="test" name="something" value="b" id="something:1">
         <label for="something:1">2</label>
     </li><li>
-        <input name="something" value="c" id="something:2">
+        <input type="test" name="something" value="c" id="something:2">
         <label for="something:2">3</label>
     </li>
 </ul>"""
@@ -232,22 +232,22 @@ class TestCheckBoxList(WidgetTest):
 
 class TestSelectionTable(WidgetTest):
     widget = SelectionTable
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
     expected = """<table class="something" id="something" name="something">
     <tbody>
     <tr>
         <td>
-            <input name="something" value="a" id="something:0">
+            <input type="test" name="something" value="a" id="something:0">
             <label for="something:0">1</label>
         </td>
     </tr><tr>
         <td>
-            <input name="something" value="b" id="something:1">
+            <input type="test" name="something" value="b" id="something:1">
             <label for="something:1">2</label>
         </td>
     </tr><tr>
         <td>
-            <input name="something" value="c" id="something:2">
+            <input type="test" name="something" value="c" id="something:2">
             <label for="something:2">3</label>
         </td>
     </tr>
@@ -259,22 +259,22 @@ class TestSelectionTable(WidgetTest):
     <tbody>
     <tr>
         <td>
-            <input checked name="something" value="a" id="something:0">
+            <input type="test" checked name="something" value="a" id="something:0">
             <label for="something:0">a</label>
         </td><td>
-            <input name="something" value="b" id="something:1">
+            <input type="test" name="something" value="b" id="something:1">
             <label for="something:1">b</label>
         </td>
     </tr><tr>
         <td>
-            <input name="something" value="c" id="something:2">
+            <input type="test" name="something" value="c" id="something:2">
             <label for="something:2">c</label>
         </td>
         <td></td>
     </tr>
     </tbody>
 </table>"""
-        attrs = {'css_class':'something', 'cols':2, 'options':(('group1', ('a', 'b')),'c'), 'id':'something'}
+        attrs = {'css_class':'something', 'field_type':'test', 'cols':2, 'options':(('group1', ('a', 'b')),'c'), 'id':'something'}
         params = {'value':'a',}
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, attrs, params, expected
