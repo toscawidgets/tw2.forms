@@ -16,7 +16,7 @@ class DemoChildren(twc.CompoundWidget):
     description = twf.TextArea()
 
 class DemoSingleSelectField(twf.SingleSelectField):
-    options = [''] + options
+    options = options
 
 class DemoMultipleSelectField(twf.MultipleSelectField):
     options = options
