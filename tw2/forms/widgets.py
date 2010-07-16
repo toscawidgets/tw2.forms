@@ -57,7 +57,7 @@ class PasswordField(InputField):
 class FileValidator(twc.Validator):
     """Base class for file validators
 
-    `extention`
+    `extension`
         Allowed extention for the file
     """
     extension = None
@@ -68,8 +68,10 @@ class FileValidator(twc.Validator):
 
     def validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
-            if self.extension is not None and not value.filename.endswith(str(self.extension)):
-                    raise twc.ValidationError('badext', self)
+            if self.extension is not None and not value.filename.endswith(self.extension):
+                raise twc.ValidationError('badext', self)
+        elif value:    
+            raise twc.ValidationError('corrupt', self)
         elif self.required:
             raise twc.ValidationError('required', self)
 
