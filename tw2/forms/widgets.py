@@ -58,7 +58,7 @@ class FileValidator(twc.Validator):
     """Base class for file validators
 
     `extension`
-        Allowed extention for the file
+        Allowed extension for the file
     """
     extension = None
     msgs = {
@@ -210,10 +210,12 @@ class SelectionField(FormField):
             if group:
                 self.grouped_options.append((unicode(optgroup[0]), opts))            
 
-        if self.prompt_text is not None: # TBD and self.options[0][1]: # and not self.grouped_options[0][0]:
+        if self.prompt_text is not None:
             self.options = [('', self.prompt_text)] + self.options
         if not self.grouped_options:        
             self.grouped_options = [(None, self.options)]
+        elif self.prompt_text is not None:
+            self.grouped_options = [(None, [('', self.prompt_text)])] + self.grouped_options
 
     def _opt_matches_value(self, opt):
         return unicode(opt) == self.value

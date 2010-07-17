@@ -27,7 +27,7 @@ class TestTextField(WidgetTest):
 class TestTextArea(WidgetTest):
     widget = TextArea
     attrs = {'css_class':'something', 'rows':6, 'cols':10}
-    params = {'value':6}
+    params = {'value':'6'}
     expected = '<textarea class="something" rows="6" cols="10">6</textarea>'
     
 class TestCheckbox(WidgetTest):
@@ -126,6 +126,7 @@ class TestSingleSelectField(WidgetTest):
 
     def test_option_group(self):
         expected = """<select class="something">
+                          <option></option>
                           <optgroup label="group">
                               <option value=""></option>
                               <option value="1">Red</option>
@@ -152,6 +153,18 @@ class TestSingleSelectField(WidgetTest):
         attrs = {'css_class':'something', 'options':('a', 'b','c')}
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
+    def test_prompt_text(self):
+        expected = """<select>
+             <option >Pick one:</option>
+             <option value="a">a</option>
+             <option value="b">b</option>
+             <option value="c">c</option>
+            </select>"""
+        attrs = {'options':('a','b','c'), 'prompt_text':'Pick one:'}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
 
 class TestMultipleSelectField(WidgetTest):
     widget = MultipleSelectField
