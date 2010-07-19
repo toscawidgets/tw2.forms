@@ -124,8 +124,7 @@ class LinkField(twc.Widget):
 
 
 class Button(InputField):
-    """Generic button. You can override the text using :attr:`value` and define
-    a JavaScript action using :attr:`attrs['onclick']`.
+    """Generic button. You can override the text using `value` and define a JavaScript action using `attrs['onclick']`.
     """
     type = "button"
     id = None
@@ -164,16 +163,16 @@ class SelectionField(FormField):
 
     The `options` parameter must be a list; it can take several formats:
 
-     * A list of values, e.g. ['', 'Red', 'Blue']
-     * A list of (code, value) tuples, e.g.
-       [(0, ''), (1, 'Red'), (2, 'Blue')]
-     * A mixed list of values and tuples. If the code is not specified, it
-       defaults to the value. e.g. ['', (1, 'Red'), (2, 'Blue')]
-     * Attributes can be passed to individual items, e.g.
-       [(0, ''), (1, 'Red', {'style':'background-color:red'})]
-     * A list of groups, e.g.
-        [('group', ['', (1, 'Red'), (2, 'Blue')]),
-         ('group2', ['', 'Pink', 'Yellow'])]
+     * A list of values, e.g.
+       ``['', 'Red', 'Blue']``
+     * A list of (code, value) tuples, e.g. 
+       ``[(0, ''), (1, 'Red'), (2, 'Blue')]``
+     * A mixed list of values and tuples. If the code is not specified, it defaults to the value. e.g. 
+       ``['', (1, 'Red'), (2, 'Blue')]``
+     * Attributes can be specified for individual items, e.g. 
+       ``[(1, 'Red', {'style':'background-color:red'})]``
+     * A list of groups, e.g. 
+       ``[('group1', [(1, 'Red')]), ('group2', ['Pink', 'Yellow'])]``
     """
 
     options = twc.Param('Options to be displayed')
@@ -229,7 +228,7 @@ class SelectionField(FormField):
 
 
 class MultipleSelectionField(SelectionField):
-    item_validator = twc.Param('Validator that applies to each item', default=twc.Validator())
+    item_validator = twc.Param('Validator that applies to each item', default=None)
 
     def prepare(self):
         if not self.value:
@@ -365,7 +364,7 @@ class ListLayout(BaseLayout):
 class RowLayout(BaseLayout):
     """
     Arrange widgets in a table row. This is normally only useful as a child to
-    :class:`GridLayout`.
+    `GridLayout`.
     """
     resources = [
         twc.Link(id='error', modname='tw2.forms', filename='static/dialog-warning.png'),
@@ -463,9 +462,9 @@ class ListFieldSet(FieldSet):
 
 class FormPage(twc.Page):
     """
-    A page that contains a form. The :meth:`request` method performs validation,
+    A page that contains a form. The `request` method performs validation,
     redisplaying the form on errors. On success, it calls
-    :meth:`validated_request`.
+    `validated_request`.
     """
     _no_autoid = True
 
