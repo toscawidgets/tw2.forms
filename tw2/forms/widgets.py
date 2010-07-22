@@ -45,7 +45,7 @@ class CheckBox(InputField):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
-        self.value = None
+        self.value = 'Voila'
 
 class RadioButton(InputField):
     type = "radio"
@@ -308,12 +308,13 @@ class MultipleSelectField(SelectionField):
     multiple = twc.Param(default=True, attribute=True)
     template = "tw2.forms.templates.select_field"
 
-
 class SelectionList(SelectionField):
     field_type = True
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_list"
 
+class SeparatedSelectionTable(SelectionList):
+    template = "tw2.forms.templates.separated_selection_table"
 
 class RadioButtonList(SelectionList):
     field_type = "radio"
@@ -350,7 +351,7 @@ class SelectionTable(SelectionField):
         super(SelectionTable, self).prepare()
         self.options_rows = self._group_rows(self.options, self.cols)
         self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
-
+        
 class VerticalSelectionTable(SelectionField):
     field_type = twc.Variable(default=True)
     selected_verb = "checked"
@@ -408,11 +409,18 @@ class VerticalSelectionTable(SelectionField):
 class RadioButtonTable(SelectionTable):
     field_type = 'radio'
 
+class SeparatedRadioButtonTable(SeparatedSelectionTable):
+    field_type = 'radio'
+
 class VerticalRadioButtonTable(VerticalSelectionTable):
     field_type = 'radio'
 
 
 class CheckBoxTable(SelectionTable):
+    field_type = 'checkbox'
+    multiple = True
+
+class SeparatedCheckBoxTable(SeparatedSelectionTable):
     field_type = 'checkbox'
     multiple = True
 

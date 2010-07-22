@@ -190,17 +190,7 @@ class CalendarDatePicker(FormField):
             self.strdate = self.value.strftime(self.date_format)
         except AttributeError:
             self.strdate = self.value
-        # print 'CalendarDatePicker.prepare: self.compound_id = ', self.compound_id
-        # print 'CalendarDatePicker.prepare: len(self.resources) = ', len(self.resources)
-        # self.setup_options.update(dict(
-        #     inputField = self.compound_id,
-        #     ifFormat = self.date_format,
-        #     button = self.id + '_trigger',
-        #     showsTime = self.picker_shows_time,
-        # ))
-        # setup_calendar = twc.JSFuncCall(function="Calendar.setup", args=self.setup_options)
-        # setup_calendar.src = '"Whoa-%s"' % self.compound_id
-        # self.resources.append(setup_calendar)
+
         self.resources.append(self.get_calendar_lang_file_link(self.calendar_lang))
 
 
