@@ -1,4 +1,8 @@
-import tw2.core as twc, re, itertools, webob, cgi
+import tw2.core as twc
+import itertools
+import webob
+import cgi
+import math
 
 #--
 # Basic Fields
@@ -10,6 +14,13 @@ class InputField(FormField):
     type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
     value = twc.Param(attribute=True)
     template = "tw2.forms.templates.input_field"
+
+
+class PostlabeledInputField(InputField):
+    """Inherits :class:`InputField`, but with a :attr:`text` label that follows the input field"""
+    text = twc.Param('Text to display after the field.')
+    text_attrs = twc.Param('Dict of attributes to inject into the label.', default={})
+    template = "tw2.forms.templates.postlabeled_input_field"
 
 
 class TextField(InputField):
@@ -32,11 +43,9 @@ class CheckBox(InputField):
         self.attrs['checked'] = self.value and 'checked' or None
         self.value = None
 
-
 class RadioButton(InputField):
     type = "radio"
-    checked = twc.Param('Whether the field is selected', attribute=True)
-
+    checked = twc.Param('Whether the field is selected', attribute=True, default=False)
 
 class PasswordField(InputField):
     """
@@ -90,12 +99,19 @@ class FileField(InputField):
 
 class HiddenField(InputField):
     """
-    A hidden field. The default validator avoids the value being included in 
-    validated data. This helps prevent against parameter tampering attacks.
+    A hidden field.
     """
     type = 'hidden'
-    validator = twc.BlankValidator
-    
+
+
+class IgnoredField(HiddenField):
+    """
+    A hidden field. The value is never included in validated data.
+    """
+    def _validate(self, value):
+        super(IgnoredField, self)._validate(value)   
+        return twc.EmptyField
+
 
 class LabelField(InputField):
     """
@@ -188,7 +204,7 @@ class SelectionField(FormField):
         self.options = []
         self.grouped_options = []        
         counter = itertools.count(0)
-
+        
         for optgroup in self._iterate_options(options):
             opts = []
             group = isinstance(optgroup[1], (list,tuple))
@@ -243,10 +259,13 @@ class MultipleSelectionField(SelectionField):
         return unicode(opt) in self.value
 
     def _validate(self, value, state=None):
-        if value and not isinstance(value, (list, tuple)):
+        value = value or []
+        if not isinstance(value, (list, tuple)):
             value = [value]
-        value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
-        return [v for v in value if v is not twc.Invalid]
+        if self.item_validator:
+            value = [twc.safe_validate(self.item_validator, v) for v in value]
+        self.value = [v for v in value if v is not twc.Invalid]
+        return self.value
 
 
 class SingleSelectField(SelectionField):
@@ -299,14 +318,73 @@ class SelectionTable(SelectionField):
         self.options_rows = self._group_rows(self.options, self.cols)
         self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
 
+class VerticalSelectionTable(SelectionField):
+    field_type = twc.Variable(default=True)
+    selected_verb = "checked"
+    template = "tw2.forms.templates.vertical_selection_table"
+    cols = twc.Param('Number of columns. If the options are grouped, this is overidden.', default=1)
+    options_rows = twc.Variable()
+
+    def _gen_row_single(self, single, cols):
+        row_count = int(math.ceil(float(len(single)) / float(cols)))
+        # This shouldn't really need spacers. It's hackish. (Problem: 4 items in a 3 column table)
+        spacer_count = (row_count * cols) - len(single)
+        single.extend([(None, None)] * spacer_count)
+        col_iters = []
+        for i in range(cols):
+            start = i * row_count
+            col_iters.append(iter(single[start:start+row_count]))
+
+        while True:
+            row = []
+            try:
+                for col_iter in col_iters:
+                    row.append(col_iter.next())
+                yield row
+            except StopIteration:
+                if row:
+                    yield row
+                break
+
+    def _gen_row_grouped(self, grouped_options):
+        row_count = max([len(o) for g, o in grouped_options])
+        col_iters = []
+        for g, o in grouped_options:
+            spacer_count = row_count - len(o)
+            o.extend([(None, None)] * spacer_count)
+            col_iters.append(hasattr(o, 'next') and o or iter(o))
+
+        while True:
+            row = []
+            try:
+                for col_iter in col_iters:
+                    row.append(col_iter.next())
+                yield row
+            except StopIteration:
+                if row:
+                    yield row
+                break
+
+    def prepare(self):
+        super(VerticalSelectionTable, self).prepare()
+        if self.grouped_options[0][0]:
+            self.options_rows =  self._gen_row_grouped(self.grouped_options)
+        else:
+            self.options_rows = self._gen_row_single(self.options, self.cols)
 
 class RadioButtonTable(SelectionTable):
+    field_type = 'radio'
+
+class VerticalRadioButtonTable(VerticalSelectionTable):
     field_type = 'radio'
 
 
 class CheckBoxTable(SelectionTable, MultipleSelectionField):
     field_type = 'checkbox'
 
+class VerticalCheckBoxTable(VerticalSelectionTable):
+    field_type = 'checkbox'
+    multiple = True
 
 #--
 # Layout widgets
@@ -339,6 +417,13 @@ class BaseLayout(twc.CompoundWidget):
     @property
     def children_non_hidden(self):
         return [c for c in self.children if not isinstance(c, HiddenField)]
+
+    @property
+    def rollup_errors(self):
+        errors = [c.error_msg for c in self.children if isinstance(c, HiddenField) and c.error_msg]
+        if self.error_msg:
+            errors.insert(0, self.error_msg)
+        return errors
 
     def prepare(self):
         super(BaseLayout, self).prepare()
