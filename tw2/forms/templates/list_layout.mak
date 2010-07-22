@@ -5,7 +5,7 @@
    % endfor
    % for i,c in enumerate(w.children_non_hidden):
     <li \
-class="${(i % 2 and 'even' or 'odd') + ((c.validator and getattr(c.validator, 'required', None)) and ' required' or '') + (c.error_msg and ' error' or '')}"\
+class="${(i % 2 and 'even' or 'odd') + (getattr(c, 'required', False) and ' required' or '') + (c.error_msg and ' error' or '')}"\
      % if w.hover_help and c.help_text:
 title="${c.help_text}" \
      % endif

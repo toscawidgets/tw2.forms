@@ -10,6 +10,10 @@ import math
 class FormField(twc.Widget):
     name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id))
 
+    @property
+    def required(self):
+        return self.validator and (getattr(self.validator, 'required', None) or getattr(self.validator, 'not_empty', None))
+
 class InputField(FormField):
     type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
     value = twc.Param(attribute=True)
