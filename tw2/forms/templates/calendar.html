@@ -2,6 +2,6 @@
     <input type="text" id="${w.compound_id}" name="${w.id}" class="${w.css_class}" value="${w.strdate}" py:attrs="w.attrs"/>
     <input type="button" id="${w.compound_id}_trigger" class="date_field_button" value="${w.button_text}" />
     <script type="text/javascript">Calendar.setup({\
-        "inputField": "${w.compound_id}", "showsTime": ${str(picker_shows_time).lower()}, \
+        "inputField": "${w.compound_id}", "showsTime": ${str(w.picker_shows_time).lower()}, \
         "ifFormat": "${w.date_format}", "button": "${w.compound_id}_trigger"})</script>
 </div>
