@@ -462,6 +462,26 @@ class RowLayout(BaseLayout):
             self.css_class = ' '.join((self.css_class or '', row_class)).strip()
         super(RowLayout, self).prepare()
 
+class StripBlanks(twc.Validator):
+    def any_content(self, val):
+        if type(val) == list:
+            for v in val:
+                if self.any_content(v):
+                    return True
+            return False
+        elif type(val) == dict:
+            for k in val:
+                if k == 'id':
+                    continue
+                if self.any_content(val[k]):
+                    return True
+            return False
+        else:
+            return bool(val)
+
+    def to_python(self, value):
+        return [v for v in value if self.any_content(v)]
+
 class GridLayout(twc.RepeatingWidget):
     """
     Arrange labels and multiple rows of widgets in a grid.
@@ -470,6 +490,8 @@ class GridLayout(twc.RepeatingWidget):
     children = twc.Required
     template = "tw2.forms.templates.grid_layout"
 
+    def _validate(self, value, state=None):
+        return super(GridLayout, self)._validate(StripBlanks().to_python(value), state)
 
 class Spacer(FormField):
     """

@@ -10,6 +10,7 @@ from widgets import (Button, CheckBox,
     RadioButtonTable, CheckBoxTable, GridLayout, RowLayout, TableForm, ListForm,
     VerticalRadioButtonTable, VerticalCheckBoxTable,
     TableFieldSet, ListFieldSet, FormPage, FileValidator,
-    LabelField, LinkField, InputField, SelectionField, MultipleSelectionField)
+    LabelField, LinkField, InputField, SelectionField, MultipleSelectionField,
+    StripBlanks)
 from mashups import PostlabeledCheckBox, PostlabeledPartialRadioButton
 from calendars import CalendarDatePicker, CalendarDateTimePicker
