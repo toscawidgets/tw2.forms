@@ -33,10 +33,13 @@ import logging
 import tw2.core as twc
 from widgets import FormField
 
-import formencode
-from formencode.validators import *
-from formencode.compound import *
-from formencode.api import Invalid
+try:
+    import formencode
+    from formencode.validators import *
+    from formencode.compound import *
+    from formencode.api import Invalid
+except ImportError:
+    pass
 
 __all__ = ["CalendarDatePicker", "CalendarDateTimePicker", "calendar_js", "calendar_setup"]
 

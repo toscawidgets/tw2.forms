@@ -64,7 +64,7 @@ class PasswordField(InputField):
 
 
 class FileValidator(twc.Validator):
-    """Base class for file validators
+    """Validate a file upload field
 
     `extension`
         Allowed extension for the file
