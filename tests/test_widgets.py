@@ -172,6 +172,15 @@ class TestSingleSelectField(WidgetTest):
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
 
+    def test_no_options(self):
+        expected = """<select>
+             <option/>
+            </select>"""
+        attrs = {'options':[]}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
+
 
 class TestMultipleSelectField(WidgetTest):
     widget = MultipleSelectField
