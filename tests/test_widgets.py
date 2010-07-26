@@ -453,7 +453,7 @@ class TestGridLayout(WidgetTest):
              'repetition': 1,
              }
     expected = """<table>
-    <tr><th>Auto</th><th>Auto</th><th>Auto</th></tr>
+    <tr><th>Field1</th><th>Field2</th><th>Field3</th></tr>
     <tr class="error"><td colspan="0" id=":error">
     </td></tr>
 </table>"""
