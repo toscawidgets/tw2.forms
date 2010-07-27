@@ -220,7 +220,7 @@ class SelectionField(FormField):
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
                 if self._opt_matches_value(option[0]):
                     option_attrs[self.selected_verb] = self.selected_verb
-                opts.append((option_attrs, unicode(option[1])))
+                opts.append((option_attrs, option[1]))
             self.options.extend(opts)
             if group:
                 self.grouped_options.append((unicode(optgroup[0]), opts))            

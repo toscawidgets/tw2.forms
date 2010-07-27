@@ -185,7 +185,7 @@ class TestSingleSelectField(WidgetTest):
 
 class TestMultipleSelectField(WidgetTest):
     widget = MultipleSelectField
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':"hid"}
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':"hid"}
     expected = """<select class="something" multiple="multiple" id="hid" name="hid">
                       <option value="a">1</option>
                       <option value="b">2</option>
@@ -195,7 +195,7 @@ class TestMultipleSelectField(WidgetTest):
 
 class TestSelectionList(WidgetTest):
     widget = SelectionList
-    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
     expected = """<ul class="something" id="something" name="something">
     <li>
         <input type="test" name="something" value="a" id="something:0">
@@ -212,7 +212,7 @@ class TestSelectionList(WidgetTest):
 
 class TestRadioButtonList(WidgetTest):
     widget = RadioButtonList
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
     expected = """<ul class="something" id="something" name="something">
     <li>
         <input type="radio" name="something" value="a" id="something:0">
@@ -228,7 +228,7 @@ class TestRadioButtonList(WidgetTest):
 
 class TestCheckBoxList(WidgetTest):
     widget = CheckBoxList
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
     expected = """<ul class="something" id="something" name="something">
     <li>
         <input type="checkbox" name="something" value="a" id="something:0">
@@ -262,7 +262,7 @@ class TestCheckBoxList(WidgetTest):
 
 class TestSelectionTable(WidgetTest):
     widget = SelectionTable
-    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
     expected = """<table class="something" id="something" name="something">
     <tbody>
     <tr>
@@ -311,7 +311,7 @@ class TestSelectionTable(WidgetTest):
 
 class TestRadioButtonTable(WidgetTest):
     widget = RadioButtonTable
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
     expected = """<table class="something" id="something" name="something">
     <tbody>
     <tr>
@@ -335,7 +335,7 @@ class TestRadioButtonTable(WidgetTest):
 
 class TestCheckBoxTable(WidgetTest):
     widget = CheckBoxTable
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
     expected = """<table class="something" id="something" name="something">
     <tbody>
     <tr>
