@@ -124,12 +124,12 @@ class LabelField(InputField):
 
 class LinkField(twc.Widget):
     """
-    A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value.
+    A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value. If the value is None, and there is no default, the entire link is hidden.
     """
     template = "tw2.forms.templates.link_field"
-    link = twc.Variable('Link target', default='')
-    text = twc.Variable('Link text', default='')
-    value = twc.Variable("Value to replace $ with in the link/text")
+    link = twc.Param('Link target', default='')
+    text = twc.Param('Link text', default='')
+    value = twc.Param("Value to replace $ with in the link/text")
     validator = twc.BlankValidator
 
     def prepare(self):
