@@ -6,6 +6,7 @@ from nose.tools import raises
 from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
+import formencode
 
 import webob
 if hasattr(webob, 'NestedMultiDict'):
@@ -424,6 +425,40 @@ class TestTableLayout(WidgetTest):
     </td></tr>
 </table>"""
     declarative = True
+
+    def test_required(self):
+        attrs = {'children': [TextField(id='field1', validator=twc.Required)]}
+        expected = """<table>
+    <tr class="odd required" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr></table>"""
+
+    def test_fe_not_required(self):
+        attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=False))]}
+        expected = """<table>
+    <tr class="odd" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr></table>"""
+
+    def test_fe_required(self):
+        attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=True))]}
+        expected = """<table>
+    <tr class="odd required" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr></table>"""
+
 
 class TestRowLayout(WidgetTest):
     widget = RowLayout
