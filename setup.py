@@ -2,15 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='tw2.forms',
-    version='2.0b1',
-    description='',
-    author='Paul Johnston, Christopher Perkins & contributors',
+    version='2.0b4',
+    description='The basic form widgets for ToscaWidgets 2.',
+    long_description = open('README.txt').read().split('\n\n', 1)[1],
+    author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',
     author_email='paj@pajhome.org.uk',
-    url='',
+    url='http://toscawidgets.org/docs/tw2.core/',
     install_requires=[
-        "tw2.core>=2.0a2",
-        ## Add other requirements here
-        # "Genshi",
+        "tw2.core>=2.0b4",
         ],
     packages=find_packages(exclude=['ez_setup', 'tests']),
     namespace_packages = ['tw2'],
