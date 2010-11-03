@@ -282,6 +282,7 @@ class MultipleSelectField(MultipleSelectionField):
 class SelectionList(SelectionField):
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_list"
+    name = None
 
 
 class RadioButtonList(SelectionList):
@@ -298,6 +299,7 @@ class SelectionTable(SelectionField):
     cols = twc.Param('Number of columns', default=1)
     options_rows = twc.Variable()
     grouped_options_rows = twc.Variable()
+    name = None
 
     def _group_rows(self, seq, size):
         if not hasattr(seq, 'next'):

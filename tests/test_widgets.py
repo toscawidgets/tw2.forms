@@ -196,7 +196,7 @@ class TestMultipleSelectField(WidgetTest):
 class TestSelectionList(WidgetTest):
     widget = SelectionList
     attrs = {'css_class':'something', 'field_type':'test', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
-    expected = """<ul class="something" id="something" name="something">
+    expected = """<ul class="something" id="something">
     <li>
         <input type="test" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
@@ -213,7 +213,7 @@ class TestSelectionList(WidgetTest):
 class TestRadioButtonList(WidgetTest):
     widget = RadioButtonList
     attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
-    expected = """<ul class="something" id="something" name="something">
+    expected = """<ul class="something" id="something">
     <li>
         <input type="radio" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
@@ -229,7 +229,7 @@ class TestRadioButtonList(WidgetTest):
 class TestCheckBoxList(WidgetTest):
     widget = CheckBoxList
     attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
-    expected = """<ul class="something" id="something" name="something">
+    expected = """<ul class="something" id="something">
     <li>
         <input type="checkbox" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
@@ -243,7 +243,7 @@ class TestCheckBoxList(WidgetTest):
 </ul>
 """
     def test_option_has_value(self):
-        expected = """<ul class="something" id="something" name="something">
+        expected = """<ul class="something" id="something">
     <li>
         <input type="checkbox" name="something" value="a" id="something:0" checked>
         <label for="something:0">a</label>
@@ -263,7 +263,7 @@ class TestCheckBoxList(WidgetTest):
 class TestSelectionTable(WidgetTest):
     widget = SelectionTable
     attrs = {'css_class':'something', 'field_type':'test', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
-    expected = """<table class="something" id="something" name="something">
+    expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
@@ -285,7 +285,7 @@ class TestSelectionTable(WidgetTest):
 </table>"""
 
     def test_option_leftover_chunk(self):
-        expected = """<table class="something" id="something" name="something">
+        expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
@@ -312,7 +312,7 @@ class TestSelectionTable(WidgetTest):
 class TestRadioButtonTable(WidgetTest):
     widget = RadioButtonTable
     attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
-    expected = """<table class="something" id="something" name="something">
+    expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
@@ -336,7 +336,7 @@ class TestRadioButtonTable(WidgetTest):
 class TestCheckBoxTable(WidgetTest):
     widget = CheckBoxTable
     attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
-    expected = """<table class="something" id="something" name="something">
+    expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
