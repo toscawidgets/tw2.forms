@@ -8,3 +8,5 @@ glob:*.rej
 tags
 glob:build/*
 glob:dist/*
+glob:*.egg
+glob:virtualenv
