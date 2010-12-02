@@ -10,3 +10,4 @@ glob:build/*
 glob:dist/*
 glob:*.egg
 glob:virtualenv
+glob:htmlcov
