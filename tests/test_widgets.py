@@ -7,6 +7,7 @@ from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
 import formencode
+import formencode.national
 
 import webob
 if hasattr(webob, 'NestedMultiDict'):
@@ -598,6 +599,42 @@ class TestTableFieldset(WidgetTest):
 </table>
 </fieldset>"""
     declarative = True
+
+class TestTableFieldsetWithFEValidator(WidgetTest):
+    widget = TableFieldSet
+    attrs = {'field1':TextField(id='field1'),
+             'field2':TextField(id='field2'),
+             'field3':TextField(id='field3', validator=formencode.national.USPostalCode()),
+             }
+    expected = """<fieldset>
+    <legend></legend>
+    <table>
+    <tr class="odd" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr><tr class="even" id="field2:container">
+        <th>Field2</th>
+        <td>
+            <input name="field2" id="field2" type="text">
+            <span id="field2:error"></span>
+        </td>
+    </tr><tr class="odd" id="field3:container">
+        <th>Field3</th>
+        <td>
+            <input name="field3" id="field3" type="text">
+            <span id="field3:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id=":error"></span>
+    </td></tr>
+</table>
+</fieldset>"""
+    declarative = True
+
 
 class TestListFieldset(WidgetTest):
     widget = ListFieldSet
