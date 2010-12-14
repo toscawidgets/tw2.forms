@@ -519,7 +519,8 @@ class Form(twc.DisplayOnlyWidget):
 
     @classmethod
     def post_define(cls):
-        cls.submit = cls.submit(parent=cls)
+        if cls.submit:
+            cls.submit = cls.submit(parent=cls)
 
     def __init__(self, **kw):
         super(Form, self).__init__(**kw)
