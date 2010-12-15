@@ -253,6 +253,8 @@ class MultipleSelectionField(SelectionField):
         value = value or []
         if not isinstance(value, (list, tuple)):
             value = [value]
+        if self.validator:
+            self.validator.validate_python(self.validator.to_python(value))
         if self.item_validator:
             value = [twc.safe_validate(self.item_validator, v) for v in value]
         self.value = [v for v in value if v is not twc.Invalid]
