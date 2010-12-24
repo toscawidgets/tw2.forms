@@ -264,6 +264,8 @@ class SelectionField(FormField):
             
         if self.multiple:
             if isinstance(value, basestring):
+                #TODO: Fix this, it's awkward if value is "" or None because
+                #the resulting list is no longer False.
                 value = [value,]
             self.value = value
             if self.item_validator:
