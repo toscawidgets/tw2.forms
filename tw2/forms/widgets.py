@@ -224,7 +224,7 @@ class SelectionField(FormField):
             self.grouped_options = [(None, [('', self.prompt_text)])] + self.grouped_options
 
     def _opt_matches_value(self, opt):
-        return unicode(opt) == self.value
+        return unicode(opt) == unicode(self.value)
 
     def _iterate_options(self, optlist):
         for option in optlist:
