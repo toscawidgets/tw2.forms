@@ -702,4 +702,7 @@ class TestFormPage(WidgetTest):
 
         self.mw.config.debug = True
         r = self.widget().request(req)
-        assert r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""", r.body
+        assert (
+            r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""" or
+            r.body == """Form posted successfully {'field2': u'b', 'field3': u'c', 'field1': u'a'}""" 
+            ), r.body
