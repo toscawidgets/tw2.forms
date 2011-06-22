@@ -30,7 +30,13 @@ setup(
     keywords = [
         'toscawidgets.widgets',
     ],
-    tests_require = ['BeautifulSoup', 'nose', 'FormEncode', 'WebTest'] + _extra_cheetah + _extra_genshi + _extra_kid + _extra_mako,
+    tests_require = [
+        'BeautifulSoup',
+        'nose',
+        'FormEncode',
+        'WebTest',
+        'strainer',
+    ] + _extra_cheetah + _extra_genshi + _extra_kid + _extra_mako,
     extras_require = {
         'cheetah': _extra_cheetah,
         'kid': _extra_kid,
