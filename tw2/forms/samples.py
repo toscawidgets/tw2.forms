@@ -15,6 +15,9 @@ class DemoChildren(twc.CompoundWidget):
     priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
     description = twf.TextArea()
 
+class DemoCheckBox(twf.CheckBox):
+    value = True
+
 class DemoSingleSelectField(twf.SingleSelectField):
     options = options
 
