@@ -1,5 +1,5 @@
 regexp:.*pyc$
-glob:tw2.forms.egg-info
+glob:*.egg*
 glob:docs/.output/
 glob:.coverage
 glob:*/.noseids

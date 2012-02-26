@@ -1,5 +1,10 @@
 from setuptools import setup, find_packages
 
+# Importing logging and multiprocessing avoid a stupid bug while running tests
+# on python 2.7 -- threebean
+import logging
+import multiprocessing
+
 setup(
     name='tw2.forms',
     version='2.0b1',
