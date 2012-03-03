@@ -1,2 +1,4 @@
 recursive-include tw2/forms/templates *
 recursive-include tw2/forms/static *
+include LICENSE.txt
+include README.txt

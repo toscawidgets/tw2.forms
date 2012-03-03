@@ -33,54 +33,15 @@ import logging
 import tw2.core as twc
 from widgets import FormField
 
-import formencode
-from formencode.validators import *
-from formencode.compound import *
-from formencode.api import Invalid
+try:
+    import formencode
+    from formencode.validators import *
+    from formencode.compound import *
+    from formencode.api import Invalid
+except ImportError:
+    pass
 
 __all__ = ["CalendarDatePicker", "CalendarDateTimePicker", "calendar_js", "calendar_setup"]
-
-class DateTimeConverter(FancyValidator):
-
-    """
-    Converts Python date and datetime objects into string representation and back.
-    """
-    messages = {
-        'badFormat': 'Invalid datetime format.',
-        'empty': 'Please Enter a Date.',
-    }
-    if_missing = None
-    def __init__(self, format = "%Y/%m/%d %H:%M", tzinfo=None, *args, **kwargs):
-        super(FancyValidator, self).__init__(*args, **kwargs)
-        self.format = format
-        self.tzinfo = tzinfo
-        
-    def _to_python(self, value, state):
-        """ parse a string and return a datetime object. """
-        if value and isinstance(value, (date, datetime)):
-            return value
-        else:
-            try:
-                tpl = time.strptime(value, self.format)
-            except ValueError:
-                raise Invalid(self.message('badFormat', state), value, state)
-            # shoudn't use time.mktime() because it can give OverflowError,
-            # depending on the date (e.g. pre 1970) and underlying C library
-            return datetime(year=tpl.tm_year, month=tpl.tm_mon, day=tpl.tm_mday,
-                            hour=tpl.tm_hour, minute=tpl.tm_min,
-                            second=tpl.tm_sec, tzinfo=self.tzinfo)
-
-    def _from_python(self, value, state):
-        if not value:
-            return None
-        elif isinstance(value, datetime):
-            # Python stdlib can only handle dates with year greater than 1900
-            if value.year <= 1900:
-                return strftime_before1900(value, self.format)
-            else:
-                return value.strftime(self.format)
-        else:
-            return value
 
 _illegal_s = re.compile(r"((^|[^%])(%%)*%s)")
 
@@ -171,10 +132,8 @@ class CalendarDatePicker(FormField):
 
     def __init__(self, *args, **kw):
         if self.validator is None:
-            self.validator = DateTimeConverter(
+            self.validator = twc.DateTimeValidator(
             format=self.date_format, 
-            not_empty=self.not_empty,
-            tzinfo=self.tzinfo
             )
         super(CalendarDatePicker, self).__init__(*args, **kw)
 

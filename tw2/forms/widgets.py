@@ -45,12 +45,11 @@ class CheckBox(InputField):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
-        self.value = 'Voila'
+        self.value = None
 
 class RadioButton(InputField):
     type = "radio"
-    checked = twc.Param(attribute=True, default=False)
-
+    checked = twc.Param('Whether the field is selected', attribute=True, default=False)
 
 class PasswordField(InputField):
     """
@@ -63,16 +62,16 @@ class PasswordField(InputField):
         super(PasswordField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['value'] = None
-    def _validate(self, value):
-        value = super(PasswordField, self)._validate(value)
+    def _validate(self, value, state=None):
+        value = super(PasswordField, self)._validate(value, state)
         return value or twc.EmptyField
 
 
 class FileValidator(twc.Validator):
-    """Base class for validators
+    """Validate a file upload field
 
-    `extention`
-        Allowed extention for the file
+    `extension`
+        Allowed extension for the file
     """
     extension = None
     msgs = {
@@ -82,8 +81,10 @@ class FileValidator(twc.Validator):
 
     def validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
-            if self.extension is not None and not value.filename.endswith(str(self.extension)):
-                    raise twc.ValidationError('badext', self)
+            if self.extension is not None and not value.filename.endswith(self.extension):
+                raise twc.ValidationError('badext', self)
+        elif value:    
+            raise twc.ValidationError('corrupt', self)
         elif self.required:
             raise twc.ValidationError('required', self)
 
@@ -92,9 +93,9 @@ class FileField(InputField):
     type = "file"
     validator = FileValidator
 
-    def _validate(self, value):
+    def _validate(self, value, state=None):
         try:
-            return super(FileField, self)._validate(value)
+            return super(FileField, self)._validate(value, state)
         except twc.ValidationError:
             self.value = None
             raise
@@ -116,37 +117,34 @@ class IgnoredField(HiddenField):
         return twc.EmptyField
 
 
-class LabelField(HiddenField):
+class LabelField(InputField):
     """
     A read-only label showing the value of a field. The value is stored in a hidden field, so it remains through validation failures. However, the value is never included in validated data.
     """
     type = 'hidden'
     template = "tw2.forms.templates.label_field"
-    def _validate(self, value):
-        super(LabelField, self)._validate(value)
-        return twc.EmptyField
+    validator = twc.BlankValidator
 
 
 class LinkField(twc.Widget):
     """
-    A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value.
+    A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value. If the value is None, and there is no default, the entire link is hidden.
     """
     template = "tw2.forms.templates.link_field"
-    link = twc.Variable('Link target', default='')
-    text = twc.Variable('Link text', default='')
-    css_class = twc.Param('Css Class Name', default=None, attribute=True, view_name='class')
-    value = twc.Variable("value to replace $ with in the link/text")
+    link = twc.Param('Link target', default='')
+    text = twc.Param('Link text', default='')
+    value = twc.Param("Value to replace $ with in the link/text")
+    validator = twc.BlankValidator
 
     def prepare(self):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['href'] = self.link.replace('$', str(self.value or ''))
-        self.text = self.text.replace('$', str(self.value or ''))
+        self.attrs['href'] = self.link.replace('$', unicode(self.value or ''))
+        self.text = self.value and self.text.replace('$', unicode(self.value)) or ''
 
 
 class Button(InputField):
-    """Generic button. You can override the text using :attr:`value` and define
-    a JavaScript action using :attr:`attrs['onclick']`.
+    """Generic button. You can override the text using `value` and define a JavaScript action using `attrs['onclick']`.
     """
     type = "button"
     id = None
@@ -173,6 +171,7 @@ class ImageButton(twc.Link, InputField):
     def prepare(self):
         super(ImageButton, self).prepare()
         self.src = self.link
+        self.safe_modify('attrs')
         self.attrs['src'] = self.src # TBD: hack!
 
 #--
@@ -182,106 +181,63 @@ class SelectionField(FormField):
     """
     Base class for single and multiple selection fields.
 
-    The `options` parameter must be an interable; it can take several formats:
+    The `options` parameter must be a list; it can take several formats:
 
-     * A list of values, e.g. ['', 'Red', 'Blue']
-     * A list of (code, value) tuples, e.g.
-       [(0, ''), (1, 'Red'), (2, 'Blue')]
-     * A mixed list of values and tuples. If the code is not specified, it
-       defaults to the value. e.g. ['', (1, 'Red'), (2, 'Blue')]
-     * A list of groups, e.g.
-        [('group', ['', (1, 'Red'), (2, 'Blue')]),
-         ('group2', ['', 'Pink', 'Yellow'])]
+     * A list of values, e.g.
+       ``['', 'Red', 'Blue']``
+     * A list of (code, value) tuples, e.g. 
+       ``[(0, ''), (1, 'Red'), (2, 'Blue')]``
+     * A mixed list of values and tuples. If the code is not specified, it defaults to the value. e.g. 
+       ``['', (1, 'Red'), (2, 'Blue')]``
+     * Attributes can be specified for individual items, e.g. 
+       ``[(1, 'Red', {'style':'background-color:red'})]``
+     * A list of groups, e.g. 
+       ``[('group1', [(1, 'Red')]), ('group2', ['Pink', 'Yellow'])]``
     """
 
     options = twc.Param('Options to be displayed')
-    item_validator = twc.Param('Validator that applies to each item in a multiple select field', default=None)
+    prompt_text = twc.Param('Text to prompt user to select an option.', default=None)
 
-    default_selected = twc.Param('Default value(s) applied to the select box if there is no value.', default=None)
     selected_verb = twc.Variable(default='selected')
     field_type = twc.Variable(default=False)
-    multiple = twc.Variable(default=False)
     grouped_options = twc.Variable()
 
     def prepare(self):
         super(SelectionField, self).prepare()
-        grouped_options = []
-        options = []
+        options = self.options
+        self.options = []
+        self.grouped_options = []
         counter = itertools.count(0)
-        value = self.value
-        if self.multiple and not value:
-            value = []
-        if self.multiple and not isinstance(value, (list, tuple)):
-            value = [value,]
-        for optgroup in self._iterate_options(self.options):
-            xxx = []
-            if isinstance(optgroup[1], (list,tuple)):
-                group = True
-                optlist = optgroup[1][:]
-            else:
-                group = False
-                optlist = [optgroup]
-            for option in self._iterate_options(optlist):
+        
+        for optgroup in self._iterate_options(options):
+            opts = []
+            group = isinstance(optgroup[1], (list,tuple))
+            for option in self._iterate_options(group and optgroup[1] or [optgroup]):
                 if len(option) is 2:
                     option_attrs = {}
-                # when is the option length going to be 3 according to the spec?
-                #elif len(option) is 3:
-                #    option_attrs = dict(option[2])
+                elif len(option) is 3:
+                    option_attrs = dict(option[2])
                 option_attrs['value'] = option[0]
                 if self.field_type:
-                    option_attrs['type'] = isinstance(self.field_type, basestring) and self.field_type or None
-                    # TBD: These are only needed for SelectionList
-                    option_attrs['name'] = self.compound_id
+                    option_attrs['type'] = self.field_type
+                    option_attrs['name'] = self.compound_id                                    
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
-
-                #handle default_selected value
-                if ((self.multiple and self.default_selected and option[0] in self.default_selected) or
-                        (not self.multiple and self.default_selected and option[0] == self.default_selected)):
+                if self._opt_matches_value(option[0]):
                     option_attrs[self.selected_verb] = self.selected_verb
-
-                #override if the widget was given an actual value
-                if ((self.multiple and unicode(option[0]) in [unicode(val) for val in value]) or
-                        (not self.multiple and unicode(option[0]) == unicode(value))):
-                    option_attrs[self.selected_verb] = self.selected_verb
-
-                xxx.append((option_attrs, unicode(option[1])))
-            options.extend(xxx)
+                opts.append((option_attrs, option[1]))
+            self.options.extend(opts)
             if group:
-                grouped_options.append((optgroup[0], xxx))
-        # options provides a list of *flat* options leaving out any eventual
-        # group, useful for backward compatibility and simpler widgets
-        # TBD: needed?
-        self.options = options
-        self.grouped_options = grouped_options or [(None, options)]
+                self.grouped_options.append((unicode(optgroup[0]), opts))            
 
-    def _validate(self, value):
-        """
-        To redisplay correctly on error, selection fields must have the
-        :attr:`item_validator` applies to their value. This function does this
-        in a way that will never raise an exception, before calling the main
-        validator.
-        """
-            
-        if self.multiple:
-            if isinstance(value, basestring):
-                #TODO: Fix this, it's awkward if value is "" or None because
-                #the resulting list is no longer False.
-                value = [value,]
-            self.value = value
-            if self.item_validator:
-                value = [twc.safe_validate(self.item_validator, v) for v in (value or [])]
-                value = [v for v in value if v is not twc.Invalid]
-            elif self.validator:
-                value = twc.safe_validate(self.validator, value)
-        else:
-            if self.item_validator:
-                value = twc.safe_validate(self.item_validator, value)
-            elif self.validator:
-                value = twc.safe_validate(self.validator, value)
-            if value is twc.Invalid:
-                value = None
-        self.value = value
-        return super(SelectionField, self)._validate(value)
+        if self.prompt_text is not None:
+            self.options = [('', self.prompt_text)] + self.options
+        if not self.grouped_options:        
+            self.grouped_options = [(None, self.options)]
+        elif self.prompt_text is not None:
+            self.grouped_options = [(None, [('', self.prompt_text)])] + self.grouped_options
+
+    def _opt_matches_value(self, opt):
+        return unicode(opt) == unicode(self.value)
 
     def _iterate_options(self, optlist):
         for option in optlist:
@@ -291,29 +247,48 @@ class SelectionField(FormField):
                 yield option
 
 
-class SingleSelectField(SelectionField):
-    template = "tw2.forms.templates.select_field"
-    null_text = twc.Param('Text to display if nothing is selected', '')
-    null_value = twc.Param('Value accompanying null_text if nothing is selected', '')
+class MultipleSelectionField(SelectionField):
+    item_validator = twc.Param('Validator that applies to each item', default=None)
 
     def prepare(self):
-        super(SingleSelectField, self).prepare()
-        if len(self.options) > 0 and self.options[0][1] and not self.grouped_options[0][0]:
-            self.options = [({'value':self.null_value}, self.null_text)] + self.options
-            self.grouped_options = [("", self.options)]
-        elif self.null_text:
-            self.options = [({'value':self.null_value}, self.null_text)] + self.options
-            self.grouped_options = [("", self.options)]
+        if not self.value:
+            self.value = []
+        if not isinstance(self.value, (list, tuple)):
+            self.value = [self.value]
+        if not hasattr(self, '_validated') and self.item_validator:
+            self.value = [self.item_validator.from_python(v) for v in self.value]
+        super(MultipleSelectionField, self).prepare()
 
-class MultipleSelectField(SelectionField):
+    def _opt_matches_value(self, opt):
+        return unicode(opt) in self.value
+
+    def _validate(self, value, state=None):
+        value = value or []
+        if not isinstance(value, (list, tuple)):
+            value = [value]
+        if self.validator:
+            self.validator.validate_python(self.validator.to_python(value))
+        if self.item_validator:
+            value = [twc.safe_validate(self.item_validator, v) for v in value]
+        self.value = [v for v in value if v is not twc.Invalid]
+        return self.value
+
+
+class SingleSelectField(SelectionField):
+    template = "tw2.forms.templates.select_field"
+    prompt_text = ''
+
+
+class MultipleSelectField(MultipleSelectionField):
     size = twc.Param('Number of visible options', default=None, attribute=True)
-    multiple = twc.Param(default=True, attribute=True)
+    multiple = twc.Variable(attribute=True, default='multiple')
     template = "tw2.forms.templates.select_field"
 
+
 class SelectionList(SelectionField):
-    field_type = True
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_list"
+    name = None
 
 class SeparatedSelectionTable(SelectionList):
     template = "tw2.forms.templates.separated_selection_table"
@@ -322,18 +297,17 @@ class RadioButtonList(SelectionList):
     field_type = "radio"
 
 
-class CheckBoxList(SelectionList):
+class CheckBoxList(SelectionList, MultipleSelectionField):
     field_type = "checkbox"
-    multiple = True
 
 
 class SelectionTable(SelectionField):
-    field_type = twc.Variable(default=True)
     selected_verb = "checked"
     template = "tw2.forms.templates.selection_table"
     cols = twc.Param('Number of columns', default=1)
     options_rows = twc.Variable()
     grouped_options_rows = twc.Variable()
+    name = None
 
     def _group_rows(self, seq, size):
         if not hasattr(seq, 'next'):
@@ -353,7 +327,7 @@ class SelectionTable(SelectionField):
         super(SelectionTable, self).prepare()
         self.options_rows = self._group_rows(self.options, self.cols)
         self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
-        
+
 class VerticalSelectionTable(SelectionField):
     field_type = twc.Variable(default=True)
     selected_verb = "checked"
@@ -411,20 +385,19 @@ class VerticalSelectionTable(SelectionField):
 class RadioButtonTable(SelectionTable):
     field_type = 'radio'
 
-class SeparatedRadioButtonTable(SeparatedSelectionTable):
+class SeparatedRadioButtonTable(SeparatedSelectionTable, MultipleSelectionField):
     field_type = 'radio'
 
 class VerticalRadioButtonTable(VerticalSelectionTable):
     field_type = 'radio'
 
 
-class CheckBoxTable(SelectionTable):
+class CheckBoxTable(SelectionTable, MultipleSelectionField):
     field_type = 'checkbox'
-    multiple = True
 
-class SeparatedCheckBoxTable(SeparatedSelectionTable):
+class SeparatedCheckBoxTable(SeparatedSelectionTable, MultipleSelectionField):
     field_type = 'checkbox'
-    multiple = True
+
 
 class VerticalCheckBoxTable(VerticalSelectionTable):
     field_type = 'checkbox'
@@ -506,6 +479,26 @@ class RowLayout(BaseLayout):
             self.css_class = ' '.join((self.css_class or '', row_class)).strip()
         super(RowLayout, self).prepare()
 
+class StripBlanks(twc.Validator):
+    def any_content(self, val):
+        if type(val) == list:
+            for v in val:
+                if self.any_content(v):
+                    return True
+            return False
+        elif type(val) == dict:
+            for k in val:
+                if k == 'id':
+                    continue
+                if self.any_content(val[k]):
+                    return True
+            return False
+        else:
+            return bool(val)
+
+    def to_python(self, value):
+        return [v for v in value if self.any_content(v)]
+
 class GridLayout(twc.RepeatingWidget):
     """
     Arrange labels and multiple rows of widgets in a grid.
@@ -514,6 +507,8 @@ class GridLayout(twc.RepeatingWidget):
     children = twc.Required
     template = "tw2.forms.templates.grid_layout"
 
+    def _validate(self, value, state=None):
+        return super(GridLayout, self)._validate(StripBlanks().to_python(value), state)
 
 class Spacer(FormField):
     """
@@ -548,7 +543,8 @@ class Form(twc.DisplayOnlyWidget):
 
     @classmethod
     def post_define(cls):
-        cls.submit = cls.submit(parent=cls)
+        if cls.submit:
+            cls.submit = cls.submit(parent=cls)
 
     def __init__(self, **kw):
         super(Form, self).__init__(**kw)
@@ -604,10 +600,11 @@ class FormPage(twc.Page):
         elif req.method == 'POST':
             try:
                 data = cls.validate(req.POST)
-                resp = cls.validated_request(req, data)
             except twc.ValidationError, e:
                 resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
                 resp.body = e.widget.display().encode('utf-8')
+            else:
+                resp = cls.validated_request(req, data)
             return resp
 
     @classmethod

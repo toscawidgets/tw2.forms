@@ -2,7 +2,7 @@
     <py:for each="c in w.children_hidden">
         ${c.display()}
     </py:for>
-    <li py:for="i,c in enumerate(w.children_non_hidden)" class="${(i % 2 and 'even' or 'odd') + (getattr(c, 'required', False) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs">
+    <li py:for="i,c in enumerate(w.children_non_hidden)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and getattr(c.validator, 'required', None)) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs">
         <label>$c.label</label>
         ${c.display()}
         <py:if test="not w.hover_help">$c.help_text</py:if>

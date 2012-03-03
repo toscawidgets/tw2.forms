@@ -6,7 +6,14 @@ from nose.tools import raises
 from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
+import formencode
+import formencode.national
 
+import webob
+if hasattr(webob, 'NestedMultiDict'):
+    from webob import NestedMultiDict
+else:
+    from webob.multidict import NestedMultiDict
 
 class TestInputField(WidgetTest):
     widget = InputField
@@ -23,7 +30,7 @@ class TestTextField(WidgetTest):
 class TestTextArea(WidgetTest):
     widget = TextArea
     attrs = {'css_class':'something', 'rows':6, 'cols':10}
-    params = {'value':6}
+    params = {'value':'6'}
     expected = '<textarea class="something" rows="6" cols="10">6</textarea>'
 
 class TestCheckbox(WidgetTest):
@@ -75,12 +82,6 @@ class TestHiddenField(WidgetTest):
     expected = '<input class="something" type="hidden" id="hid" value="info" name="hidden_name">'
     validate_params = [[None, {'hid':'b'}, 'b']]
 
-class TestIgnoredField(WidgetTest):
-    widget = IgnoredField
-    attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
-    expected = '<input class="something" type="hidden" id="hid" value="info" name="hidden_name">'
-    validate_params = [[None, {'hid':'b'}, EmptyField]]
-
 class TestLabelField(WidgetTest):
     widget = LabelField
     attrs = {'css_class':'something', 'value':'info', 'name':'hidden_name', 'id':'hid'}
@@ -116,18 +117,19 @@ class TestSingleSelectField(WidgetTest):
     widget = SingleSelectField
     attrs = {'css_class':'something',
              'options':((1, 'a'), (2, 'b'), (3, 'c')), 'id':'hid',
-             'item_validator':IntValidator(),
+             'validator':IntValidator(),
              }
     expected = """<select class="something" id="hid" name="hid">
-                        <option value=""></option>
+                        <option></option>
                         <option value="1">a</option>
                         <option value="2">b</option>
                         <option value="3">c</option>
                   </select>"""
-    validate_params = [[None, {'hid':'b'}, None],[None, {'hid':'1'}, 1]]
+    validate_params = [[None, {'hid':''}, None],[None, {'hid':'1'}, 1]]
 
     def test_option_group(self):
         expected = """<select class="something">
+                          <option></option>
                           <optgroup label="group">
                               <option value=""></option>
                               <option value="1">Red</option>
@@ -146,7 +148,7 @@ class TestSingleSelectField(WidgetTest):
 
     def test_option_no_values(self):
         expected = """<select class="something">
-                         <option value=""></option>
+                         <option></option>
                          <option value="a">a</option>
                          <option value="b">b</option>
                          <option value="c">c</option>
@@ -155,9 +157,30 @@ class TestSingleSelectField(WidgetTest):
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
 
+    def test_prompt_text(self):
+        expected = """<select>
+             <option >Pick one:</option>
+             <option value="a">a</option>
+             <option value="b">b</option>
+             <option value="c">c</option>
+            </select>"""
+        attrs = {'options':('a','b','c'), 'prompt_text':'Pick one:'}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
+    def test_no_options(self):
+        expected = """<select>
+             <option/>
+            </select>"""
+        attrs = {'options':[]}
+        for engine in self._get_all_possible_engines():
+            yield self._check_rendering_vs_expected, engine, attrs, self.params, expected
+
+
+
 class TestMultipleSelectField(WidgetTest):
     widget = MultipleSelectField
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':"hid"}
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':"hid"}
     expected = """<select class="something" multiple="multiple" id="hid" name="hid">
                       <option value="a">1</option>
                       <option value="b">2</option>
@@ -167,16 +190,16 @@ class TestMultipleSelectField(WidgetTest):
 
 class TestSelectionList(WidgetTest):
     widget = SelectionList
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
-    expected = """<ul class="something" id="something" name="something">
+    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
+    expected = """<ul class="something" id="something">
     <li>
-        <input name="something" value="a" id="something:0">
+        <input type="test" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
     </li><li>
-        <input name="something" value="b" id="something:1">
+        <input type="test" name="something" value="b" id="something:1">
         <label for="something:1">2</label>
     </li><li>
-        <input name="something" value="c" id="something:2">
+        <input type="test" name="something" value="c" id="something:2">
         <label for="something:2">3</label>
     </li>
 </ul>"""
@@ -184,8 +207,8 @@ class TestSelectionList(WidgetTest):
 
 class TestRadioButtonList(WidgetTest):
     widget = RadioButtonList
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
-    expected = """<ul class="something" id="something" name="something">
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
+    expected = """<ul class="something" id="something">
     <li>
         <input type="radio" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
@@ -200,8 +223,8 @@ class TestRadioButtonList(WidgetTest):
 
 class TestCheckBoxList(WidgetTest):
     widget = CheckBoxList
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
-    expected = """<ul class="something" id="something" name="something">
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
+    expected = """<ul class="something" id="something">
     <li>
         <input type="checkbox" name="something" value="a" id="something:0">
         <label for="something:0">1</label>
@@ -215,7 +238,7 @@ class TestCheckBoxList(WidgetTest):
 </ul>
 """
     def test_option_has_value(self):
-        expected = """<ul class="something" id="something" name="something">
+        expected = """<ul class="something" id="something">
     <li>
         <input type="checkbox" name="something" value="a" id="something:0" checked>
         <label for="something:0">a</label>
@@ -234,22 +257,22 @@ class TestCheckBoxList(WidgetTest):
 
 class TestSelectionTable(WidgetTest):
     widget = SelectionTable
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
-    expected = """<table class="something" id="something" name="something">
+    attrs = {'css_class':'something', 'field_type':'test', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
+    expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
-            <input name="something" value="a" id="something:0">
+            <input type="test" name="something" value="a" id="something:0">
             <label for="something:0">1</label>
         </td>
     </tr><tr>
         <td>
-            <input name="something" value="b" id="something:1">
+            <input type="test" name="something" value="b" id="something:1">
             <label for="something:1">2</label>
         </td>
     </tr><tr>
         <td>
-            <input name="something" value="c" id="something:2">
+            <input type="test" name="something" value="c" id="something:2">
             <label for="something:2">3</label>
         </td>
     </tr>
@@ -257,34 +280,34 @@ class TestSelectionTable(WidgetTest):
 </table>"""
 
     def test_option_leftover_chunk(self):
-        expected = """<table class="something" id="something" name="something">
+        expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
-            <input checked name="something" value="a" id="something:0">
+            <input type="test" checked name="something" value="a" id="something:0">
             <label for="something:0">a</label>
         </td><td>
-            <input name="something" value="b" id="something:1">
+            <input type="test" name="something" value="b" id="something:1">
             <label for="something:1">b</label>
         </td>
     </tr><tr>
         <td>
-            <input name="something" value="c" id="something:2">
+            <input type="test" name="something" value="c" id="something:2">
             <label for="something:2">c</label>
         </td>
         <td></td>
     </tr>
     </tbody>
 </table>"""
-        attrs = {'css_class':'something', 'cols':2, 'options':(('group1', ('a', 'b')),'c'), 'id':'something'}
+        attrs = {'css_class':'something', 'field_type':'test', 'cols':2, 'options':(('group1', ('a', 'b')),'c'), 'id':'something'}
         params = {'value':'a',}
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, attrs, params, expected
 
 class TestRadioButtonTable(WidgetTest):
     widget = RadioButtonTable
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
-    expected = """<table class="something" id="something" name="something">
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
+    expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
@@ -307,8 +330,8 @@ class TestRadioButtonTable(WidgetTest):
 
 class TestCheckBoxTable(WidgetTest):
     widget = CheckBoxTable
-    attrs = {'css_class':'something', 'options':(('a',1), ('b', 2), ('c', 3)), 'id':'something'}
-    expected = """<table class="something" id="something" name="something">
+    attrs = {'css_class':'something', 'options':(('a','1'), ('b', '2'), ('c', '3')), 'id':'something'}
+    expected = """<table class="something" id="something">
     <tbody>
     <tr>
         <td>
@@ -397,6 +420,40 @@ class TestTableLayout(WidgetTest):
     </td></tr>
 </table>"""
     declarative = True
+
+    def test_required(self):
+        attrs = {'children': [TextField(id='field1', validator=twc.Required)]}
+        expected = """<table>
+    <tr class="odd required" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr></table>"""
+
+    def test_fe_not_required(self):
+        attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=False))]}
+        expected = """<table>
+    <tr class="odd" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr></table>"""
+
+    def test_fe_required(self):
+        attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=True))]}
+        expected = """<table>
+    <tr class="odd required" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr></table>"""
+
 
 class TestRowLayout(WidgetTest):
     widget = RowLayout
@@ -542,6 +599,42 @@ class TestTableFieldset(WidgetTest):
 </table>
 </fieldset>"""
     declarative = True
+
+class TestTableFieldsetWithFEValidator(WidgetTest):
+    widget = TableFieldSet
+    attrs = {'field1':TextField(id='field1'),
+             'field2':TextField(id='field2'),
+             'field3':TextField(id='field3', validator=formencode.national.USPostalCode()),
+             }
+    expected = """<fieldset>
+    <legend></legend>
+    <table>
+    <tr class="odd" id="field1:container">
+        <th>Field1</th>
+        <td>
+            <input name="field1" id="field1" type="text">
+            <span id="field1:error"></span>
+        </td>
+    </tr><tr class="even" id="field2:container">
+        <th>Field2</th>
+        <td>
+            <input name="field2" id="field2" type="text">
+            <span id="field2:error"></span>
+        </td>
+    </tr><tr class="odd" id="field3:container">
+        <th>Field3</th>
+        <td>
+            <input name="field3" id="field3" type="text">
+            <span id="field3:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id=":error"></span>
+    </td></tr>
+</table>
+</fieldset>"""
+    declarative = True
+
 
 class TestListFieldset(WidgetTest):
     widget = ListFieldSet
