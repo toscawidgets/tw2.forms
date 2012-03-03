@@ -4,26 +4,40 @@ import webob
 import cgi
 import math
 
+
 #--
 # Basic Fields
 #--
 class FormField(twc.Widget):
-    name = twc.Variable('dom name', request_local=False, attribute=True, default=property(lambda s: s.compound_id))
+    name = twc.Variable(
+        'dom name',
+        request_local=False,
+        attribute=True,
+        default=property(lambda s: s.compound_id)
+    )
 
     @property
     def required(self):
-        return self.validator and (getattr(self.validator, 'required', None) or getattr(self.validator, 'not_empty', None))
+        return self.validator and (
+            getattr(self.validator, 'required', None) or
+            getattr(self.validator, 'not_empty', None)
+        )
+
 
 class InputField(FormField):
-    type = twc.Variable('Type of input field', default=twc.Required, attribute=True)
+    type = twc.Variable('Type of input field',
+                        default=twc.Required,
+                        attribute=True)
     value = twc.Param(attribute=True)
     template = "tw2.forms.templates.input_field"
 
 
 class PostlabeledInputField(InputField):
-    """Inherits :class:`InputField`, but with a :attr:`text` label that follows the input field"""
+    """ Inherits :class:`InputField`, but with a :attr:`text`
+    label that follows the input field """
     text = twc.Param('Text to display after the field.')
-    text_attrs = twc.Param('Dict of attributes to inject into the label.', default={})
+    text_attrs = twc.Param('Dict of attributes to inject into the label.',
+                           default={})
     template = "tw2.forms.templates.postlabeled_input_field"
 
 
@@ -41,15 +55,20 @@ class TextArea(FormField):
 class CheckBox(InputField):
     type = "checkbox"
     validator = twc.BoolValidator
+
     def prepare(self):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
         self.value = None
 
+
 class RadioButton(InputField):
     type = "radio"
-    checked = twc.Param('Whether the field is selected', attribute=True, default=False)
+    checked = twc.Param('Whether the field is selected',
+                        attribute=True,
+                        default=False)
+
 
 class PasswordField(InputField):
     """
@@ -58,10 +77,12 @@ class PasswordField(InputField):
     password is entered, this validates as EmptyField.
     """
     type = 'password'
+
     def prepare(self):
         super(PasswordField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['value'] = None
+
     def _validate(self, value, state=None):
         value = super(PasswordField, self)._validate(value, state)
         return value or twc.EmptyField
@@ -81,7 +102,8 @@ class FileValidator(twc.Validator):
 
     def validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
-            if self.extension is not None and not value.filename.endswith(self.extension):
+            if self.extension is not None and \
+               not value.filename.endswith(self.extension):
                 raise twc.ValidationError('badext', self)
         elif value:
             raise twc.ValidationError('corrupt', self)
@@ -119,7 +141,9 @@ class IgnoredField(HiddenField):
 
 class LabelField(InputField):
     """
-    A read-only label showing the value of a field. The value is stored in a hidden field, so it remains through validation failures. However, the value is never included in validated data.
+    A read-only label showing the value of a field. The value is stored in a
+    hidden field, so it remains through validation failures. However, the
+    value is never included in validated data.
     """
     type = 'hidden'
     template = "tw2.forms.templates.label_field"
@@ -128,7 +152,9 @@ class LabelField(InputField):
 
 class LinkField(twc.Widget):
     """
-    A dynamic link based on the value of a field. If either *link* or *text* contain a $, it is replaced with the field value. If the value is None, and there is no default, the entire link is hidden.
+    A dynamic link based on the value of a field. If either *link* or *text*
+    contain a $, it is replaced with the field value. If the value is None,
+    and there is no default, the entire link is hidden.
     """
     template = "tw2.forms.templates.link_field"
     link = twc.Param('Link target', default='')
@@ -140,11 +166,15 @@ class LinkField(twc.Widget):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['href'] = self.link.replace('$', unicode(self.value or ''))
-        self.text = self.value and self.text.replace('$', unicode(self.value)) or ''
+        self.text = \
+                self.value and \
+                self.text.replace('$', unicode(self.value)) or \
+                ''
 
 
 class Button(InputField):
-    """Generic button. You can override the text using `value` and define a JavaScript action using `attrs['onclick']`.
+    """ Generic button. You can override the text using `value` and define a
+    JavaScript action using `attrs['onclick']`.
     """
     type = "button"
     id = None
@@ -163,8 +193,12 @@ class ResetButton(Button):
 
 class ImageButton(twc.Link, InputField):
     type = "image"
-    width = twc.Param('Width of image in pixels', attribute=True, default=None)
-    height = twc.Param('Height of image in pixels', attribute=True, default=None)
+    width = twc.Param('Width of image in pixels',
+                      attribute=True,
+                      default=None)
+    height = twc.Param('Height of image in pixels',
+                       attribute=True,
+                       default=None)
     alt = twc.Param('Alternate text', attribute=True, default='')
     src = twc.Variable(attribute=True)
 
@@ -172,7 +206,8 @@ class ImageButton(twc.Link, InputField):
         super(ImageButton, self).prepare()
         self.src = self.link
         self.safe_modify('attrs')
-        self.attrs['src'] = self.src # TBD: hack!
+        self.attrs['src'] = self.src  # TBD: hack!
+
 
 #--
 # Selection fields
@@ -187,7 +222,8 @@ class SelectionField(FormField):
        ``['', 'Red', 'Blue']``
      * A list of (code, value) tuples, e.g.
        ``[(0, ''), (1, 'Red'), (2, 'Blue')]``
-     * A mixed list of values and tuples. If the code is not specified, it defaults to the value. e.g.
+     * A mixed list of values and tuples. If the code is not specified, it
+       defaults to the value. e.g.
        ``['', (1, 'Red'), (2, 'Blue')]``
      * Attributes can be specified for individual items, e.g.
        ``[(1, 'Red', {'style':'background-color:red'})]``
@@ -196,7 +232,8 @@ class SelectionField(FormField):
     """
 
     options = twc.Param('Options to be displayed')
-    prompt_text = twc.Param('Text to prompt user to select an option.', default=None)
+    prompt_text = twc.Param('Text to prompt user to select an option.',
+                            default=None)
 
     selected_verb = twc.Variable(default='selected')
     field_type = twc.Variable(default=False)
@@ -211,8 +248,10 @@ class SelectionField(FormField):
 
         for optgroup in self._iterate_options(options):
             opts = []
-            group = isinstance(optgroup[1], (list,tuple))
-            for option in self._iterate_options(group and optgroup[1] or [optgroup]):
+            group = isinstance(optgroup[1], (list, tuple))
+            for option in self._iterate_options(
+                group and optgroup[1] or [optgroup]):
+
                 if len(option) is 2:
                     option_attrs = {}
                 elif len(option) is 3:
@@ -221,7 +260,9 @@ class SelectionField(FormField):
                 if self.field_type:
                     option_attrs['type'] = self.field_type
                     option_attrs['name'] = self.compound_id
-                    option_attrs['id'] = self.compound_id + ':' + str(counter.next())
+                    option_attrs['id'] = ':'.join([
+                        self.compound_id, str(counter.next())
+                    ])
                 if self._opt_matches_value(option[0]):
                     option_attrs[self.selected_verb] = self.selected_verb
                 opts.append((option_attrs, option[1]))
@@ -234,21 +275,23 @@ class SelectionField(FormField):
         if not self.grouped_options:
             self.grouped_options = [(None, self.options)]
         elif self.prompt_text is not None:
-            self.grouped_options = [(None, [('', self.prompt_text)])] + self.grouped_options
+            self.grouped_options = \
+                    [(None, [('', self.prompt_text)])] + self.grouped_options
 
     def _opt_matches_value(self, opt):
         return unicode(opt) == unicode(self.value)
 
     def _iterate_options(self, optlist):
         for option in optlist:
-            if not isinstance(option, (tuple,list)):
+            if not isinstance(option, (tuple, list)):
                 yield (option, option)
             else:
                 yield option
 
 
 class MultipleSelectionField(SelectionField):
-    item_validator = twc.Param('Validator that applies to each item', default=None)
+    item_validator = twc.Param('Validator that applies to each item',
+                               default=None)
 
     def prepare(self):
         if not self.value:
@@ -256,7 +299,9 @@ class MultipleSelectionField(SelectionField):
         if not isinstance(self.value, (list, tuple)):
             self.value = [self.value]
         if not hasattr(self, '_validated') and self.item_validator:
-            self.value = [self.item_validator.from_python(v) for v in self.value]
+            self.value = [
+                self.item_validator.from_python(v) for v in self.value
+            ]
         super(MultipleSelectionField, self).prepare()
 
     def _opt_matches_value(self, opt):
@@ -290,8 +335,10 @@ class SelectionList(SelectionField):
     template = "tw2.forms.templates.selection_list"
     name = None
 
+
 class SeparatedSelectionTable(SelectionList):
     template = "tw2.forms.templates.separated_selection_table"
+
 
 class RadioButtonList(SelectionList):
     field_type = "radio"
@@ -326,24 +373,31 @@ class SelectionTable(SelectionField):
     def prepare(self):
         super(SelectionTable, self).prepare()
         self.options_rows = self._group_rows(self.options, self.cols)
-        self.grouped_options_rows = [(g, self._group_rows(o, self.cols)) for g, o in self.grouped_options]
+        self.grouped_options_rows = [
+            (g, self._group_rows(o, self.cols))
+            for g, o in self.grouped_options
+        ]
+
 
 class VerticalSelectionTable(SelectionField):
     field_type = twc.Variable(default=True)
     selected_verb = "checked"
     template = "tw2.forms.templates.vertical_selection_table"
-    cols = twc.Param('Number of columns. If the options are grouped, this is overidden.', default=1)
+    cols = twc.Param(
+        'Number of columns. If the options are grouped, this is overidden.',
+        default=1)
     options_rows = twc.Variable()
 
     def _gen_row_single(self, single, cols):
         row_count = int(math.ceil(float(len(single)) / float(cols)))
-        # This shouldn't really need spacers. It's hackish. (Problem: 4 items in a 3 column table)
+        # This shouldn't really need spacers. It's hackish.
+        # (Problem: 4 items in a 3 column table)
         spacer_count = (row_count * cols) - len(single)
         single.extend([(None, None)] * spacer_count)
         col_iters = []
         for i in range(cols):
             start = i * row_count
-            col_iters.append(iter(single[start:start+row_count]))
+            col_iters.append(iter(single[start:start + row_count]))
 
         while True:
             row = []
@@ -378,24 +432,31 @@ class VerticalSelectionTable(SelectionField):
     def prepare(self):
         super(VerticalSelectionTable, self).prepare()
         if self.grouped_options[0][0]:
-            self.options_rows =  self._gen_row_grouped(self.grouped_options)
+            self.options_rows = self._gen_row_grouped(self.grouped_options)
         else:
             self.options_rows = self._gen_row_single(self.options, self.cols)
+
 
 class RadioButtonTable(SelectionTable):
     field_type = 'radio'
 
-class SeparatedRadioButtonTable(SeparatedSelectionTable, MultipleSelectionField):
+
+class SeparatedRadioButtonTable(SeparatedSelectionTable,
+                                MultipleSelectionField):
     field_type = 'radio'
+
 
 class VerticalRadioButtonTable(VerticalSelectionTable):
     field_type = 'radio'
 
 
-class CheckBoxTable(SelectionTable, MultipleSelectionField):
+class CheckBoxTable(SelectionTable,
+                    MultipleSelectionField):
     field_type = 'checkbox'
 
-class SeparatedCheckBoxTable(SeparatedSelectionTable, MultipleSelectionField):
+
+class SeparatedCheckBoxTable(SeparatedSelectionTable,
+                             MultipleSelectionField):
     field_type = 'checkbox'
 
 
@@ -403,12 +464,14 @@ class VerticalCheckBoxTable(VerticalSelectionTable):
     field_type = 'checkbox'
     multiple = True
 
+
 #--
 # Layout widgets
 #--
 class BaseLayout(twc.CompoundWidget):
     """
-    The following CSS classes are used, on the element containing both a child widget and its label.
+    The following CSS classes are used, on the element containing
+    both a child widget and its label.
 
     `odd` / `even`
         On alternating rows. The first row is odd.
@@ -420,10 +483,18 @@ class BaseLayout(twc.CompoundWidget):
         If the field contains a validation error.
     """
 
-    label = twc.ChildParam('Label for the field. Auto generates this from the id; None supresses the label.', default=twc.Auto)
-    help_text = twc.ChildParam('A longer description of the field', default=None)
-    hover_help = twc.Param('Whether to display help text as hover tips', default=False)
-    container_attrs = twc.ChildParam('Extra attributes to include in the element containing the widget and its label.', default={})
+    label = twc.ChildParam(
+        'Label for the field. Auto generates this from the ' +
+        'id; None supresses the label.',
+        default=twc.Auto)
+    help_text = twc.ChildParam('A longer description of the field',
+                               default=None)
+    hover_help = twc.Param('Whether to display help text as hover tips',
+                           default=False)
+    container_attrs = twc.ChildParam(
+        'Extra attributes to include in the element containing ' +
+        'the widget and its label.',
+        default={})
 
     resources = [twc.CSSLink(modname='tw2.forms', filename='static/forms.css')]
 
@@ -437,7 +508,10 @@ class BaseLayout(twc.CompoundWidget):
 
     @property
     def rollup_errors(self):
-        errors = [c.error_msg for c in self.children if isinstance(c, HiddenField) and c.error_msg]
+        errors = [
+            c.error_msg for c in self.children
+            if isinstance(c, HiddenField) and c.error_msg
+        ]
         if self.error_msg:
             errors.insert(0, self.error_msg)
         return errors
@@ -468,16 +542,20 @@ class RowLayout(BaseLayout):
     Arrange widgets in a table row. This is normally only useful as a child to
     :class:`GridLayout`.
     """
-    resources = [
-        twc.Link(id='error', modname='tw2.forms', filename='static/dialog-warning.png'),
-    ]
+    resources = [twc.Link(id='error', modname='tw2.forms',
+                          filename='static/dialog-warning.png'),
+                ]
     template = "tw2.forms.templates.row_layout"
 
     def prepare(self):
         row_class = (self.repetition % 2 and 'even') or 'odd'
         if not self.css_class or row_class not in self.css_class:
-            self.css_class = ' '.join((self.css_class or '', row_class)).strip()
+            self.css_class = ' '.join((
+                self.css_class or '', row_class
+            )).strip()
+
         super(RowLayout, self).prepare()
+
 
 class StripBlanks(twc.Validator):
     def any_content(self, val):
@@ -499,21 +577,21 @@ class StripBlanks(twc.Validator):
     def to_python(self, value):
         return [v for v in value if self.any_content(v)]
 
+
 class GridLayout(twc.RepeatingWidget):
-    """
-    Arrange labels and multiple rows of widgets in a grid.
-    """
+    """ Arrange labels and multiple rows of widgets in a grid. """
     child = RowLayout
     children = twc.Required
     template = "tw2.forms.templates.grid_layout"
 
     def _validate(self, value, state=None):
-        return super(GridLayout, self)._validate(StripBlanks().to_python(value), state)
+        return super(GridLayout, self)._validate(
+            StripBlanks().to_python(value), state
+        )
+
 
 class Spacer(FormField):
-    """
-    A blank widget, used to insert a blank row in a layout.
-    """
+    """ A blank widget, used to insert a blank row in a layout. """
     template = "tw2.forms.templates.spacer"
     id = None
     label = None
@@ -521,7 +599,8 @@ class Spacer(FormField):
 
 class Label(twc.Widget):
     """
-    A textual label. This disables any label that would be displayed by a parent layout.
+    A textual label. This disables any label that would be displayed by
+    a parent layout.
     """
     template = 'tw2.forms.templates.label'
     text = twc.Param('Text to appear in label')
@@ -531,13 +610,22 @@ class Label(twc.Widget):
 
 class Form(twc.DisplayOnlyWidget):
     """
-    A form, with a submit button. It's common to pass a TableLayout or ListLayout widget as the child.
+    A form, with a submit button. It's common to pass a
+    TableLayout or ListLayout widget as the child.
     """
     template = "tw2.forms.templates.form"
-    help_msg = twc.Param('This message displays as a div inside the form', default=None)
-    action = twc.Param('URL to submit form data to. If this is None, the form submits to the same URL it was displayed on.', default=None, attribute=True)
-    method = twc.Param('HTTP method used for form submission.', default='post', attribute=True)
-    submit = twc.Param('Submit button widget. If this is None, no submit button is generated.', default=SubmitButton(id='submit', value='Save'))
+    help_msg = twc.Param(
+        'This message displays as a div inside the form',
+        default=None)
+    action = twc.Param(
+        'URL to submit form data to. If this is None, the form ' +
+        'submits to the same URL it was displayed on.',
+        default=None, attribute=True)
+    method = twc.Param('HTTP method used for form submission.',
+                       default='post', attribute=True)
+    submit = twc.Param('Submit button widget. If this is None, no submit ' +
+                       'button is generated.',
+                       default=SubmitButton(id='submit', value='Save'))
     attrs = {'enctype': 'multipart/form-data'}
     id_suffix = 'form'
 
@@ -556,28 +644,34 @@ class Form(twc.DisplayOnlyWidget):
         if self.submit:
             self.submit.prepare()
 
+
 class FieldSet(twc.DisplayOnlyWidget):
     """
-    A field set. It's common to pass a TableLayout or ListLayout widget as the child.
+    A field set. It's common to pass a TableLayout or ListLayout
+    widget as the child.
     """
     template = "tw2.forms.templates.fieldset"
     legend = twc.Param('Text for the legend', default=None)
     id_suffix = 'fieldset'
+
 
 class TableForm(Form):
     """Equivalent to a Form containing a TableLayout."""
     child = twc.Variable(default=TableLayout)
     children = twc.Required
 
+
 class ListForm(Form):
     """Equivalent to a Form containing a ListLayout."""
     child = twc.Variable(default=ListLayout)
     children = twc.Required
 
+
 class TableFieldSet(FieldSet):
     """Equivalent to a FieldSet containing a TableLayout."""
     child = twc.Variable(default=TableLayout)
     children = twc.Required
+
 
 class ListFieldSet(FieldSet):
     """Equivalent to a FieldSet containing a ListLayout."""
@@ -587,7 +681,8 @@ class ListFieldSet(FieldSet):
 
 class FormPage(twc.Page):
     """
-    A page that contains a form. The :meth:`request` method performs validation,
+    A page that contains a form. The :meth:`request` method
+    performs validation,
     redisplaying the form on errors. On success, it calls
     :meth:`validated_request`.
     """
@@ -601,7 +696,10 @@ class FormPage(twc.Page):
             try:
                 data = cls.validate(req.POST)
             except twc.ValidationError, e:
-                resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
+                resp = webob.Response(
+                    request=req,
+                    content_type="text/html; charset=UTF8",
+                )
                 resp.body = e.widget.display().encode('utf-8')
             else:
                 resp = cls.validated_request(req, data)
@@ -609,7 +707,10 @@ class FormPage(twc.Page):
 
     @classmethod
     def validated_request(cls, req, data):
-        resp = webob.Response(request=req, content_type="text/html; charset=UTF8")
+        resp = webob.Response(
+            request=req,
+            content_type="text/html; charset=UTF8",
+        )
         resp.body = 'Form posted successfully'
         if twc.core.request_local()['middleware'].config.debug:
             resp.body += ' ' + repr(data)

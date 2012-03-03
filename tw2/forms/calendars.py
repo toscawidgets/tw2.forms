@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Portions of this document have been taken in part and modified from the original
-tw.forms codebase written primarily by Alberto Valaverde
+Portions of this document have been taken in part and modified from the
+original tw.forms codebase written primarily by Alberto Valaverde
 
 """
 import re
@@ -41,9 +41,15 @@ try:
 except ImportError:
     pass
 
-__all__ = ["CalendarDatePicker", "CalendarDateTimePicker", "calendar_js", "calendar_setup"]
+__all__ = [
+    "CalendarDatePicker",
+    "CalendarDateTimePicker",
+    "calendar_js",
+    "calendar_setup",
+]
 
 _illegal_s = re.compile(r"((^|[^%])(%%)*%s)")
+
 
 def _findall(text, substr):
     # Also finds overlaps
@@ -54,12 +60,14 @@ def _findall(text, substr):
         if j == -1:
             break
         sites.append(j)
-        i = j+1
+        i = j + 1
     return sites
+
 
 def strftime_before1900(dt, fmt):
     """
-    A strftime implementation that supports proleptic Gregorian dates before 1900.
+    A strftime implementation that supports proleptic Gregorian dates before
+    1900.
 
     @see: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/306860
     """
@@ -72,17 +80,17 @@ def strftime_before1900(dt, fmt):
     # For every non-leap year century, advance by
     # 6 years to get into the 28-year repeat cycle
     delta = 2000 - year
-    off = 6*(delta // 100 + delta // 400)
+    off = 6 * (delta // 100 + delta // 400)
     year = year + off
 
     # Move to around the year 2000
-    year = year + ((2000 - year)//28)*28
+    year = year + ((2000 - year) // 28) * 28
     timetuple = dt.timetuple()
     s1 = time.strftime(fmt, (year,) + timetuple[1:])
     sites1 = _findall(s1, str(year))
 
-    s2 = time.strftime(fmt, (year+28,) + timetuple[1:])
-    sites2 = _findall(s2, str(year+28))
+    s2 = time.strftime(fmt, (year + 28,) + timetuple[1:])
+    sites2 = _findall(s2, str(year + 28))
 
     sites = []
     for site in sites1:
@@ -92,7 +100,7 @@ def strftime_before1900(dt, fmt):
     s = s1
     syear = "%4d" % (dt.year,)
     for site in sites:
-        s = s[:site] + syear + s[site+4:]
+        s = s[:site] + syear + s[site + 4:]
     return s
 
 log = logging.getLogger(__name__)
@@ -104,13 +112,15 @@ calendar_js = twc.JSLink(
 calendar_setup = twc.JSLink(resources=[calendar_js],
     modname='tw2.forms', filename='static/calendar/calendar-setup.js')
 
+
 class CalendarDatePicker(FormField):
     """
     Uses a javascript calendar system to allow picking of calendar dates.
     The date_format is in mm/dd/yyyy unless otherwise specified
     """
     template = "tw2.forms.templates.calendar"
-    calendar_lang = twc.Param("Default Language to use in the Calendar", default='en')
+    calendar_lang = twc.Param("Default Language to use in the Calendar",
+                              default='en')
     not_empty = twc.Param("Allow this field to be empty", default=True)
     button_text = twc.Param("Text to display on Button", default="Choose")
     date_format = twc.Param("Date Display Format", default="%m/%d/%Y")
@@ -118,7 +128,10 @@ class CalendarDatePicker(FormField):
     tzinfo = twc.Param('Time Zone Information', default=None)
     setup_options = twc.Param('Calendar.setup(...) options', default={})
 #    validator = None
-    default = twc.Param('Default value (datetime) for the widget.  If set to a function, it will be called each time before displaying.', default=datetime.now)
+    default = twc.Param(
+        'Default value (datetime) for the widget.  If set to a function, ' +
+        'it will be called each time before displaying.',
+        default=datetime.now)
 
     def get_calendar_lang_file_link(self, lang):
         """
@@ -150,7 +163,9 @@ class CalendarDatePicker(FormField):
         except AttributeError:
             self.strdate = self.value
 
-        self.resources.append(self.get_calendar_lang_file_link(self.calendar_lang))
+        self.resources.append(
+            self.get_calendar_lang_file_link(self.calendar_lang)
+        )
 
 
 class CalendarDateTimePicker(CalendarDatePicker):
