@@ -133,7 +133,7 @@ class CalendarDatePicker(FormField):
     def __init__(self, *args, **kw):
         if self.validator is None:
             self.validator = twc.DateTimeValidator(
-            format=self.date_format, 
+            format=self.date_format,
             )
         super(CalendarDatePicker, self).__init__(*args, **kw)
 

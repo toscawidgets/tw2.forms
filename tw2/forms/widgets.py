@@ -83,7 +83,7 @@ class FileValidator(twc.Validator):
         if isinstance(value, cgi.FieldStorage):
             if self.extension is not None and not value.filename.endswith(self.extension):
                 raise twc.ValidationError('badext', self)
-        elif value:    
+        elif value:
             raise twc.ValidationError('corrupt', self)
         elif self.required:
             raise twc.ValidationError('required', self)
@@ -185,13 +185,13 @@ class SelectionField(FormField):
 
      * A list of values, e.g.
        ``['', 'Red', 'Blue']``
-     * A list of (code, value) tuples, e.g. 
+     * A list of (code, value) tuples, e.g.
        ``[(0, ''), (1, 'Red'), (2, 'Blue')]``
-     * A mixed list of values and tuples. If the code is not specified, it defaults to the value. e.g. 
+     * A mixed list of values and tuples. If the code is not specified, it defaults to the value. e.g.
        ``['', (1, 'Red'), (2, 'Blue')]``
-     * Attributes can be specified for individual items, e.g. 
+     * Attributes can be specified for individual items, e.g.
        ``[(1, 'Red', {'style':'background-color:red'})]``
-     * A list of groups, e.g. 
+     * A list of groups, e.g.
        ``[('group1', [(1, 'Red')]), ('group2', ['Pink', 'Yellow'])]``
     """
 
@@ -208,7 +208,7 @@ class SelectionField(FormField):
         self.options = []
         self.grouped_options = []
         counter = itertools.count(0)
-        
+
         for optgroup in self._iterate_options(options):
             opts = []
             group = isinstance(optgroup[1], (list,tuple))
@@ -220,18 +220,18 @@ class SelectionField(FormField):
                 option_attrs['value'] = option[0]
                 if self.field_type:
                     option_attrs['type'] = self.field_type
-                    option_attrs['name'] = self.compound_id                                    
+                    option_attrs['name'] = self.compound_id
                     option_attrs['id'] = self.compound_id + ':' + str(counter.next())
                 if self._opt_matches_value(option[0]):
                     option_attrs[self.selected_verb] = self.selected_verb
                 opts.append((option_attrs, option[1]))
             self.options.extend(opts)
             if group:
-                self.grouped_options.append((unicode(optgroup[0]), opts))            
+                self.grouped_options.append((unicode(optgroup[0]), opts))
 
         if self.prompt_text is not None:
             self.options = [('', self.prompt_text)] + self.options
-        if not self.grouped_options:        
+        if not self.grouped_options:
             self.grouped_options = [(None, self.options)]
         elif self.prompt_text is not None:
             self.grouped_options = [(None, [('', self.prompt_text)])] + self.grouped_options
