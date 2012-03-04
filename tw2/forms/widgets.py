@@ -31,7 +31,6 @@ class InputField(FormField):
     value = twc.Param(attribute=True)
     template = "tw2.forms.templates.input_field"
 
-
 class PostlabeledInputField(InputField):
     """ Inherits :class:`InputField`, but with a :attr:`text`
     label that follows the input field """
@@ -43,12 +42,14 @@ class PostlabeledInputField(InputField):
 
 class TextField(InputField):
     size = twc.Param('Size of the field', default=None, attribute=True)
+    placeholder = twc.Param('Placeholder text (HTML5 Only)', attribute=True, default=None)
     type = 'text'
 
 
 class TextArea(FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
+    placeholder = twc.Param('Placeholder text (HTML5 Only)', attribute=True, default=None)
     template = "tw2.forms.templates.textarea"
 
 
