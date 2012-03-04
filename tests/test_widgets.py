@@ -23,9 +23,9 @@ class TestInputField(WidgetTest):
 
 class TestTextField(WidgetTest):
     widget = TextField
-    attrs = {'css_class':'something', 'size':'60'}
+    attrs = {'css_class':'something', 'size':'60', 'placeholder': "Search..."}
     params = {'value':6}
-    expected = '<input type="text" class="something" value="6" size="60"/>'
+    expected = '<input type="text" class="something" placeholder="Search..." value="6" size="60"/>'
 
 class TestTextArea(WidgetTest):
     widget = TextArea
