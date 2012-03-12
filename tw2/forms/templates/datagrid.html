@@ -1,0 +1,19 @@
+<table xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:py="http://genshi.edgewall.org/"
+       py:attrs="w.attrs" cellpadding="0" cellspacing="1" border="0">
+    <thead py:if="w.columns">
+        <tr>
+            <th py:for="i, col in enumerate(w.columns)"
+                class="col_${i}" py:content="col.title"/>
+        </tr>
+    </thead>
+    <tbody>
+        <tr py:for="i, row in enumerate(w.value)"
+            class="${i%2 and 'odd' or 'even'}">
+            <td py:for="col in w.columns"
+                align="${col.get_option('align', None)}"
+                class="${col.get_option('css_class', None)}"
+                py:content="col.get_field(row, displays_on='genshi')"/>
+        </tr>
+    </tbody>
+</table>
