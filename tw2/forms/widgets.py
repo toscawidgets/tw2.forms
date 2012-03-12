@@ -41,6 +41,9 @@ class InputField(FormField):
     maxlength = twc.Param('Maximum length of field',
         attribute=True, default=None)
 
+    pattern = twc.Param('JavaScript Regex to match field with',
+        attribute=True, default=None)
+
     required = twc.Param('Input field is required',
         attribute=True, default=None)
 
