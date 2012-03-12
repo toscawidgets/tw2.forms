@@ -60,7 +60,7 @@ class CheckBox(InputField):
     def prepare(self):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['checked'] = self.value and 'checked' or None
+        self.attrs['checked'] = 'checked' if self.value in [True, 'checked'] else None
         self.value = None
 
 

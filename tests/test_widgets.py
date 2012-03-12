@@ -18,20 +18,20 @@ else:
 class TestInputField(WidgetTest):
     widget = InputField
     attrs = {'type':'foo', 'css_class':'something'}
-    params = {'value':6}
-    expected = '<input type="foo" class="something" value="6"/>'
+    params = {'value':7}
+    expected = '<input type="foo" class="something" value="7"/>'
 
 class TestTextField(WidgetTest):
     widget = TextField
-    attrs = {'css_class':'something', 'size':'60', 'placeholder': "Search..."}
-    params = {'value':6}
+    attrs = {'css_class':'something', 'size':'60'}
+    params = {'value':6, 'placeholder': "Search..."}
     expected = '<input type="text" class="something" placeholder="Search..." value="6" size="60"/>'
 
 class TestTextArea(WidgetTest):
     widget = TextArea
     attrs = {'css_class':'something', 'rows':6, 'cols':10}
-    params = {'value':'6'}
-    expected = '<textarea class="something" rows="6" cols="10">6</textarea>'
+    params = {'value':'5'}
+    expected = '<textarea class="something" rows="6" cols="10">5</textarea>'
 
 class TestCheckbox(WidgetTest):
     widget = CheckBox
@@ -40,8 +40,8 @@ class TestCheckbox(WidgetTest):
     expected = '<input checked="checked" value="True" type="checkbox" class="something"/>'
 
     def test_value_false(self):
-        params = {'value':False}
-        expected = '<input value="False" type="checkbox" class="something">'
+        params = {'value': False}
+        expected = '<input type="checkbox" class="something">'
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
 
