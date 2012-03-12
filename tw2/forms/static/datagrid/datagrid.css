@@ -1,0 +1,15 @@
+.grid { background-color:#e3e3e3;font-size:12px;font-family:verdana,sans-serif;border:none;width:100%;}
+.grid td, .grid th {padding:3px;border:none;}
+.grid .action_cell { text-align:right; }
+.grid THEAD { text-align:left;background-color:#f0f0f0;color:#333;}
+.grid .heading img { float:right;margin-left:2px;margin-right:3px; } 
+.grid .heading a { text-decoration:none;color:#333; }
+.grid td a { text-decoration:none;color:#333}
+.grid .odd{background-color:#edf3fe}
+.grid .even{background-color:#fff}
+.grid .pointer {cursor:pointer}
+.grid .column_chooser_link {position:relative;background-color:#e3e3e3;}
+.grid .column_chooser_link ul {position:absolute;display:none;top:0px;right:-20px;}
+.grid .column_chooser_list a {width:200px;display:block;padding:3px;background-color:#e3e3e3;}
+.grid .column_chooser_list a:hover {background-color:#cdcdcd;}
+.grid .column_chooser_list { padding:0;margin:0;list-style:none;background-color:#e3e3e3; }
