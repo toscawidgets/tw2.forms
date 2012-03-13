@@ -666,7 +666,7 @@ class Form(twc.DisplayOnlyWidget):
         if self.submit and not \
         ['SubmitButton' in repr(b) for b in self.buttons]:
             self.buttons.append(self.submit)
- 
+
         for b in self.buttons:
             b.prepare()
 
