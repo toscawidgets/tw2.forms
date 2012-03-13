@@ -84,6 +84,7 @@ class DemoFieldSet(twf.FieldSet):
 
 class DemoForm(twf.Form):
     child = DemoTableLayout()
+    buttons = [twf.ResetButton()]
 
 
 class DemoButton(twf.Button):
