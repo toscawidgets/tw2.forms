@@ -13,7 +13,8 @@ options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoTextField(twf.TextField):
-    placeholder = "Search..."
+    placeholder = "Search upto 7 characters..."
+    maxlength = 7
 
 class DemoChildren(twc.CompoundWidget):
     title = twf.TextField()
