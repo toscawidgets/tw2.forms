@@ -5,6 +5,7 @@ NoDefault = object()
 
 __all__ = ["DataGrid", "Column"]
 
+
 class Column(object):
     """Simple struct that describes a single DataGrid column.
 
@@ -18,11 +19,12 @@ class Column(object):
 
     def __init__(self, name, getter=None, title=None, options=None):
         if not name:
-            raise ValueError, 'name is required'
+            raise ValueError('name is required')
+
         if getter:
             if callable(getter):
                 self.getter = getter
-            else: # assume it's an attribute name
+            else:  # assume it's an attribute name
                 self.getter = operator.attrgetter(getter)
         else:
             self.getter = attrwrapper(name)
@@ -33,18 +35,20 @@ class Column(object):
     def get_option(self, name, default=NoDefault):
         if name in self.options:
             return self.options[name]
-        if default is NoDefault: # no such key and no default is given
+        if default is NoDefault:  # no such key and no default is given
             raise KeyError(name)
         return default
 
     def get_field(self, row, displays_on=None):
-        if getattr(self.getter, '__bases__', None) and issubclass(self.getter, twc.Widget) or\
+        if getattr(self.getter, '__bases__', None) and \
+           issubclass(self.getter, twc.Widget) or \
            isinstance(self.getter, twc.Widget):
             return self.getter.display(value=row, displays_on=displays_on)
         return self.getter(row)
 
     def __str__(self):
         return "<Column %s>" % self.name
+
 
 class DataGrid(twc.Widget):
     """Generic widget to present and manipulate data in a grid (tabular) form.
@@ -58,18 +62,27 @@ class DataGrid(twc.Widget):
     or dynamically, via 'fields' key.
 
     """
-    resources = [twc.CSSLink(modname='tw2.forms', filename='static/datagrid/datagrid.css')]
+    resources = [
+        twc.CSSLink(modname='tw2.forms',
+                    filename='static/datagrid/datagrid.css')
+    ]
     template = "tw2.forms.templates.datagrid"
-    
-    css_class = twc.Param('CSS class name', default='grid', attribute=True, view_name='class')
+
+    css_class = twc.Param(
+        'CSS class name',
+        default='grid',
+        attribute=True,
+        view_name='class'
+    )
     fields = twc.Param('Fields of the Grid', default=[], attribute=False)
 
     @staticmethod
     def get_field_getter(columns):
         """Return a function to access the fields of table by row, col."""
-        idx = {} # index columns by name
+        idx = {}  # index columns by name
         for col in columns:
             idx[col.name] = col
+
         def _get_field(row, col):
             return idx[col].get_field(row)
         return _get_field
@@ -83,7 +96,7 @@ class DataGrid(twc.Widget):
 
         """
         columns = []
-        names = {} # keep track of names to ensure there are no dups
+        names = {}  # keep track of names to ensure there are no dups
         for n, col in enumerate(fields):
             if not isinstance(col, Column):
                 if isinstance(col, str) or callable(col):

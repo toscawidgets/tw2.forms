@@ -15,6 +15,7 @@ options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 class DemoTextField(twf.TextField):
     placeholder = "Search..."
 
+
 class DemoChildren(twc.CompoundWidget):
     title = twf.TextField()
     priority = twf.SingleSelectField(options=['', 'Normal', 'High'])
