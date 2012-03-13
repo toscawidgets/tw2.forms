@@ -67,14 +67,10 @@ class DataGrid(twc.Widget):
                     filename='static/datagrid/datagrid.css')
     ]
     template = "tw2.forms.templates.datagrid"
+    css_class = 'grid'
 
-    css_class = twc.Param(
-        'CSS class name',
-        default='grid',
-        attribute=True,
-        view_name='class'
-    )
     fields = twc.Param('Fields of the Grid', default=[], attribute=False)
+    columns = twc.Variable('Used internally', default=[])
 
     @staticmethod
     def get_field_getter(columns):
@@ -85,6 +81,7 @@ class DataGrid(twc.Widget):
 
         def _get_field(row, col):
             return idx[col].get_field(row)
+
         return _get_field
 
     def _parse(self, fields):
@@ -119,6 +116,15 @@ class DataGrid(twc.Widget):
 
     def prepare(self):
         super(DataGrid, self).prepare()
+
+        if not self.value:
+            raise ValueError(
+                "DataGrid must be passed a value.")
+
+        if not self.fields and not self.columns:
+            raise ValueError(
+                "DataGrid must be passed either fields or columns")
+
         if self.fields:
             self.columns = self._parse(self.fields)
 

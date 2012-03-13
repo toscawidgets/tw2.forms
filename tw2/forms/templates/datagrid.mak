@@ -1,4 +1,4 @@
-<%namespace name="tw" module="tw.core.mako_util"/>\
+<%namespace name="tw" module="tw2.core.mako_util"/>\
 <table ${tw.attrs(attrs=w.attrs)} cellpadding="0" cellspacing="1" border="0">
     % if w.columns:
     <thead>
