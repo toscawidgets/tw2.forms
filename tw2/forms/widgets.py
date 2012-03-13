@@ -643,7 +643,8 @@ class Form(twc.DisplayOnlyWidget):
             cls.buttons = []
         else:
             for b in range(0, len(cls.buttons)):
-                cls.buttons[b] = cls.buttons[b](parent=cls)
+                if callable(cls.buttons[b]):
+                    cls.buttons[b] = cls.buttons[b](parent=cls)
 
         if cls.submit:
             cls.submit = cls.submit(parent=cls)
