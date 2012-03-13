@@ -116,6 +116,8 @@ class FileValidator(twc.Validator):
 
 
 class FileField(InputField):
+    """ TODO - this widget needs to be documented.  It is complicated. """
+
     type = "file"
     validator = FileValidator
 
