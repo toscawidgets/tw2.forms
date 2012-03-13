@@ -632,23 +632,45 @@ class Form(twc.DisplayOnlyWidget):
     submit = twc.Param('Submit button widget. If this is None, no submit ' +
                        'button is generated.',
                        default=SubmitButton(id='submit', value='Save'))
+    buttons = twc.Param('List of additional buttons to be placed at the ' +
+                        'bottom of the form',
+                        default=[])
+
     attrs = {'enctype': 'multipart/form-data'}
     id_suffix = 'form'
 
     @classmethod
     def post_define(cls):
+        if not cls.buttons:
+            cls.buttons = []
+        else:
+            for b in range(0, len(cls.buttons)):
+                if callable(cls.buttons[b]):
+                    cls.buttons[b] = cls.buttons[b](parent=cls)
+
         if cls.submit:
             cls.submit = cls.submit(parent=cls)
 
     def __init__(self, **kw):
         super(Form, self).__init__(**kw)
+        if self.buttons:
+            for b in range(0, len(self.buttons)):
+                self.buttons[b] = self.buttons[b].req()
+
         if self.submit:
             self.submit = self.submit.req()
 
     def prepare(self):
         super(Form, self).prepare()
-        if self.submit:
-            self.submit.prepare()
+        if self.buttons and not isinstance(self.buttons, list):
+            raise AttributeError("buttons parameter must be a list or None")
+
+        if self.submit and not \
+        ['SubmitButton' in repr(b) for b in self.buttons]:
+            self.buttons.append(self.submit)
+
+        for b in self.buttons:
+            b.prepare()
 
 
 class FieldSet(twc.DisplayOnlyWidget):

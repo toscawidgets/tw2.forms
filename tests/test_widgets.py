@@ -499,6 +499,30 @@ class TestLabel(WidgetTest):
     attrs = {'text':'something'}
     expected = """<span>something</span>"""
 
+class TestForm(WidgetTest):
+    widget = Form
+    attrs = {'child': TableLayout(field1=TextField(id='field1')),
+        'buttons': [SubmitButton, ResetButton()]}
+    expected = """<form enctype="multipart/form-data" method="post">
+     <span class="error"></span>
+    <table >
+    <tr class="odd"  id="field1:container">
+        <th>Field1</th>
+        <td >
+            <input name="field1" type="text" id="field1"/>
+            
+            <span id="field1:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id=":error"></span>
+    </td></tr>
+</table>
+        <input type="submit"/>
+        <input type="reset"/>
+</form>"""
+    declarative = True
+
 class TestTableForm(WidgetTest):
     widget = TableForm
     attrs = {'field1':TextField(id='field1'),

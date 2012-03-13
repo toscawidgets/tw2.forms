@@ -9,7 +9,7 @@
      </div>
      % endif
     ${w.child.display() | n}
-   % if w.submit:
-    ${w.submit.display() | n}
-   % endif
+	% for button in w.buttons:
+		${button.display() | n}
+	% endfor
 </form>
