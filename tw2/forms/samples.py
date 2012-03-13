@@ -8,12 +8,14 @@ See http://toscawidgets.org/documentation/WidgetBrowser for more information
 
 import tw2.core as twc
 import widgets as twf
+import datagrid as dg
 
 options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoTextField(twf.TextField):
     placeholder = "Search..."
+
 
 class DemoChildren(twc.CompoundWidget):
     title = twf.TextField()
@@ -99,3 +101,22 @@ class DemoGridLayout(twf.GridLayout):
 class DemoImageButton(twf.ImageButton):
     modname = 'tw2.forms'
     filename = 'static/edit-undo.png'
+
+
+class DemoDataGrid(dg.DataGrid):
+    class DummyObject(object):
+        def __init__(self, name):
+            self._name = name
+
+        def name(self):
+            return self._name
+
+        def address(self):
+            return "Fancy pancy street."
+
+    value = [
+        DummyObject("Jimmy John"),
+        DummyObject("Sally Sue"),
+    ]
+
+    fields = [DummyObject.name, DummyObject.address]
