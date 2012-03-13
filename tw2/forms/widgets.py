@@ -661,7 +661,7 @@ class Form(twc.DisplayOnlyWidget):
     def prepare(self):
         super(Form, self).prepare()
         if self.buttons and not isinstance(self.buttons, list):
-            raise AttributeError, "buttons parameter must be a list or None"
+            raise AttributeError("buttons parameter must be a list or None")
 
         if self.submit and not \
         ['SubmitButton' in repr(b) for b in self.buttons]:
