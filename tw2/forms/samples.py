@@ -10,7 +10,6 @@ import tw2.core as twc
 import widgets as twf
 import datagrid as dg
 
-options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoTextField(twf.TextField):
@@ -28,28 +27,29 @@ class DemoCheckBox(twf.CheckBox):
 
 
 class DemoSingleSelectField(twf.SingleSelectField):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoMultipleSelectField(twf.MultipleSelectField):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoRadioButtonList(twf.RadioButtonList):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoCheckBoxList(twf.CheckBoxList):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoRadioButtonTable(twf.RadioButtonTable):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
     cols = 2
 
 
 class DemoCheckBoxTable(twf.CheckBoxTable):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
+    value = ['Red', 'Green', 'Blue']  # These are the selected items
     cols = 2
 
 
