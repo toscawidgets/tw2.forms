@@ -116,7 +116,16 @@ class FileValidator(twc.Validator):
 
 
 class FileField(InputField):
-    """ TODO - this widget needs to be documented.  It is complicated. """
+    """
+    A field for uploading files.  The returned object has (at least) two
+    properties of note:
+
+     * filename:
+        the name of the uploaded file
+     * value:
+        a bytestring of the contents of the uploaded file, suitable for being
+        written to disk
+    """
 
     type = "file"
     validator = FileValidator
