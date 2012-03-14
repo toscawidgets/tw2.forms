@@ -8,8 +8,12 @@ See http://toscawidgets.org/documentation/WidgetBrowser for more information
 
 import tw2.core as twc
 import widgets as twf
+import datagrid as dg
 
-options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
+
+
+class DemoTextField(twf.TextField):
+    placeholder = "Search..."
 
 
 class DemoChildren(twc.CompoundWidget):
@@ -23,28 +27,29 @@ class DemoCheckBox(twf.CheckBox):
 
 
 class DemoSingleSelectField(twf.SingleSelectField):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoMultipleSelectField(twf.MultipleSelectField):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoRadioButtonList(twf.RadioButtonList):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoCheckBoxList(twf.CheckBoxList):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
 
 
 class DemoRadioButtonTable(twf.RadioButtonTable):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
     cols = 2
 
 
 class DemoCheckBoxTable(twf.CheckBoxTable):
-    options = options
+    options = ['Red', 'Orange', 'Yellow', 'Green', 'Blue']
+    value = ['Red', 'Green', 'Blue']  # These are the selected items
     cols = 2
 
 
@@ -79,6 +84,7 @@ class DemoFieldSet(twf.FieldSet):
 
 class DemoForm(twf.Form):
     child = DemoTableLayout()
+    buttons = [twf.ResetButton()]
 
 
 class DemoButton(twf.Button):
@@ -96,3 +102,22 @@ class DemoGridLayout(twf.GridLayout):
 class DemoImageButton(twf.ImageButton):
     modname = 'tw2.forms'
     filename = 'static/edit-undo.png'
+
+
+class DemoDataGrid(dg.DataGrid):
+    class DummyObject(object):
+        def __init__(self, name):
+            self._name = name
+
+        def name(self):
+            return self._name
+
+        def address(self):
+            return "Fancy pancy street."
+
+    value = [
+        DummyObject("Jimmy John"),
+        DummyObject("Sally Sue"),
+    ]
+
+    fields = [DummyObject.name, DummyObject.address]

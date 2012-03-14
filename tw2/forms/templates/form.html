@@ -6,5 +6,5 @@
       </p>
      </div>
     ${w.child.display()}
-    <py:if test="w.submit">${w.submit.display()}</py:if>
+    <py:for each="button in w.buttons">${button.display()}</py:for>
 </form>

@@ -23,9 +23,9 @@ class TestInputField(WidgetTest):
 
 class TestTextField(WidgetTest):
     widget = TextField
-    attrs = {'css_class':'something', 'size':'60'}
+    attrs = {'css_class':'something', 'size':'60', 'placeholder': "Search..."}
     params = {'value':6}
-    expected = '<input type="text" class="something" value="6" size="60"/>'
+    expected = '<input type="text" class="something" placeholder="Search..." value="6" size="60"/>'
 
 class TestTextArea(WidgetTest):
     widget = TextArea
@@ -498,6 +498,30 @@ class TestLabel(WidgetTest):
     widget = Label
     attrs = {'text':'something'}
     expected = """<span>something</span>"""
+
+class TestForm(WidgetTest):
+    widget = Form
+    attrs = {'child': TableLayout(field1=TextField(id='field1')),
+        'buttons': [SubmitButton, ResetButton()]}
+    expected = """<form enctype="multipart/form-data" method="post">
+     <span class="error"></span>
+    <table >
+    <tr class="odd"  id="field1:container">
+        <th>Field1</th>
+        <td >
+            <input name="field1" type="text" id="field1"/>
+            
+            <span id="field1:error"></span>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <span id=":error"></span>
+    </td></tr>
+</table>
+        <input type="submit"/>
+        <input type="reset"/>
+</form>"""
+    declarative = True
 
 class TestTableForm(WidgetTest):
     widget = TableForm
