@@ -117,7 +117,7 @@ class DataGrid(twc.Widget):
     def prepare(self):
         super(DataGrid, self).prepare()
 
-        if not self.value:
+        if self.value is None:
             raise ValueError(
                 "DataGrid must be passed a value.")
 
