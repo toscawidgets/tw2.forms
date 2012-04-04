@@ -10,7 +10,7 @@ _extra_mako = ["Mako >= 0.1.1"]
 
 setup(
     name='tw2.forms',
-    version='2.0.0',
+    version='2.0.1',
     description='The basic form widgets for ToscaWidgets 2.',
     long_description = open('README.txt').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',
