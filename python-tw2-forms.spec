@@ -3,7 +3,7 @@
 %global modname tw2.forms
 
 Name:           python-tw2-forms
-Version:        2.0.1
+Version:        2.0.2
 Release:        1
 Summary:        Forms for ToscaWidgets2
 
@@ -72,6 +72,10 @@ rm -rf %{buildroot}
 %{python_sitelib}/*
 
 %changelog
+* Wed Apr 11 2012 Ralph Bean <rbean@redhat.com> - 2.0.2-1
+- Update for latest tw2.forms release.
+- Fixes rpmlint errors.  Execution bit in templates, wat?
+
 * Thu Apr 05 2012 Ralph Bean <rbean@redhat.com> - 2.0.1-1
 - Update for latest tw2.forms release.
 
