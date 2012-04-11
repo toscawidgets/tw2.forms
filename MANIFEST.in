@@ -6,3 +6,4 @@ recursive-include tw2/forms/templates *.kid
 recursive-include tw2/forms/templates *.mak
 include LICENSE.txt
 include README.txt
+recursive-include tests *.py
