@@ -4,7 +4,7 @@
 
 Name:           python-tw2-forms
 Version:        2.0.2
-Release:        1
+Release:        1%{?dist}
 Summary:        Forms for ToscaWidgets2
 
 Group:          Development/Languages
@@ -75,6 +75,7 @@ rm -rf %{buildroot}
 * Wed Apr 11 2012 Ralph Bean <rbean@redhat.com> - 2.0.2-1
 - Update for latest tw2.forms release.
 - Fixes rpmlint errors.  Execution bit in templates, wat?
+- Added dist macro to release field.
 
 * Thu Apr 05 2012 Ralph Bean <rbean@redhat.com> - 2.0.1-1
 - Update for latest tw2.forms release.
