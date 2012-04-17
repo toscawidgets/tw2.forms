@@ -52,6 +52,18 @@ tw2.forms contains the basic form widgets.
 %prep
 %setup -q -n %{modname}-%{version}
 
+%if %{?rhel}%{!?rhel:0} >= 6
+
+# Make sure that epel/rhel picks up the correct version of webob
+awk 'NR==1{print "import __main__; __main__.__requires__ = __requires__ = [\"WebOb>=1.0\"]; import pkg_resources"}1' setup.py > setup.py.tmp
+mv setup.py.tmp setup.py
+
+# Remove all the fancy nosetests configuration for older python
+rm setup.cfg
+
+%endif
+
+
 %build
 %{__python} setup.py build
 
@@ -76,6 +88,7 @@ rm -rf %{buildroot}
 - Update for latest tw2.forms release.
 - Fixes rpmlint errors.  Execution bit in templates, wat?
 - Added dist macro to release field.
+- Added awk line to make sure pkg_resources picks up the right WebOb on el6
 
 * Thu Apr 05 2012 Ralph Bean <rbean@redhat.com> - 2.0.1-1
 - Update for latest tw2.forms release.
