@@ -4,14 +4,13 @@
 
 Name:           python-tw2-forms
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Forms for ToscaWidgets2
 
 Group:          Development/Languages
 License:        MIT
 URL:            http://toscawidgets.org
 Source0:        http://pypi.python.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 # For building, generally
@@ -63,27 +62,26 @@ rm setup.cfg
 
 %endif
 
-
 %build
 %{__python} setup.py build
 
 %install
-rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
 
 %check
 PYTHONPATH=$(pwd) python setup.py test
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
 %doc README.txt LICENSE.txt
 %{python_sitelib}/*
 
 %changelog
+* Mon Apr 30 2012 Ralph Bean <rbean@redhat.com> - 2.0.2-2
+- Removed clean section
+- Removed defattr in files section
+- Removed unnecessary references to buildroot
+
 * Wed Apr 11 2012 Ralph Bean <rbean@redhat.com> - 2.0.2-1
 - Update for latest tw2.forms release.
 - Fixes rpmlint errors.  Execution bit in templates, wat?
