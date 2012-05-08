@@ -64,7 +64,7 @@ class CheckBox(InputField):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
-        self.value = None
+        self.attrs['value'] = None
 
 
 class RadioButton(InputField):
