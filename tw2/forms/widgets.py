@@ -106,6 +106,9 @@ class FileValidator(twc.Validator):
 
     def validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
+            if self.required and not getattr(value, 'filename', None):
+                raise twc.ValidationError('required', self)
+
             if self.extension is not None and \
                not value.filename.endswith(self.extension):
                 raise twc.ValidationError('badext', self)
