@@ -27,7 +27,7 @@ class Column(object):
             else:  # assume it's an attribute name
                 self.getter = operator.attrgetter(getter)
         else:
-            self.getter = attrwrapper(name)
+            self.getter = operator.attrgetter(name)
         self.name = name
         self.title = title is None and name.capitalize() or title
         self.options = options or {}
