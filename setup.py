@@ -16,7 +16,7 @@ setup(
     name='tw2.forms',
     version='2.0.3',
     description='The basic form widgets for ToscaWidgets 2.',
-    long_description = open('README.txt').read().split('\n\n', 1)[1],
+    long_description = open('README.rst').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',
     author_email='paj@pajhome.org.uk',
     url='http://toscawidgets.org',
