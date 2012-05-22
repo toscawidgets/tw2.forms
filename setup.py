@@ -1,6 +1,10 @@
 from setuptools import setup, find_packages
 
-import multiprocessing, logging
+try:
+    import multiprocessing
+    import logging
+except:
+    pass
 
 # Requirements to install buffet plugins and engines
 _extra_cheetah = ["Cheetah>=1.0", "TurboCheetah>=0.9.5"]
