@@ -1,6 +1,10 @@
 from setuptools import setup, find_packages
 
-import multiprocessing, logging
+try:
+    import multiprocessing
+    import logging
+except:
+    pass
 
 # Requirements to install buffet plugins and engines
 _extra_cheetah = ["Cheetah>=1.0", "TurboCheetah>=0.9.5"]
@@ -10,7 +14,7 @@ _extra_mako = ["Mako >= 0.1.1"]
 
 setup(
     name='tw2.forms',
-    version='2.0.2',
+    version='2.0.3',
     description='The basic form widgets for ToscaWidgets 2.',
     long_description = open('README.txt').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',

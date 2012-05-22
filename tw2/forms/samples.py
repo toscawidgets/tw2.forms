@@ -11,7 +11,6 @@ import widgets as twf
 import datagrid as dg
 
 
-
 class DemoTextField(twf.TextField):
     placeholder = "Search..."
 

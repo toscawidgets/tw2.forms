@@ -64,7 +64,7 @@ class CheckBox(InputField):
         super(CheckBox, self).prepare()
         self.safe_modify('attrs')
         self.attrs['checked'] = self.value and 'checked' or None
-        self.value = None
+        self.attrs['value'] = None
 
 
 class RadioButton(InputField):
@@ -106,6 +106,9 @@ class FileValidator(twc.Validator):
 
     def validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
+            if self.required and not getattr(value, 'filename', None):
+                raise twc.ValidationError('required', self)
+
             if self.extension is not None and \
                not value.filename.endswith(self.extension):
                 raise twc.ValidationError('badext', self)
