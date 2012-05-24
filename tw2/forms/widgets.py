@@ -614,6 +614,9 @@ class Spacer(FormField):
     id = None
     label = None
 
+    def _validate(self, value, state=None):
+        return twc.EmptyField
+
 
 class Label(twc.Widget):
     """

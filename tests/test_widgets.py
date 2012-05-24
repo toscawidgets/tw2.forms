@@ -494,6 +494,18 @@ class TestSpacer(WidgetTest):
     attrs = {}
     expected = """<div></div>"""
 
+
+def test_spacer_validation():
+    """ Test that spacers don't inject None keys in validated data. """
+
+    class SomeForm(TableForm):
+        some_id = HiddenField
+        space = Spacer
+
+    data = SomeForm.validate({})
+    assert None not in data
+
+
 class TestLabel(WidgetTest):
     widget = Label
     attrs = {'text':'something'}
