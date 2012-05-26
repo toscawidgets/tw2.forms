@@ -1,7 +1,11 @@
 from tw2.forms.widgets import *
 from webob import Request
 from webob.multidict import NestedMultiDict
-from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
+from tw2.core.testbase import (
+    assert_in_xml,
+    assert_eq_xml,
+    WidgetTest as _WidgetTest,
+)
 from nose.tools import raises
 from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
@@ -14,6 +18,18 @@ if hasattr(webob, 'NestedMultiDict'):
     from webob import NestedMultiDict
 else:
     from webob.multidict import NestedMultiDict
+
+
+class WidgetTest(_WidgetTest):
+    """ Constrain tests to only run against mako and genshi.
+
+    Even though tw2.core supports rendering widgets with templates written in
+    mako, genshi, kajiki, jinja2, and chameleon, here we only run tests against
+    the first two since those are the only templates provided by tw2.forms
+    itself.
+    """
+    engines = ['mako', 'genshi']
+
 
 class TestInputField(WidgetTest):
     widget = InputField
