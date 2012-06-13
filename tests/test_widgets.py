@@ -1,4 +1,5 @@
 from tw2.forms.widgets import *
+from tw2.forms.calendars import *
 from webob import Request
 from webob.multidict import NestedMultiDict
 from tw2.core.testbase import (
@@ -12,6 +13,7 @@ from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
 import formencode
 import formencode.national
+from datetime import datetime
 
 import webob
 if hasattr(webob, 'NestedMultiDict'):
@@ -851,3 +853,38 @@ class TestFormPage(WidgetTest):
             r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""" or
             r.body == """Form posted successfully {'field2': u'b', 'field3': u'c', 'field1': u'a'}"""
             ), r.body
+
+
+def test_picker_validation():
+    """ Test that CalendarDate*Pickers validate correctly. """
+
+    class SomeForm(TableForm):
+        date = CalendarDatePicker(date_format='%Y-%m-%d')
+        datetime = CalendarDateTimePicker(date_format='%Y-%m-%d %H:%M')
+
+    data = SomeForm.validate({'date': '2012-06-13', 'datetime': '2012-06-13 10:07'})
+    for field in data.itervalues():
+        assert isinstance(field, datetime)
+
+
+def test_picker_required_validation():
+    """ Test that CalendarDate*Pickers validate required fields correctly. """
+
+    class SomeForm(TableForm):
+        date = CalendarDatePicker(date_format='%Y-%m-%d', required=True)
+        datetime = CalendarDateTimePicker(date_format='%Y-%m-%d %H:%M', required=True)
+
+    try:
+        data = SomeForm.validate({'date': '', 'datetime': '2012-06-13 10:07'})
+    except ValidationError:
+        pass
+    else:
+        assert False
+
+    try:
+        data = SomeForm.validate({'date': '2012-06-13', 'datetime': ''})
+    except ValidationError:
+        pass
+    else:
+        assert False
+
