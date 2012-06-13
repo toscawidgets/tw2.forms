@@ -121,7 +121,7 @@ class CalendarDatePicker(FormField):
     template = "tw2.forms.templates.calendar"
     calendar_lang = twc.Param("Default Language to use in the Calendar",
                               default='en')
-    not_empty = twc.Param("Allow this field to be empty", default=True)
+    required = twc.Param(default=False)
     button_text = twc.Param("Text to display on Button", default="Choose")
     date_format = twc.Param("Date Display Format", default="%m/%d/%Y")
     picker_shows_time = twc.Param('Picker Shows Time', default=False)
@@ -147,13 +147,14 @@ class CalendarDatePicker(FormField):
         if self.validator is None:
             self.validator = twc.DateTimeValidator(
             format=self.date_format,
+            required=self.required
             )
         super(CalendarDatePicker, self).__init__(*args, **kw)
 
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
         self.resources = [calendar_css, calendar_js, calendar_setup]
-        if not self.value:
+        if not self.value and self.required:
             if callable(self.default):
                 self.value = self.default()
             else:

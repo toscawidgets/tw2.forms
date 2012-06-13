@@ -19,8 +19,7 @@ class FormField(twc.Widget):
     @property
     def required(self):
         return self.validator and (
-            getattr(self.validator, 'required', None) or
-            getattr(self.validator, 'not_empty', None)
+            getattr(self.validator, 'required', None)
         )
 
 
