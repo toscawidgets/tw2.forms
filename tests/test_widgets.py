@@ -37,6 +37,12 @@ class TestInputField(WidgetTest):
     params = {'value':6}
     expected = '<input type="foo" class="something" value="6"/>'
 
+class TestInputFieldWithDeferred(WidgetTest):
+    widget = InputField
+    attrs = {'type':'foo', 'css_class':'something'}
+    params = {'value': twc.Deferred(lambda:6)}
+    expected = '<input type="foo" class="something" value="6"/>'
+
 class TestTextField(WidgetTest):
     widget = TextField
     attrs = {'css_class':'something', 'size':'60', 'placeholder': "Search..."}
