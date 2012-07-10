@@ -11,8 +11,6 @@ from nose.tools import raises
 from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
-import formencode
-import formencode.national
 from datetime import datetime
 
 import webob
@@ -451,6 +449,10 @@ class TestTableLayout(WidgetTest):
     </tr></table>"""
 
     def test_fe_not_required(self):
+        try:
+            import formencode
+        except ImportError, e:
+            self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=False))]}
         expected = """<table>
     <tr class="odd" id="field1:container">
@@ -462,6 +464,10 @@ class TestTableLayout(WidgetTest):
     </tr></table>"""
 
     def test_fe_required(self):
+        try:
+            import formencode
+        except ImportError, e:
+            self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=True))]}
         expected = """<table>
     <tr class="odd required" id="field1:container">
@@ -655,6 +661,10 @@ class TestTableFieldset(WidgetTest):
     declarative = True
 
 class TestTableFieldsetWithFEValidator(WidgetTest):
+    try:
+        import formencode.national
+    except ImportError, e:
+        self.skipTest(str(e))
     widget = TableFieldSet
     attrs = {'field1':TextField(id='field1'),
              'field2':TextField(id='field2'),
