@@ -248,6 +248,10 @@ class SelectionField(FormField):
        ``[(1, 'Red', {'style':'background-color:red'})]``
      * A list of groups, e.g.
        ``[('group1', [(1, 'Red')]), ('group2', ['Pink', 'Yellow'])]``
+
+    Setting ``value`` before rendering will set the default displayed value on
+    the page.  In ToscaWidgets1, this was accomplished by setting ``default``.
+    That is no longer the case.
     """
 
     options = twc.Param('Options to be displayed')
