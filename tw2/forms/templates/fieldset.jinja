@@ -1,0 +1,4 @@
+<fieldset {{ w.attrs|xmlattr }}>
+    <legend>{{ w.legend or '' }}</legend>
+    {{ w.child.display() }}
+</fieldset>

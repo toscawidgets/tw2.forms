@@ -1,0 +1,14 @@
+<form {{ w.attrs|xmlattr }}>
+     <span class="error">{{ w.error_msg or '' }}</span>
+     {% if w.help_msg %}
+     <div class="help">
+      <p>
+         {{ w.help_msg }}
+      </p>
+     </div>
+     {% endif %}
+    {{ w.child.display() }}
+        {% for button in w.buttons %}
+            {{ button.display() }}
+        {% endfor %}	
+</form>
