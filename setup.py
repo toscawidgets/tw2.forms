@@ -11,9 +11,10 @@ except:
 # Requirements to install buffet plugins and engines
 _extra_genshi = ["Genshi >= 0.3.5"]
 _extra_mako = ["Mako >= 0.1.1"]
+_extra_jinja = ["Jinja2"]
 
 requires=[
-    "tw2.core",
+    "tw2.core>=2.1.1",
 ]
 
 if sys.version_info[0] == 2 and sys.version_info[1] <= 5:
@@ -47,10 +48,11 @@ setup(
         'FormEncode',
         'WebTest',
         'strainer',
-    ] + _extra_genshi + _extra_mako,
+    ] + _extra_genshi + _extra_mako + _extra_jinja,
     extras_require = {
         'genshi': _extra_genshi,
         'mako': _extra_mako,
+        'jinja': _extra_jinja,
     },
     classifiers = [
         'Development Status :: 5 - Production/Stable',
