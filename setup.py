@@ -9,13 +9,12 @@ except:
     pass
 
 # Requirements to install buffet plugins and engines
-_extra_cheetah = ["Cheetah>=1.0", "TurboCheetah>=0.9.5"]
 _extra_genshi = ["Genshi >= 0.3.5"]
-_extra_kid = ["kid>=0.9.5", "TurboKid>=0.9.9"]
 _extra_mako = ["Mako >= 0.1.1"]
+_extra_jinja = ["Jinja2"]
 
 requires=[
-    "tw2.core",
+    "tw2.core>=2.1.1",
 ]
 
 if sys.version_info[0] == 2 and sys.version_info[1] <= 5:
@@ -23,7 +22,7 @@ if sys.version_info[0] == 2 and sys.version_info[1] <= 5:
 
 setup(
     name='tw2.forms',
-    version='2.0.3',
+    version='2.1.1',
     description='The basic form widgets for ToscaWidgets 2.',
     long_description = open('README.rst').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',
@@ -49,12 +48,11 @@ setup(
         'FormEncode',
         'WebTest',
         'strainer',
-    ] + _extra_cheetah + _extra_genshi + _extra_kid + _extra_mako,
+    ] + _extra_genshi + _extra_mako + _extra_jinja,
     extras_require = {
-        'cheetah': _extra_cheetah,
-        'kid': _extra_kid,
         'genshi': _extra_genshi,
         'mako': _extra_mako,
+        'jinja': _extra_jinja,
     },
     classifiers = [
         'Development Status :: 5 - Production/Stable',

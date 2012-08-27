@@ -1,0 +1,19 @@
+<ul {{ w.attrs|xmlattr }}>
+    {% for group, opts in w.grouped_options %}
+       {% if group %}
+        <li>
+        <div class="group_header">{{ group }}</div>
+        <ul>
+       {% endif %}
+       {% for attrs, desc in opts %}
+        <li>
+            <input {{ attrs|xmlattr }}/>
+            <label for="{{ attrs['id'] }}">{{ desc }}</label>
+        </li>
+       {% endfor %}
+       {% if group %}
+        </li>
+        </ul>
+       {% endif %}
+   {% endfor %}
+</ul>

@@ -1,0 +1,13 @@
+<table {{ w.attrs|xmlattr }}>
+<tr>
+{% for col in w.children[0].children_non_hidden %}
+    <th>{{ col.label | string }}</th>
+{% endfor %}
+</tr>
+{% for row in w.children %}
+    {{ row.display }}
+{% endfor %}
+    <tr class="error"><td colspan="{{ w.children|length }}" id="{{ w.compound_id or '' }}:error">
+        {{ w.error_msg or '' }}
+    </td></tr>
+</table>

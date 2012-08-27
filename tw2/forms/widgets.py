@@ -19,8 +19,7 @@ class FormField(twc.Widget):
     @property
     def required(self):
         return self.validator and (
-            getattr(self.validator, 'required', None) or
-            getattr(self.validator, 'not_empty', None)
+            getattr(self.validator, 'required', None)
         )
 
 
@@ -184,10 +183,12 @@ class LinkField(twc.Widget):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['href'] = self.link.replace('$', unicode(self.value or ''))
-        self.text = \
-                self.value and \
-                self.text.replace('$', unicode(self.value)) or \
-                ''
+
+        if '$' in self.text:
+            self.text = \
+                    self.value and \
+                    self.text.replace('$', unicode(self.value)) or \
+                    ''
 
 
 class Button(InputField):
@@ -247,6 +248,10 @@ class SelectionField(FormField):
        ``[(1, 'Red', {'style':'background-color:red'})]``
      * A list of groups, e.g.
        ``[('group1', [(1, 'Red')]), ('group2', ['Pink', 'Yellow'])]``
+
+    Setting ``value`` before rendering will set the default displayed value on
+    the page.  In ToscaWidgets1, this was accomplished by setting ``default``.
+    That is no longer the case.
     """
 
     options = twc.Param('Options to be displayed')
@@ -330,7 +335,7 @@ class MultipleSelectionField(SelectionField):
         if not isinstance(value, (list, tuple)):
             value = [value]
         if self.validator:
-            self.validator.validate_python(self.validator.to_python(value))
+            self.validator.validate_python(self.validator.to_python(value, state))
         if self.item_validator:
             value = [twc.safe_validate(self.item_validator, v) for v in value]
         self.value = [v for v in value if v is not twc.Invalid]
@@ -592,7 +597,7 @@ class StripBlanks(twc.Validator):
         else:
             return bool(val)
 
-    def to_python(self, value):
+    def to_python(self, value, state=None):
         return [v for v in value if self.any_content(v)]
 
 
@@ -604,7 +609,7 @@ class GridLayout(twc.RepeatingWidget):
 
     def _validate(self, value, state=None):
         return super(GridLayout, self)._validate(
-            StripBlanks().to_python(value), state
+            StripBlanks().to_python(value, state), state
         )
 
 
@@ -613,6 +618,9 @@ class Spacer(FormField):
     template = "tw2.forms.templates.spacer"
     id = None
     label = None
+
+    def _validate(self, value, state=None):
+        return twc.EmptyField
 
 
 class Label(twc.Widget):

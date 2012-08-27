@@ -1,19 +1,35 @@
 from tw2.forms.widgets import *
+from tw2.forms.calendars import *
 from webob import Request
 from webob.multidict import NestedMultiDict
-from tw2.core.testbase import assert_in_xml, assert_eq_xml, WidgetTest
+from tw2.core.testbase import (
+    assert_in_xml,
+    assert_eq_xml,
+    WidgetTest as _WidgetTest,
+)
 from nose.tools import raises
 from cStringIO import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
-import formencode
-import formencode.national
+from datetime import datetime
 
 import webob
 if hasattr(webob, 'NestedMultiDict'):
     from webob import NestedMultiDict
 else:
     from webob.multidict import NestedMultiDict
+
+
+class WidgetTest(_WidgetTest):
+    """ Constrain tests to only run against mako and genshi.
+
+    Even though tw2.core supports rendering widgets with templates written in
+    mako, genshi, kajiki, jinja2, and chameleon, here we only run tests against
+    the first two since those are the only templates provided by tw2.forms
+    itself.
+    """
+    engines = ['mako', 'genshi', 'jinja']
+
 
 class TestInputField(WidgetTest):
     widget = InputField
@@ -433,6 +449,10 @@ class TestTableLayout(WidgetTest):
     </tr></table>"""
 
     def test_fe_not_required(self):
+        try:
+            import formencode
+        except ImportError, e:
+            self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=False))]}
         expected = """<table>
     <tr class="odd" id="field1:container">
@@ -444,6 +464,10 @@ class TestTableLayout(WidgetTest):
     </tr></table>"""
 
     def test_fe_required(self):
+        try:
+            import formencode
+        except ImportError, e:
+            self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=True))]}
         expected = """<table>
     <tr class="odd required" id="field1:container">
@@ -493,6 +517,18 @@ class TestSpacer(WidgetTest):
     widget = Spacer
     attrs = {}
     expected = """<div></div>"""
+
+
+def test_spacer_validation():
+    """ Test that spacers don't inject None keys in validated data. """
+
+    class SomeForm(TableForm):
+        some_id = HiddenField
+        space = Spacer
+
+    data = SomeForm.validate({})
+    assert None not in data
+
 
 class TestLabel(WidgetTest):
     widget = Label
@@ -625,6 +661,10 @@ class TestTableFieldset(WidgetTest):
     declarative = True
 
 class TestTableFieldsetWithFEValidator(WidgetTest):
+    try:
+        import formencode.national
+    except ImportError, e:
+        self.skipTest(str(e))
     widget = TableFieldSet
     attrs = {'field1':TextField(id='field1'),
              'field2':TextField(id='field2'),
@@ -823,3 +863,38 @@ class TestFormPage(WidgetTest):
             r.body == """Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}""" or
             r.body == """Form posted successfully {'field2': u'b', 'field3': u'c', 'field1': u'a'}"""
             ), r.body
+
+
+def test_picker_validation():
+    """ Test that CalendarDate*Pickers validate correctly. """
+
+    class SomeForm(TableForm):
+        date = CalendarDatePicker(date_format='%Y-%m-%d')
+        datetime = CalendarDateTimePicker(date_format='%Y-%m-%d %H:%M')
+
+    data = SomeForm.validate({'date': '2012-06-13', 'datetime': '2012-06-13 10:07'})
+    for field in data.itervalues():
+        assert isinstance(field, datetime)
+
+
+def test_picker_required_validation():
+    """ Test that CalendarDate*Pickers validate required fields correctly. """
+
+    class SomeForm(TableForm):
+        date = CalendarDatePicker(date_format='%Y-%m-%d', required=True)
+        datetime = CalendarDateTimePicker(date_format='%Y-%m-%d %H:%M', required=True)
+
+    try:
+        data = SomeForm.validate({'date': '', 'datetime': '2012-06-13 10:07'})
+    except ValidationError:
+        pass
+    else:
+        assert False
+
+    try:
+        data = SomeForm.validate({'date': '2012-06-13', 'datetime': ''})
+    except ValidationError:
+        pass
+    else:
+        assert False
+

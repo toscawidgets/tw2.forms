@@ -1,0 +1,8 @@
+<table {{ w.attrs|xmlattr }}>
+  {% for attrs, desc in w.options %}
+  <tr>
+    <td><input {{ attrs|xmlattr }}/></td>
+    <td><label for="{{ attrs['id'] }}">{{ desc }}</label></td>
+  </tr>
+  {% endfor %}
+</table>
