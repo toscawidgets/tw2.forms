@@ -28,7 +28,7 @@ class WidgetTest(_WidgetTest):
     the first two since those are the only templates provided by tw2.forms
     itself.
     """
-    engines = ['mako', 'genshi']
+    engines = ['mako', 'genshi', 'jinja']
 
 
 class TestInputField(WidgetTest):

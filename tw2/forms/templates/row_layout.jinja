@@ -1,0 +1,18 @@
+<tr {{ w.attrs|xmlattr }}>
+    {% for c in w.children_non_hidden %}
+    <td>
+        {{ c.display() }}
+        {% if c.error_msg %}
+        <img src="{{ w.resources.error.link }}" title="{{ c.error_msg }}"/>
+        {% endif %}
+    </td>
+    {% endfor %}
+    <td>
+        {% for c in w.children_hidden %}
+        {{ c.display() }}
+        {% endfor %}
+        {% if w.error_msg %}
+        <img src="{{ w.resources.error.link }}" title="{{ w.error_msg }}"/>
+        {% endif %}
+    </td>
+</tr>

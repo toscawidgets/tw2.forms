@@ -1,0 +1,13 @@
+<select {{ w.attrs|xmlattr }}>
+    {% for group, options in w.grouped_options %}
+        {% if group %}
+        <optgroup {{ {'label': group}|xmlattr }}>
+        {% endif %}
+        {% for attrs, desc in options %}
+        <option {% if attrs %}{{ attrs|xmlattr }}{% endif %}>{{ desc }}</option>
+        {% endfor %}    
+        {% if group %}
+        </optgroup>
+        {% endif %}
+    {% endfor %}
+</select>

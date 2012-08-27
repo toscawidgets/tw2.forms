@@ -1,0 +1,17 @@
+<table {{ w.attrs|xmlattr }}>
+    <tbody>
+    {% for row in w.options_rows %}
+    <tr>
+        {% for attrs, desc in row %}
+        <td>
+            <input {{ attrs|xmlattr }} />
+            <label for="{{ attrs['id'] }}">{{ desc }}</label>
+        </td>
+        {% endfor %}
+        {% for j in range(w.cols - row|length) %}
+        <td/>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

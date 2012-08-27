@@ -1,0 +1,32 @@
+<table {{ w.attrs|xmlattr }}>
+   {% for c in w.children_non_hidden %}
+   <tr class="{{ loop.index0 % 2 and 'even' or 'odd' }}{{ c|attr('required') and ' required' or '' }}{{ c.error_msg and ' error' or '' }}"
+      {% if w.hover_help and c.help_text %}title="{{ c.help_text }}"{% endif %}
+      {{ c.container_attrs|xmlattr }}
+      id="{{ c.compound_id }}:container">
+      
+      {% if c.label %}
+      <th>{{ c.label }}</th>
+      {% endif %}
+   
+      <td 
+	{% if not c.label %}
+	colspan="2" 
+	{% endif %}>
+	    {{ c.display() }}
+	
+	    {% if not w.hover_help %}
+	    {{ c.help_text or '' }}
+	    {% endif %}
+            <span id="{{ c.compound_id or '' }}:error">{{ c.error_msg or ''}}</span>
+      </td>
+   </tr>
+   {% endfor %}
+    
+   <tr class="error"><td colspan="2">
+      {% for c in w.children_hidden %}
+      {{ c.display() }}
+      {% endfor %}
+      <span id="{{ w.compound_id or '' }}:error">{{ w.error_msg or '' }}</span>
+   </td></tr>
+</table>

@@ -1,0 +1,23 @@
+<table {{ w.attrs|xmlattr }} cellpadding="0" cellspacing="1" border="0">
+    {% if w.columns %}
+    <thead>
+        <tr>
+            {% for i, col in enumerate(w.columns) %}
+            <th class="col_{{ i|string }}">{{ col.title }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    {% endif %}
+
+    <tbody>
+        {% for i, row in enumerate(w.value) %}
+        <tr class="{{ i%2 and 'odd' or 'even' }}">
+            {% for col in w.columns %}
+            <td {{ 
+    {'align': col.get_option('align', None),
+     'class': col.get_option('css_class', None)} | xmlattr }}>{{ col.get_field(row) }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>\
