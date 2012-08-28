@@ -651,7 +651,7 @@ class Form(twc.DisplayOnlyWidget):
                        default='post', attribute=True)
     submit = twc.Param('Submit button widget. If this is None, no submit ' +
                        'button is generated.',
-                       default=SubmitButton(id='submit', value='Save'))
+                       default=SubmitButton(value='Save'))
     buttons = twc.Param('List of additional buttons to be placed at the ' +
                         'bottom of the form',
                         default=[])
