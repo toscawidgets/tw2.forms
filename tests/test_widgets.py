@@ -591,7 +591,7 @@ class TestTableForm(WidgetTest):
         <span id=":error"></span>
     </td></tr>
 </table>
-    <input type="submit" id="submit" value="Save">
+    <input type="submit" value="Save">
 </form>"""
     declarative = True
 
@@ -621,7 +621,7 @@ class TestListForm(WidgetTest):
     </li>
     <li class="error"><span id=":error" class="error"></span></li>
 </ul>
-    <input type="submit" id="submit" value="Save"/>
+    <input type="submit" value="Save"/>
 </form>"""
     declarative = True
 
@@ -764,7 +764,7 @@ class TestFormPage(WidgetTest):
         <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
-    <input type="submit" id="submit" value="Save">
+    <input type="submit" value="Save">
 </form></body>
 </html>"""
 
@@ -802,7 +802,7 @@ class TestFormPage(WidgetTest):
         <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
-    <input type="submit" id="submit" value="Save">
+    <input type="submit" value="Save">
 </form></body>
 </html>""")
 
@@ -844,7 +844,7 @@ class TestFormPage(WidgetTest):
         <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
-    <input type="submit" id="submit" value="Save">
+    <input type="submit" value="Save">
 </form></body>
 </html>""")
 
