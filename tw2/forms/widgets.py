@@ -13,10 +13,7 @@ class FormField(twc.Widget):
         'dom name',
         request_local=False,
         attribute=True,
-        # Default to compound_id *unless* the user has specified a data key.
-        default=property(
-            lambda s: (s.key and s.key != s.id) and s.key or s.compound_id
-        )
+        default=property(lambda s: hasattr(s, 'compound_key') and s.compound_key or s.compound_id)
     )
 
     @property
