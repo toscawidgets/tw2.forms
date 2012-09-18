@@ -744,19 +744,19 @@ class TestFormPage(WidgetTest):
     <tr class="odd" id="mytestwidget:field1:container">
         <th>Field1</th>
         <td>
-            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text">
+            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text"/>
             <span id="mytestwidget:field1:error"></span>
         </td>
     </tr><tr class="even" id="mytestwidget:field2:container">
         <th>Field2</th>
         <td>
-            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text">
+            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text"/>
             <span id="mytestwidget:field2:error"></span>
         </td>
     </tr><tr class="odd" id="mytestwidget:field3:container">
         <th>Field3</th>
         <td>
-            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text">
+            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text"/>
             <span id="mytestwidget:field3:error"></span>
         </td>
     </tr>
@@ -764,7 +764,7 @@ class TestFormPage(WidgetTest):
         <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
-    <input type="submit" value="Save">
+    <input type="submit" value="Save" />
 </form></body>
 </html>"""
 
@@ -782,19 +782,19 @@ class TestFormPage(WidgetTest):
     <tr class="odd" id="mytestwidget:field1:container">
         <th>Field1</th>
         <td>
-            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text">
+            <input name="mytestwidget:field1" id="mytestwidget:field1" type="text"/>
             <span id="mytestwidget:field1:error"></span>
         </td>
     </tr><tr class="even" id="mytestwidget:field2:container">
         <th>Field2</th>
         <td>
-            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text">
+            <input name="mytestwidget:field2" id="mytestwidget:field2" type="text"/>
             <span id="mytestwidget:field2:error"></span>
         </td>
     </tr><tr class="odd" id="mytestwidget:field3:container">
         <th>Field3</th>
         <td>
-            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text">
+            <input name="mytestwidget:field3" id="mytestwidget:field3" type="text"/>
             <span id="mytestwidget:field3:error"></span>
         </td>
     </tr>
@@ -802,7 +802,7 @@ class TestFormPage(WidgetTest):
         <span id="mytestwidget:error"></span>
     </td></tr>
 </table>
-    <input type="submit" value="Save">
+    <input type="submit" value="Save"/>
 </form></body>
 </html>""")
 
