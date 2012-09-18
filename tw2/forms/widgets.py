@@ -13,7 +13,7 @@ class FormField(twc.Widget):
         'dom name',
         request_local=False,
         attribute=True,
-        default=property(lambda s: s.compound_id)
+        default=property(lambda s: hasattr(s, 'compound_key') and s.compound_key or s.compound_id)
     )
 
     @property
@@ -651,7 +651,7 @@ class Form(twc.DisplayOnlyWidget):
                        default='post', attribute=True)
     submit = twc.Param('Submit button widget. If this is None, no submit ' +
                        'button is generated.',
-                       default=SubmitButton(id='submit', value='Save'))
+                       default=SubmitButton(value='Save'))
     buttons = twc.Param('List of additional buttons to be placed at the ' +
                         'bottom of the form',
                         default=[])
