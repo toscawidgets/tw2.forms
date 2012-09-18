@@ -594,6 +594,11 @@ class StripBlanks(twc.Validator):
                 if self.any_content(val[k]):
                     return True
             return False
+        elif type(val) == cgi.FieldStorage:
+            try:
+                return bool(v['file'].filename)
+            except:
+                return False
         else:
             return bool(val)
 
