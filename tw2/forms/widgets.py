@@ -638,6 +638,9 @@ class Label(twc.Widget):
     label = None
     id = None
 
+    def _validate(self, value, state=None):
+        return twc.EmptyField
+
 
 class Form(twc.DisplayOnlyWidget):
     """
