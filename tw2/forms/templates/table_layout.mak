@@ -8,7 +8,7 @@
 ${tw.attrs(attrs=c.container_attrs)} \
 id="${c.compound_id or ''}:container">
        % if c.label:
-        <th>${c.label}</th>
+        <th><label for='${c.id}'>${c.label}</label></th>
        % endif
         <td \
        % if not c.label:

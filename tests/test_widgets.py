@@ -377,15 +377,15 @@ class TestListLayout(WidgetTest):
     expected = """\
 <ul>
     <li class="odd">
-        <label>Field1</label>
+        <label for="field1">Field1</label>
         <input name="field1" id="field1" type="text">
         <span id="field1:error" class="error"></span>
     </li><li class="even">
-        <label>Field2</label>
+        <label for="field2">Field2</label>
         <input name="field2" id="field2" type="text">
         <span id="field2:error" class="error"></span>
     </li><li class="odd">
-        <label>Field3</label>
+        <label for="field3">Field3</label>
         <input name="field3" id="field3" type="text">
         <span id="field3:error" class="error"></span>
     </li>
@@ -399,7 +399,7 @@ class TestListLayoutErrors(TestListLayout):
     expected = """\
 <ul>
     <li class="odd">
-        <label>Field1</label>
+        <label for="field1">Field1</label>
         <input name="field1" id="field1" type="text">
         <span id="field1:error" class="error"></span>
     </li>
@@ -413,19 +413,19 @@ class TestTableLayout(WidgetTest):
                           TextField(id='field3')]}
     expected = """<table>
     <tr class="odd" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
         </td>
     </tr><tr class="even" id="field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="field2" id="field2" type="text">
             <span id="field2:error"></span>
         </td>
     </tr><tr class="odd" id="field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="field3" id="field3" type="text">
             <span id="field3:error"></span>
@@ -441,7 +441,7 @@ class TestTableLayout(WidgetTest):
         attrs = {'children': [TextField(id='field1', validator=twc.Required)]}
         expected = """<table>
     <tr class="odd required" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
@@ -456,7 +456,7 @@ class TestTableLayout(WidgetTest):
         attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=False))]}
         expected = """<table>
     <tr class="odd" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
@@ -471,7 +471,7 @@ class TestTableLayout(WidgetTest):
         attrs = {'children': [TextField(id='field1', validator=formencode.FancyValidator(not_empty=True))]}
         expected = """<table>
     <tr class="odd required" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
@@ -543,10 +543,9 @@ class TestForm(WidgetTest):
      <span class="error"></span>
     <table >
     <tr class="odd"  id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td >
             <input name="field1" type="text" id="field1"/>
-            
             <span id="field1:error"></span>
         </td>
     </tr>
@@ -569,19 +568,19 @@ class TestTableForm(WidgetTest):
      <span class="error"></span>
     <table>
     <tr class="odd" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
         </td>
     </tr><tr class="even" id="field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="field2" id="field2" type="text">
             <span id="field2:error"></span>
         </td>
     </tr><tr class="odd" id="field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="field3" id="field3" type="text">
             <span id="field3:error"></span>
@@ -605,17 +604,17 @@ class TestListForm(WidgetTest):
      <span class="error"></span>
     <ul >
     <li class="odd">
-     <label>Field1</label>
+     <label for="field1">Field1</label>
         <input name="field1" id="field1" type="text"/>
         <span id="field1:error" class="error"></span>
     </li>
     <li class="even">
-     <label>Field2</label>
+     <label for="field2">Field2</label>
         <input name="field2" id="field2" type="text"/>
         <span id="field2:error" class="error"></span>
     </li>
     <li class="odd">
-     <label>Field3</label>
+     <label for="field3">Field3</label>
         <input name="field3" id="field3" type="text"/>
         <span id="field3:error" class="error"></span>
     </li>
@@ -635,19 +634,19 @@ class TestTableFieldset(WidgetTest):
     <legend></legend>
     <table>
     <tr class="odd" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
         </td>
     </tr><tr class="even" id="field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="field2" id="field2" type="text">
             <span id="field2:error"></span>
         </td>
     </tr><tr class="odd" id="field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="field3" id="field3" type="text">
             <span id="field3:error"></span>
@@ -674,19 +673,19 @@ class TestTableFieldsetWithFEValidator(WidgetTest):
     <legend></legend>
     <table>
     <tr class="odd" id="field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="field1" id="field1" type="text">
             <span id="field1:error"></span>
         </td>
     </tr><tr class="even" id="field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="field2" id="field2" type="text">
             <span id="field2:error"></span>
         </td>
     </tr><tr class="odd" id="field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="field3" id="field3" type="text">
             <span id="field3:error"></span>
@@ -710,17 +709,17 @@ class TestListFieldset(WidgetTest):
     <legend></legend>
     <ul >
     <li class="odd">
-     <label>Field1</label>
+     <label for="field1">Field1</label>
         <input name="field1" id="field1" type="text"/>
         <span id="field1:error" class="error"></span>
     </li>
     <li class="even">
-     <label>Field2</label>
+     <label for="field2">Field2</label>
         <input name="field2" id="field2" type="text"/>
         <span id="field2:error" class="error"></span>
     </li>
     <li class="odd">
-     <label>Field3</label>
+     <label for="field3">Field3</label>
         <input name="field3" id="field3" type="text"/>
         <span id="field3:error" class="error"></span>
     </li>
@@ -742,19 +741,19 @@ class TestFormPage(WidgetTest):
      <span class="error"></span>
     <table id="mytestwidget">
     <tr class="odd" id="mytestwidget:field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="mytestwidget:field1" id="mytestwidget:field1" type="text"/>
             <span id="mytestwidget:field1:error"></span>
         </td>
     </tr><tr class="even" id="mytestwidget:field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="mytestwidget:field2" id="mytestwidget:field2" type="text"/>
             <span id="mytestwidget:field2:error"></span>
         </td>
     </tr><tr class="odd" id="mytestwidget:field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="mytestwidget:field3" id="mytestwidget:field3" type="text"/>
             <span id="mytestwidget:field3:error"></span>
@@ -780,19 +779,19 @@ class TestFormPage(WidgetTest):
      <span class="error"></span>
     <table id="mytestwidget">
     <tr class="odd" id="mytestwidget:field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="mytestwidget:field1" id="mytestwidget:field1" type="text"/>
             <span id="mytestwidget:field1:error"></span>
         </td>
     </tr><tr class="even" id="mytestwidget:field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="mytestwidget:field2" id="mytestwidget:field2" type="text"/>
             <span id="mytestwidget:field2:error"></span>
         </td>
     </tr><tr class="odd" id="mytestwidget:field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="mytestwidget:field3" id="mytestwidget:field3" type="text"/>
             <span id="mytestwidget:field3:error"></span>
@@ -822,19 +821,19 @@ class TestFormPage(WidgetTest):
      <span class="error"></span>
     <table id="mytestwidget">
     <tr class="odd" id="mytestwidget:field1:container">
-        <th>Field1</th>
+        <th><label for="field1">Field1</label></th>
         <td>
             <input name="mytestwidget:field1" id="mytestwidget:field1" type="text">
             <span id="mytestwidget:field1:error"></span>
         </td>
     </tr><tr class="even" id="mytestwidget:field2:container">
-        <th>Field2</th>
+        <th><label for="field2">Field2</label></th>
         <td>
             <input name="mytestwidget:field2" id="mytestwidget:field2" type="text">
             <span id="mytestwidget:field2:error"></span>
         </td>
     </tr><tr class="odd" id="mytestwidget:field3:container">
-        <th>Field3</th>
+        <th><label for="field3">Field3</label></th>
         <td>
             <input name="mytestwidget:field3" id="mytestwidget:field3" type="text">
             <span id="mytestwidget:field3:error"></span>
