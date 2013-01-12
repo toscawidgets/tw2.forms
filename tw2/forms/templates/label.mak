@@ -1,8 +1,8 @@
 <%namespace name="tw" module="tw2.core.mako_util"/>\
-<span ${tw.attrs(attrs=w.attrs)}>
+<span ${tw.attrs(attrs=w.attrs)}>\
 % if w.escape:
-  ${w.text}
+${w.text}\
 % else:
-  ${w.text | n}
+${w.text | n}\
 % endif
 </span>
