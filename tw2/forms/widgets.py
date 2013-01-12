@@ -635,6 +635,7 @@ class Label(twc.Widget):
     """
     template = 'tw2.forms.templates.label'
     text = twc.Param('Text to appear in label')
+    escape = twc.Param('Whether text shall be html-escaped or not', default=True)
     label = None
     id = None
 
