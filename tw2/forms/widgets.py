@@ -131,6 +131,10 @@ class FileField(InputField):
 
     type = "file"
     validator = FileValidator
+    
+    def prepare(self):
+        self.value = None
+        super(FileField, self).prepare()
 
     def _validate(self, value, state=None):
         try:
