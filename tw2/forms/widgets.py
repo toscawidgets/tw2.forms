@@ -61,8 +61,9 @@ class CheckBox(InputField):
 
     def prepare(self):
         super(CheckBox, self).prepare()
+        checked = self.validator.to_python(self.value)
         self.safe_modify('attrs')
-        self.attrs['checked'] = self.value and 'checked' or None
+        self.attrs['checked'] = checked and 'checked' or None
         self.attrs['value'] = None
 
 
@@ -131,6 +132,10 @@ class FileField(InputField):
 
     type = "file"
     validator = FileValidator
+    
+    def prepare(self):
+        self.value = None
+        super(FileField, self).prepare()
 
     def _validate(self, value, state=None):
         try:
@@ -594,6 +599,11 @@ class StripBlanks(twc.Validator):
                 if self.any_content(val[k]):
                     return True
             return False
+        elif type(val) == cgi.FieldStorage:
+            try:
+                return bool(v['file'].filename)
+            except:
+                return False
         else:
             return bool(val)
 
@@ -630,8 +640,12 @@ class Label(twc.Widget):
     """
     template = 'tw2.forms.templates.label'
     text = twc.Param('Text to appear in label')
+    escape = twc.Param('Whether text shall be html-escaped or not', default=True)
     label = None
     id = None
+
+    def _validate(self, value, state=None):
+        return twc.EmptyField
 
 
 class Form(twc.DisplayOnlyWidget):

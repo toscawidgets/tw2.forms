@@ -11,7 +11,7 @@ title="${c.help_text}" \
      % endif
 ${tw.attrs(attrs=c.container_attrs)}\
 >
-     <label>${c.label or ''}</label>
+     <label for='${c.id}'>${c.label or ''}</label>
         ${c.display() | n}
         % if not w.hover_help:
 ${c.help_text or ''}\
