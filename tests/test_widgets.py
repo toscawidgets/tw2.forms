@@ -56,7 +56,7 @@ class TestCheckbox(WidgetTest):
     expected = '<input checked="checked" type="checkbox" class="something"/>'
 
     def test_value_false(self):
-        params = {'value':False}
+        params = {'value': False}
         expected = '<input type="checkbox" class="something">'
         for engine in self._get_all_possible_engines():
             yield self._check_rendering_vs_expected, engine, self.attrs, params, expected
@@ -86,11 +86,18 @@ class TestPasswordField(WidgetTest):
 
 class TestFileField(WidgetTest):
     widget = FileField
-    attrs = {'css_class':'something', 'id':'hid', 'validator':FileValidator(extension="bdb", required=True)}
+    attrs = {
+        'css_class': 'something',
+        'id': 'hid',
+        'validator': FileValidator(extension="bdb", required=True),
+    }
     expected = '<input id="hid" type="file" class="something" name="hid"/>'
     dummy_file = FieldStorage(StringIO(''))
     dummy_file.filename = 'something.ext'
-    validate_params = [[None, {'hid':'b'}, None, ValidationError], [None, {'hid':dummy_file}, None, ValidationError]]
+    validate_params = [
+        [None, {'hid': 'b'}, None, ValidationError],
+        [None, {'hid': dummy_file}, None, ValidationError],
+    ]
 
 class TestHiddenField(WidgetTest):
     widget = HiddenField
