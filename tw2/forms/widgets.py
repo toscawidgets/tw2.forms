@@ -61,8 +61,9 @@ class CheckBox(InputField):
 
     def prepare(self):
         super(CheckBox, self).prepare()
+        checked = self.validator._convert_to_python(self.value)
         self.safe_modify('attrs')
-        self.attrs['checked'] = self.value and 'checked' or None
+        self.attrs['checked'] = checked and 'checked' or None
         self.attrs['value'] = None
 
 
