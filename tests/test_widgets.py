@@ -91,7 +91,7 @@ class TestFileField(WidgetTest):
         'id': 'hid',
         'validator': FileValidator(extension="bdb", required=True),
     }
-    expected = '<input id="hid" type="file" class="something" name="hid"/>'
+    expected = '<input id="hid" type="file" class="something" value="" name="hid"/>'
     dummy_file = FieldStorage(StringIO(''))
     dummy_file.filename = 'something.ext'
     validate_params = [
