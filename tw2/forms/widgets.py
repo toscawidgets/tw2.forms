@@ -104,7 +104,7 @@ class FileValidator(twc.Validator):
         'badext': "File name must have '$extension' extension",
     }
 
-    def validate_python(self, value, outer_call=None):
+    def _validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
             if self.required and not getattr(value, 'filename', None):
                 raise twc.ValidationError('required', self)
@@ -340,7 +340,7 @@ class MultipleSelectionField(SelectionField):
         if not isinstance(value, (list, tuple)):
             value = [value]
         if self.validator:
-            self.validator.validate_python(self.validator.to_python(value, state))
+            self.validator.to_python(value, state)
         if self.item_validator:
             value = [twc.safe_validate(self.item_validator, v) for v in value]
         self.value = [v for v in value if v is not twc.Invalid]
