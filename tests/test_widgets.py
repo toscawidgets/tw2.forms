@@ -504,10 +504,16 @@ class TestTableLayout(WidgetTest):
             <tr class="odd required" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text">
+                    <input name="field1" id="field1" type="text" value="">
                     <span id="field1:error"></span>
                 </td>
+            </tr><tr class="error"><td colspan="2">
+                <span id=":error"></span></td>
             </tr></table>"""
+        params = {'value': None}
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, params, expected)
 
     def test_fe_not_required(self):
         try:
@@ -523,7 +529,13 @@ class TestTableLayout(WidgetTest):
                     <input name="field1" id="field1" type="text">
                     <span id="field1:error"></span>
                 </td>
+            </tr><tr class="error"><td colspan="2">
+                <span id=":error"></span></td>
             </tr></table>"""
+        params = {'value': None}
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, params, expected)
 
     def test_fe_required(self):
         try:
@@ -539,7 +551,13 @@ class TestTableLayout(WidgetTest):
                     <input name="field1" id="field1" type="text">
                     <span id="field1:error"></span>
                 </td>
+            </tr><tr class="error"><td colspan="2">
+                <span id=":error"></span></td>
             </tr></table>"""
+        params = {'value': None}
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, params, expected)
 
 
 class TestRowLayout(WidgetTest):
@@ -738,15 +756,14 @@ class TestTableFieldset(WidgetTest):
 class TestTableFieldsetWithFEValidator(WidgetTest):
 
     try:
-        import formencode.national
+        from formencode.national import USPostalCode as FEValidator
     except ImportError, e:
-        self.skipTest(str(e))
+        FEValidator = IntValidator
     widget = TableFieldSet
     attrs = {
         'field1': TextField(id='field1'),
         'field2': TextField(id='field2'),
-        'field3': TextField(id='field3',
-            validator=formencode.national.USPostalCode())}
+        'field3': TextField(id='field3', validator=FEValidator())}
     expected = """<fieldset>
         <legend></legend>
         <table>
@@ -774,6 +791,11 @@ class TestTableFieldsetWithFEValidator(WidgetTest):
         </table>
         </fieldset>"""
     declarative = True
+
+    def setUp(self):
+        if self.FEValidator is IntValidator:
+            self.skipTest('Cannot import FormEncode validator')
+        super(TestTableFieldsetWithFEValidator, self).setUp()
 
 
 class TestListFieldset(WidgetTest):

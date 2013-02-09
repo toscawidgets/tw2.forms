@@ -3,7 +3,7 @@
         {{ c.display() }}
     {% endfor %}
     {% for c in w.children_non_hidden %}
-    <li class="{{ loop.index0 % 2 and 'even' or 'odd' }}{{ c|attr(' required') and ' required' or '' }}{{ c.error_msg and ' error' or '' }}" {% if w.hover_help and c.help_text %}title="{{ c.help_text }}"{% endif %} {{ c.container_attrs|xmlattr }}>
+    <li class="{{ loop.index0 % 2 and 'even' or 'odd' }}{{ (c|attr('validator') and (c|attr('validator')|attr('required') or c|attr('validator')|attr('not_empty'))) and ' required' or '' }}{{ c.error_msg and ' error' or '' }}" {% if w.hover_help and c.help_text %}title="{{ c.help_text }}"{% endif %} {{ c.container_attrs|xmlattr }}>
     <label for="{{ c.id }}">{{ c.label or '' }}</label>
         {{ c.display() }}
         {% if not w.hover_help %}{{ c.help_text or '' }}{% endif %}
