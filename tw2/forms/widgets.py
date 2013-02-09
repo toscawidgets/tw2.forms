@@ -109,8 +109,8 @@ class FileValidator(twc.Validator):
             if self.required and not getattr(value, 'filename', None):
                 raise twc.ValidationError('required', self)
 
-            if self.extension is not None and \
-               not value.filename.endswith(self.extension):
+            if (self.extension is not None
+                    and not value.filename.endswith(self.extension)):
                 raise twc.ValidationError('badext', self)
         elif value:
             raise twc.ValidationError('corrupt', self)
@@ -132,7 +132,7 @@ class FileField(InputField):
 
     type = "file"
     validator = FileValidator
-    
+
     def prepare(self):
         self.value = None
         super(FileField, self).prepare()
