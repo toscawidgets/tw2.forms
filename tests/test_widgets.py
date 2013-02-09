@@ -11,10 +11,9 @@ from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
 from datetime import datetime
 
-import webob
-if hasattr(webob, 'NestedMultiDict'):
+try:
     from webob import NestedMultiDict
-else:
+except ImportError:
     from webob.multidict import NestedMultiDict
 
 
@@ -68,8 +67,8 @@ class TestCheckbox(WidgetTest):
 
 class TestRadioButton(WidgetTest):
     widget = RadioButton
-    attrs = {'css_class':'something'}
-    params = {'checked':None}
+    attrs = {'css_class': 'something'}
+    params = {'checked': None}
     expected = '<input type="radio" class="something"/>'
 
     def test_checked(self):
@@ -164,8 +163,8 @@ class TestImageButton(WidgetTest):
 
 class TestSingleSelectField(WidgetTest):
     widget = SingleSelectField
-    attrs = {'css_class':'something',
-        'options': ((1, 'a'), (2, 'b'), (3, 'c')), 'id':'hid',
+    attrs = {'css_class': 'something',
+        'options': ((1, 'a'), (2, 'b'), (3, 'c')), 'id': 'hid',
         'validator': IntValidator()}
     expected = """<select class="something" id="hid" name="hid">
             <option></option>
@@ -431,9 +430,10 @@ class TestCheckBoxTable(WidgetTest):
 class TestListLayout(WidgetTest):
 
     widget = ListLayout
-    attrs = {'children': [TextField(id='field1'),
-                          TextField(id='field2'),
-                          TextField(id='field3')]}
+    attrs = {'children': [
+        TextField(id='field1'),
+        TextField(id='field2'),
+        TextField(id='field3')]}
     expected = """<ul>
         <li class="odd">
             <label for="field1">Field1</label>
@@ -494,8 +494,8 @@ class TestTableLayout(WidgetTest):
                 <span id="field3:error"></span>
             </td>
         </tr><tr class="error"><td colspan="2">
-            <span id=":error"></span>
-        </td></tr></table>"""
+            <span id=":error"></span></td>
+        </tr></table>"""
     declarative = True
 
     def test_required(self):
@@ -531,7 +531,7 @@ class TestTableLayout(WidgetTest):
         except ImportError, e:
             self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1',
-                validator=formencode.FancyValidator(not_empty=True))]}
+            validator=formencode.FancyValidator(not_empty=True))]}
         expected = """<table>
             <tr class="odd required" id="field1:container">
                 <th><label for="field1">Field1</label></th>
@@ -781,8 +781,8 @@ class TestListFieldset(WidgetTest):
     widget = ListFieldSet
     attrs = {
         'field1': TextField(id='field1'),
-         'field2': TextField(id='field2'),
-         'field3': TextField(id='field3')}
+        'field2': TextField(id='field2'),
+        'field3': TextField(id='field3')}
     expected = """<fieldset>
         <legend></legend>
         <ul >
