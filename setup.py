@@ -13,7 +13,7 @@ _extra_genshi = ["Genshi >= 0.3.5"]
 _extra_mako = ["Mako >= 0.1.1"]
 _extra_jinja = ["Jinja2"]
 
-requires=[
+requires = [
     "tw2.core>=2.1.4",
 ]
 
@@ -24,37 +24,37 @@ setup(
     name='tw2.forms',
     version='2.1.4.1',
     description='The basic form widgets for ToscaWidgets 2.',
-    long_description = open('README.rst').read().split('\n\n', 1)[1],
+    long_description=open('README.rst').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',
     author_email='paj@pajhome.org.uk',
     url='http://toscawidgets.org',
     install_requires=requires,
     packages=find_packages(exclude=['ez_setup', 'tests']),
-    namespace_packages = ['tw2'],
+    namespace_packages=['tw2'],
     zip_safe=False,
     include_package_data=True,
-    test_suite = 'nose.collector',
+    test_suite='nose.collector',
     entry_points="""
         [tw2.widgets]
         # Register your widgets so they can be listed in the WidgetBrowser
         tw2.forms = tw2.forms
     """,
-    keywords = [
+    keywords=[
         'toscawidgets.widgets',
     ],
-    tests_require = [
+    tests_require=[
         'BeautifulSoup',
         'nose',
         'FormEncode',
         'WebTest',
         'strainer',
     ] + _extra_genshi + _extra_mako + _extra_jinja,
-    extras_require = {
+    extras_require={
         'genshi': _extra_genshi,
         'mako': _extra_mako,
         'jinja': _extra_jinja,
     },
-    classifiers = [
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Environment :: Web Environment :: ToscaWidgets',
