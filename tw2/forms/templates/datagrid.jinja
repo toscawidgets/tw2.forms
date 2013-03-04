@@ -2,16 +2,16 @@
     {% if w.columns %}
     <thead>
         <tr>
-            {% for i, col in enumerate(w.columns) %}
-            <th class="col_{{ i|string }}">{{ col.title }}</th>
+            {% for col in w.columns %}
+            <th class="col_{{ loop.index0|string }}">{{ col.title }}</th>
             {% endfor %}
         </tr>
     </thead>
     {% endif %}
 
     <tbody>
-        {% for i, row in enumerate(w.value) %}
-        <tr class="{{ i%2 and 'odd' or 'even' }}">
+        {% for row in w.value %}
+        <tr class="{{ loop.index0 % 2 and 'odd' or 'even' }}">
             {% for col in w.columns %}
             <td {{ 
     {'align': col.get_option('align', None),
@@ -20,4 +20,4 @@
         </tr>
         {% endfor %}
     </tbody>
-</table>\
+</table>

@@ -46,7 +46,7 @@ setup(
         'BeautifulSoup',
         'nose',
         'FormEncode',
-        'WebTest',
+        'WebTest<2.0',
         'strainer',
     ] + _extra_genshi + _extra_mako + _extra_jinja,
     extras_require={
