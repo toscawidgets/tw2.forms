@@ -6,10 +6,11 @@ from tw2.core.testbase import (
     assert_in_xml, assert_eq_xml,
     WidgetTest as _WidgetTest)
 from nose.tools import raises
-from cStringIO import StringIO
+from six.moves import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
 from cgi import FieldStorage
 from datetime import datetime
+import six
 
 try:
     from webob import NestedMultiDict
@@ -25,7 +26,7 @@ class WidgetTest(_WidgetTest):
     the first two since those are the only templates provided by tw2.forms
     itself.
     """
-    engines = ['mako', 'genshi', 'jinja']
+    engines = ['mako', 'jinja']
 
 
 class TestInputField(WidgetTest):
@@ -59,7 +60,7 @@ class TestCheckbox(WidgetTest):
 
     def test_value_false(self):
         params = {'value': False}
-        expected = '<input type="checkbox" class="something">'
+        expected = '<input type="checkbox" class="something"/>'
         for engine in self._get_all_possible_engines():
             yield (self._check_rendering_vs_expected,
                 engine, self.attrs, params, expected)
@@ -135,14 +136,14 @@ class TestButton(WidgetTest):
     widget = Button
     attrs = {'css_class': 'something', 'value': 'info', 'name': 'hidden_name'}
     expected = """<input class="something" type="button"
-        value="info" name="hidden_name">"""
+        value="info" name="hidden_name"/>"""
 
 
 class TestSubmitButton(WidgetTest):
     widget = SubmitButton
     attrs = {'css_class': 'something', 'value': 'info', 'name': 'hidden_name'}
     expected = """<input class="something" type="submit"
-        value="info" name="hidden_name">"""
+        value="info" name="hidden_name"/>"""
 
 
 class TestResetButton(WidgetTest):
@@ -150,7 +151,7 @@ class TestResetButton(WidgetTest):
     attrs = {'css_class': 'something',
         'value': 'info', 'name': 'hidden_name'}
     expected = """<input class="something" type="reset"
-        value="info" name="hidden_name">"""
+        value="info" name="hidden_name"/>"""
 
 
 class TestImageButton(WidgetTest):
@@ -158,7 +159,7 @@ class TestImageButton(WidgetTest):
     attrs = {'css_class': 'something',
         'value': 'info', 'name': 'hidden_name', 'link': '/somewhere.gif'}
     expected = """<input src="/somewhere.gif" name="hidden_name"
-        value="info" alt="" type="image" class="something">"""
+        value="info" alt="" type="image" class="something"/>"""
 
 
 class TestSingleSelectField(WidgetTest):
@@ -237,7 +238,7 @@ class TestMultipleSelectField(WidgetTest):
             <option value="b">2</option>
             <option value="c">3</option>
         </select>"""
-    validate_params = [[None, {'hid': 'b'}, [u'b']]]
+    validate_params = [[None, {'hid': 'b'}, [six.u('b')]]]
 
 
 class TestSelectionList(WidgetTest):
@@ -247,13 +248,13 @@ class TestSelectionList(WidgetTest):
         'options': (('a', '1'), ('b', '2'), ('c', '3')), 'id': 'something'}
     expected = """<ul class="something" id="something">
         <li>
-            <input type="test" name="something" value="a" id="something:0">
+            <input type="test" name="something" value="a" id="something:0"/>
             <label for="something:0">1</label>
         </li><li>
-            <input type="test" name="something" value="b" id="something:1">
+            <input type="test" name="something" value="b" id="something:1"/>
             <label for="something:1">2</label>
         </li><li>
-            <input type="test" name="something" value="c" id="something:2">
+            <input type="test" name="something" value="c" id="something:2"/>
             <label for="something:2">3</label>
         </li></ul>"""
 
@@ -265,13 +266,13 @@ class TestRadioButtonList(WidgetTest):
         'options': (('a', '1'), ('b', '2'), ('c', '3')), 'id': 'something'}
     expected = """<ul class="something" id="something">
         <li>
-            <input type="radio" name="something" value="a" id="something:0">
+            <input type="radio" name="something" value="a" id="something:0"/>
             <label for="something:0">1</label>
         </li><li>
-            <input type="radio" name="something" value="b" id="something:1">
+            <input type="radio" name="something" value="b" id="something:1"/>
             <label for="something:1">2</label>
         </li><li>
-            <input type="radio" name="something" value="c" id="something:2">
+            <input type="radio" name="something" value="c" id="something:2"/>
             <label for="something:2">3</label>
         </li></ul>"""
 
@@ -284,15 +285,15 @@ class TestCheckBoxList(WidgetTest):
     expected = """<ul class="something" id="something">
         <li>
             <input type="checkbox"
-                name="something" value="a" id="something:0">
+                name="something" value="a" id="something:0"/>
             <label for="something:0">1</label>
         </li><li>
             <input type="checkbox"
-                name="something" value="b" id="something:1">
+                name="something" value="b" id="something:1"/>
             <label for="something:1">2</label>
         </li><li>
             <input type="checkbox"
-                name="something" value="c" id="something:2">
+                name="something" value="c" id="something:2"/>
             <label for="something:2">3</label>
         </li></ul>"""
 
@@ -300,15 +301,15 @@ class TestCheckBoxList(WidgetTest):
         expected = """<ul class="something" id="something">
             <li>
                 <input type="checkbox"
-                    name="something" value="a" id="something:0" checked>
+                    name="something" value="a" id="something:0" checked/>
                 <label for="something:0">a</label>
             </li><li>
                 <input type="checkbox"
-                    name="something" value="b" id="something:1">
+                    name="something" value="b" id="something:1"/>
                 <label for="something:1">b</label>
             </li><li>
                 <input type="checkbox"
-                    name="something" value="c" id="something:2">
+                    name="something" value="c" id="something:2"/>
                 <label for="something:2">c</label>
             </li></ul>"""
         attrs = {'css_class': 'something',
@@ -327,17 +328,17 @@ class TestSelectionTable(WidgetTest):
     expected = """<table class="something" id="something"><tbody>
         <tr>
             <td>
-                <input type="test" name="something" value="a" id="something:0">
+                <input type="test" name="something" value="a" id="something:0"/>
                 <label for="something:0">1</label>
             </td>
         </tr><tr>
             <td>
-                <input type="test" name="something" value="b" id="something:1">
+                <input type="test" name="something" value="b" id="something:1"/>
                 <label for="something:1">2</label>
             </td>
         </tr><tr>
             <td>
-                <input type="test" name="something" value="c" id="something:2">
+                <input type="test" name="something" value="c" id="something:2"/>
                 <label for="something:2">3</label>
             </td>
         </tr>
@@ -348,17 +349,17 @@ class TestSelectionTable(WidgetTest):
             <tr>
                 <td>
                     <input type="test"
-                        checked name="something" value="a" id="something:0">
+                        checked name="something" value="a" id="something:0"/>
                     <label for="something:0">a</label>
                 </td><td>
                     <input type="test"
-                        name="something" value="b" id="something:1">
+                        name="something" value="b" id="something:1"/>
                     <label for="something:1">b</label>
                 </td>
             </tr><tr>
                 <td>
                     <input type="test"
-                        name="something" value="c" id="something:2">
+                        name="something" value="c" id="something:2"/>
                     <label for="something:2">c</label>
                 </td>
                 <td></td>
@@ -381,17 +382,17 @@ class TestRadioButtonTable(WidgetTest):
     <tbody>
     <tr>
         <td>
-            <input type="radio" name="something" value="a" id="something:0">
+            <input type="radio" name="something" value="a" id="something:0"/>
             <label for="something:0">1</label>
         </td>
     </tr><tr>
         <td>
-            <input type="radio" name="something" value="b" id="something:1">
+            <input type="radio" name="something" value="b" id="something:1"/>
             <label for="something:1">2</label>
         </td>
     </tr><tr>
         <td>
-            <input type="radio" name="something" value="c" id="something:2">
+            <input type="radio" name="something" value="c" id="something:2"/>
             <label for="something:2">3</label>
         </td>
     </tr>
@@ -408,19 +409,19 @@ class TestCheckBoxTable(WidgetTest):
         <tr>
             <td>
                 <input type="checkbox"
-                    name="something" value="a" id="something:0">
+                    name="something" value="a" id="something:0"/>
                 <label for="something:0">1</label>
             </td>
         </tr><tr>
             <td>
                 <input type="checkbox"
-                    name="something" value="b" id="something:1">
+                    name="something" value="b" id="something:1"/>
                 <label for="something:1">2</label>
             </td>
         </tr><tr>
             <td>
                 <input type="checkbox"
-                    name="something" value="c" id="something:2">
+                    name="something" value="c" id="something:2"/>
                 <label for="something:2">3</label>
             </td>
         </tr>
@@ -437,15 +438,15 @@ class TestListLayout(WidgetTest):
     expected = """<ul>
         <li class="odd">
             <label for="field1">Field1</label>
-            <input name="field1" id="field1" type="text">
+            <input name="field1" id="field1" type="text"/>
             <span id="field1:error" class="error"></span>
         </li><li class="even">
             <label for="field2">Field2</label>
-            <input name="field2" id="field2" type="text">
+            <input name="field2" id="field2" type="text"/>
             <span id="field2:error" class="error"></span>
         </li><li class="odd">
             <label for="field3">Field3</label>
-            <input name="field3" id="field3" type="text">
+            <input name="field3" id="field3" type="text"/>
             <span id="field3:error" class="error"></span>
         </li><li class="error">
             <span id=":error" class="error"></span>
@@ -460,7 +461,7 @@ class TestListLayoutErrors(TestListLayout):
     expected = """<ul>
         <li class="odd">
             <label for="field1">Field1</label>
-            <input name="field1" id="field1" type="text">
+            <input name="field1" id="field1" type="text"/>
             <span id="field1:error" class="error"></span>
         </li><li class="error">
             <span id=":error" class="error"><p>bogus error</p></span>
@@ -478,19 +479,19 @@ class TestTableLayout(WidgetTest):
         <tr class="odd" id="field1:container">
             <th><label for="field1">Field1</label></th>
             <td>
-                <input name="field1" id="field1" type="text">
+                <input name="field1" id="field1" type="text"/>
                 <span id="field1:error"></span>
             </td>
         </tr><tr class="even" id="field2:container">
             <th><label for="field2">Field2</label></th>
             <td>
-                <input name="field2" id="field2" type="text">
+                <input name="field2" id="field2" type="text"/>
                 <span id="field2:error"></span>
             </td>
         </tr><tr class="odd" id="field3:container">
             <th><label for="field3">Field3</label></th>
             <td>
-                <input name="field3" id="field3" type="text">
+                <input name="field3" id="field3" type="text"/>
                 <span id="field3:error"></span>
             </td>
         </tr><tr class="error"><td colspan="2">
@@ -504,7 +505,7 @@ class TestTableLayout(WidgetTest):
             <tr class="odd required" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text" value="">
+                    <input name="field1" id="field1" type="text" value=""/>
                     <span id="field1:error"></span>
                 </td>
             </tr><tr class="error"><td colspan="2">
@@ -518,7 +519,7 @@ class TestTableLayout(WidgetTest):
     def test_fe_not_required(self):
         try:
             import formencode
-        except ImportError, e:
+        except ImportError as e:
             self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1',
             validator=formencode.FancyValidator(not_empty=False))]}
@@ -526,7 +527,7 @@ class TestTableLayout(WidgetTest):
             <tr class="odd" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text">
+                    <input name="field1" id="field1" type="text"/>
                     <span id="field1:error"></span>
                 </td>
             </tr><tr class="error"><td colspan="2">
@@ -540,7 +541,7 @@ class TestTableLayout(WidgetTest):
     def test_fe_required(self):
         try:
             import formencode
-        except ImportError, e:
+        except ImportError as e:
             self.skipTest(str(e))
         attrs = {'children': [TextField(id='field1',
             validator=formencode.FancyValidator(not_empty=True))]}
@@ -548,7 +549,7 @@ class TestTableLayout(WidgetTest):
             <tr class="odd required" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text">
+                    <input name="field1" id="field1" type="text"/>
                     <span id="field1:error"></span>
                 </td>
             </tr><tr class="error"><td colspan="2">
@@ -571,11 +572,11 @@ class TestRowLayout(WidgetTest):
         'repetition': 1}
     expected = """<tr class="even">
         <td>
-            <input name="field1" id="field1" type="text">
+            <input name="field1" id="field1" type="text"/>
         </td><td>
-            <input name="field2" id="field2" type="text">
+            <input name="field2" id="field2" type="text"/>
         </td><td>
-            <input name="field3" id="field3" type="text">
+            <input name="field3" id="field3" type="text"/>
         </td><td>
         </td></tr>"""
     declarative = True
@@ -661,26 +662,26 @@ class TestTableForm(WidgetTest):
             <tr class="odd" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text">
+                    <input name="field1" id="field1" type="text"/>
                     <span id="field1:error"></span>
                 </td>
             </tr><tr class="even" id="field2:container">
                 <th><label for="field2">Field2</label></th>
                 <td>
-                    <input name="field2" id="field2" type="text">
+                    <input name="field2" id="field2" type="text"/>
                     <span id="field2:error"></span>
                 </td>
             </tr><tr class="odd" id="field3:container">
                 <th><label for="field3">Field3</label></th>
                 <td>
-                    <input name="field3" id="field3" type="text">
+                    <input name="field3" id="field3" type="text"/>
                     <span id="field3:error"></span>
                 </td>
             </tr><tr class="error"><td colspan="2">
                 <span id=":error"></span>
             </td></tr>
         </table>
-        <input type="submit" value="Save">
+        <input type="submit" value="Save"/>
         </form>"""
     declarative = True
 
@@ -730,19 +731,19 @@ class TestTableFieldset(WidgetTest):
             <tr class="odd" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text">
+                    <input name="field1" id="field1" type="text"/>
                     <span id="field1:error"></span>
                 </td>
             </tr><tr class="even" id="field2:container">
                 <th><label for="field2">Field2</label></th>
                 <td>
-                    <input name="field2" id="field2" type="text">
+                    <input name="field2" id="field2" type="text"/>
                     <span id="field2:error"></span>
                 </td>
             </tr><tr class="odd" id="field3:container">
                 <th><label for="field3">Field3</label></th>
                 <td>
-                    <input name="field3" id="field3" type="text">
+                    <input name="field3" id="field3" type="text"/>
                     <span id="field3:error"></span>
                 </td>
             </tr><tr class="error"><td colspan="2">
@@ -757,7 +758,7 @@ class TestTableFieldsetWithFEValidator(WidgetTest):
 
     try:
         from formencode.national import USPostalCode as FEValidator
-    except ImportError, e:
+    except ImportError as e:
         FEValidator = IntValidator
     widget = TableFieldSet
     attrs = {
@@ -770,19 +771,19 @@ class TestTableFieldsetWithFEValidator(WidgetTest):
             <tr class="odd" id="field1:container">
                 <th><label for="field1">Field1</label></th>
                 <td>
-                    <input name="field1" id="field1" type="text">
+                    <input name="field1" id="field1" type="text"/>
                     <span id="field1:error"></span>
                 </td>
             </tr><tr class="even" id="field2:container">
                 <th><label for="field2">Field2</label></th>
                 <td>
-                    <input name="field2" id="field2" type="text">
+                    <input name="field2" id="field2" type="text"/>
                     <span id="field2:error"></span>
                 </td>
             </tr><tr class="odd" id="field3:container">
                 <th><label for="field3">Field3</label></th>
                 <td>
-                    <input name="field3" id="field3" type="text">
+                    <input name="field3" id="field3" type="text"/>
                     <span id="field3:error"></span>
                 </td>
             </tr><tr class="error"><td colspan="2">
@@ -941,7 +942,7 @@ class TestFormPage(WidgetTest):
                             <th><label for="field1">Field1</label></th>
                             <td>
                                 <input name="mytestwidget:field1"
-                                    id="mytestwidget:field1" type="text">
+                                    id="mytestwidget:field1" type="text"/>
                                 <span id="mytestwidget:field1:error"></span>
                             </td>
                         </tr><tr class="even"
@@ -949,7 +950,7 @@ class TestFormPage(WidgetTest):
                             <th><label for="field2">Field2</label></th>
                             <td>
                                 <input name="mytestwidget:field2"
-                                    id="mytestwidget:field2" type="text">
+                                    id="mytestwidget:field2" type="text"/>
                                 <span id="mytestwidget:field2:error"></span>
                             </td>
                         </tr><tr class="odd"
@@ -957,14 +958,14 @@ class TestFormPage(WidgetTest):
                             <th><label for="field3">Field3</label></th>
                             <td>
                                 <input name="mytestwidget:field3"
-                                    id="mytestwidget:field3" type="text">
+                                    id="mytestwidget:field3" type="text"/>
                                 <span id="mytestwidget:field3:error"></span>
                             </td>
                         </tr><tr class="error"><td colspan="2">
                             <span id="mytestwidget:error"></span>
                         </td></tr>
                     </table>
-                    <input type="submit" value="Save">
+                    <input type="submit" value="Save"/>
                 </form>
             </body></html>""")
 
@@ -992,7 +993,7 @@ def test_picker_validation():
 
     data = SomeForm.validate({
         'date': '2012-06-13', 'datetime': '2012-06-13 10:07'})
-    for field in data.itervalues():
+    for field in six.itervalues(data):
         assert isinstance(field, datetime)
 
 
