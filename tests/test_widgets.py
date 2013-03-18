@@ -4,10 +4,13 @@ from webob import Request
 from webob.multidict import NestedMultiDict
 from tw2.core.testbase import (
     assert_in_xml, assert_eq_xml,
-    WidgetTest as _WidgetTest)
+    WidgetTest as _WidgetTest,
+    TW2WidgetBuilder
+)
 from nose.tools import raises
 from six.moves import StringIO
 from tw2.core import EmptyField, IntValidator, ValidationError
+from tw2.core.middleware import make_middleware
 from cgi import FieldStorage
 from datetime import datetime
 import six
@@ -839,6 +842,7 @@ class TestFormPage(WidgetTest):
             TextField(id='field2'),
             TextField(id='field3')]),
         'title': 'some title'}
+
     expected = """<html>
         <head><title>some title</title></head>
         <body id="mytestwidget:page">
@@ -878,6 +882,10 @@ class TestFormPage(WidgetTest):
         </html>"""
 
     declarative = True
+
+    def setUp(self):
+        self.widget = TW2WidgetBuilder(self.widget, **self.attrs)
+        self.mw = make_middleware(None, {})
 
     def test_request_get(self):
         environ = {'REQUEST_METHOD': 'GET'}
@@ -973,15 +981,18 @@ class TestFormPage(WidgetTest):
         environ = {'wsgi.input': StringIO('')}
         req = Request(environ)
         req.method = 'POST'
-        req.body = ('mytestwidget:field1=a&mytestwidget'
-            ':field2=b&mytestwidget:field3=c')
+        attr = six.PY3 and "text" or "body"
+        setattr(req, attr, ('mytestwidget:field1=a&mytestwidget'
+            ':field2=b&mytestwidget:field3=c'))
         req.environ['CONTENT_LENGTH'] = str(len(req.body))
         req.environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
 
         self.mw.config.debug = True
         r = self.widget().request(req)
-        assert (r.body.replace(": u'", ": '") == "Form posted successfully"
-            " {'field2': 'b', 'field3': 'c', 'field1': 'a'}"), r.body
+        target = six.b(
+            "Form posted successfully {'field2': 'b', 'field3': 'c', 'field1': 'a'}"
+        )
+        assert(target in r.body, r.body)
 
 
 def test_picker_validation():

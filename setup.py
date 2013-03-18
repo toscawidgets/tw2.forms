@@ -17,8 +17,20 @@ requires = [
     "tw2.core>=2.1.4",
 ]
 
+tests_require=[
+    #'BeautifulSoup',
+    'nose',
+    'sieve',
+] + _extra_genshi + _extra_mako + _extra_jinja
+
 if sys.version_info[0] == 2 and sys.version_info[1] <= 5:
     requires.append('WebOb<=1.1.1')
+    tests_require.append('WebTest<2.0')
+else:
+    tests_require.append('WebTest')
+
+if sys.version_info[0] < 3:
+    tests_require.append('FormEncode')
 
 setup(
     name='tw2.forms',
@@ -42,13 +54,7 @@ setup(
     keywords=[
         'toscawidgets.widgets',
     ],
-    tests_require=[
-        'BeautifulSoup',
-        'nose',
-        'FormEncode',
-        'WebTest<2.0',
-        'strainer',
-    ] + _extra_genshi + _extra_mako + _extra_jinja,
+    tests_require=tests_require,
     extras_require={
         'genshi': _extra_genshi,
         'mako': _extra_mako,
