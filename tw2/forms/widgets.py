@@ -687,6 +687,8 @@ class Form(twc.DisplayOnlyWidget):
 
     def __init__(self, **kw):
         super(Form, self).__init__(**kw)
+
+        self.safe_modify('buttons')
         if self.buttons:
             for b in range(0, len(self.buttons)):
                 self.buttons[b] = self.buttons[b].req()
