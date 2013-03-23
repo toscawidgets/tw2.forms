@@ -7,8 +7,8 @@ See http://toscawidgets.org/documentation/WidgetBrowser for more information
 """
 
 import tw2.core as twc
-import widgets as twf
-import datagrid as dg
+from . import widgets as twf
+from . import datagrid as dg
 
 
 class DemoTextField(twf.TextField):
