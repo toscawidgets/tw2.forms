@@ -31,7 +31,7 @@ import time
 import logging
 
 import tw2.core as twc
-from widgets import FormField
+from .widgets import FormField
 
 
 __all__ = [

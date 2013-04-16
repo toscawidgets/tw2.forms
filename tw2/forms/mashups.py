@@ -1,5 +1,5 @@
 import tw2.core as twc
-from widgets import CheckBox, PostlabeledInputField
+from .widgets import CheckBox, PostlabeledInputField
 
 
 class PostlabeledCheckBox(CheckBox, PostlabeledInputField):
