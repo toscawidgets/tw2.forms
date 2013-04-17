@@ -15,6 +15,7 @@ _extra_jinja = ["Jinja2"]
 
 requires = [
     "tw2.core>=2.1.4",
+    "six",
 ]
 
 tests_require=[
