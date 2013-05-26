@@ -24,13 +24,52 @@ class FormField(twc.Widget):
         )
 
 
+class HTML5PatternMixin(twc.Widget):
+    pattern = twc.Param('JavaScript Regex to match field with',
+        attribute=True, default=None)
+
+
+class HTML5PlaceholderMixin(twc.Widget):
+    placeholder = twc.Param('Placeholder text (HTML5 Only)',
+        attribute=True, default=None)
+
+
+class HTML5LengthMixin(twc.Widget):
+    minlength = twc.Param('Minumim length of field',
+        attribute=True, default=None)
+    maxlength = twc.Param('Maximum length of field',
+        attribute=True, default=None)
+
+
+class HTML5MinMaxMixin(twc.Widget):
+    min = twc.Param('Minimum value for field',
+        attribute=True, default=None)
+    max = twc.Param('Maximum value for field',
+        attribute=True, default=None)
+
+
+class HTML5KitchenSinkMixin(HTML5PatternMixin,
+    HTML5PlaceholderMixin, HTML5LengthMixin, HTML5MinMaxMixin):
+    pass
+
+
 class InputField(FormField):
     type = twc.Variable('Type of input field',
                         default=twc.Required,
                         attribute=True)
+
     value = twc.Param(attribute=True)
+
+    required = twc.Param('Input field is required',
+        attribute=True, default=None)
+
     template = "tw2.forms.templates.input_field"
 
+    def prepare(self):
+        super(InputField, self).prepare()
+        self.safe_modify('attrs')
+        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None
+        self.retuired=None
 
 class PostlabeledInputField(InputField):
     """ Inherits :class:`InputField`, but with a :attr:`text`
@@ -41,14 +80,14 @@ class PostlabeledInputField(InputField):
     template = "tw2.forms.templates.postlabeled_input_field"
 
 
-class TextField(InputField):
+class TextField(HTML5KitchenSinkMixin, InputField):
     size = twc.Param('Size of the field', default=None, attribute=True)
     placeholder = twc.Param(
         'Placeholder text (HTML5 Only)', attribute=True, default=None)
     type = 'text'
 
 
-class TextArea(FormField):
+class TextArea(HTML5KitchenSinkMixin, FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
     placeholder = twc.Param(
@@ -75,7 +114,7 @@ class RadioButton(InputField):
                         default=False)
 
 
-class PasswordField(InputField):
+class PasswordField(HTML5LengthMixin, InputField):
     """
     A password field. This never displays a value passed into the widget,
     although it does redisplay entered values on validation failure. If no

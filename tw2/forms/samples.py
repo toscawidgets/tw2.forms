@@ -12,7 +12,8 @@ from . import datagrid as dg
 
 
 class DemoTextField(twf.TextField):
-    placeholder = "Search..."
+    placeholder = "Search upto 7 characters..."
+    maxlength = 7
 
 
 class DemoChildren(twc.CompoundWidget):
