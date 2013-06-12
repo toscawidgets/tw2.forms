@@ -64,8 +64,8 @@ class CheckBox(InputField):
         # Since twc.BoolValidator returns None if no value is present
         # (which is the common case if a HTML checkbox is not checked)
         # we explicitly convert to bool again here
-        self.value = super(CheckBox, self)._validate(value, state)
-        return bool(self.value)
+        self.value = bool(super(CheckBox, self)._validate(value, state))
+        return self.value
 
     def prepare(self):
         super(CheckBox, self).prepare()
