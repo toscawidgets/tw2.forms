@@ -3,6 +3,7 @@ import itertools
 import webob
 import cgi
 import math
+import six
 
 
 #--
@@ -63,8 +64,8 @@ class CheckBox(InputField):
         # Since twc.BoolValidator returns None if no value is present
         # (which is the common case if a HTML checkbox is not checked)
         # we explicitly convert to bool again here
-        self.value = super(CheckBox, self)._validate(value, state)
-        return bool(self.value)
+        self.value = bool(super(CheckBox, self)._validate(value, state))
+        return self.value
 
     def prepare(self):
         super(CheckBox, self).prepare()
@@ -111,13 +112,13 @@ class FileValidator(twc.Validator):
         'badext': "File name must have '$extension' extension",
     }
 
-    def validate_python(self, value, outer_call=None):
+    def _validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
             if self.required and not getattr(value, 'filename', None):
                 raise twc.ValidationError('required', self)
 
-            if self.extension is not None and \
-               not value.filename.endswith(self.extension):
+            if (self.extension is not None
+                    and not value.filename.endswith(self.extension)):
                 raise twc.ValidationError('badext', self)
         elif value:
             raise twc.ValidationError('corrupt', self)
@@ -139,7 +140,7 @@ class FileField(InputField):
 
     type = "file"
     validator = FileValidator
-    
+
     def prepare(self):
         self.value = None
         super(FileField, self).prepare()
@@ -194,12 +195,12 @@ class LinkField(twc.Widget):
     def prepare(self):
         super(LinkField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['href'] = self.link.replace('$', unicode(self.value or ''))
+        self.attrs['href'] = self.link.replace('$', six.text_type(self.value or ''))
 
         if '$' in self.text:
             self.text = \
                     self.value and \
-                    self.text.replace('$', unicode(self.value)) or \
+                    self.text.replace('$', six.text_type(self.value)) or \
                     ''
 
 
@@ -296,14 +297,14 @@ class SelectionField(FormField):
                     option_attrs['type'] = self.field_type
                     option_attrs['name'] = self.compound_id
                     option_attrs['id'] = ':'.join([
-                        self.compound_id, str(counter.next())
+                        self.compound_id, str(six.advance_iterator(counter))
                     ])
                 if self._opt_matches_value(option[0]):
                     option_attrs[self.selected_verb] = self.selected_verb
                 opts.append((option_attrs, option[1]))
             self.options.extend(opts)
             if group:
-                self.grouped_options.append((unicode(optgroup[0]), opts))
+                self.grouped_options.append((six.text_type(optgroup[0]), opts))
 
         if self.prompt_text is not None:
             self.options = [('', self.prompt_text)] + self.options
@@ -314,7 +315,7 @@ class SelectionField(FormField):
                     [(None, [('', self.prompt_text)])] + self.grouped_options
 
     def _opt_matches_value(self, opt):
-        return unicode(opt) == unicode(self.value)
+        return six.text_type(opt) == six.text_type(self.value)
 
     def _iterate_options(self, optlist):
         for option in optlist:
@@ -340,14 +341,14 @@ class MultipleSelectionField(SelectionField):
         super(MultipleSelectionField, self).prepare()
 
     def _opt_matches_value(self, opt):
-        return unicode(opt) in self.value
+        return six.text_type(opt) in self.value
 
     def _validate(self, value, state=None):
         value = value or []
         if not isinstance(value, (list, tuple)):
             value = [value]
         if self.validator:
-            self.validator.validate_python(self.validator.to_python(value, state))
+            self.validator.to_python(value, state)
         if self.item_validator:
             value = [twc.safe_validate(self.item_validator, v) for v in value]
         self.value = [v for v in value if v is not twc.Invalid]
@@ -397,8 +398,8 @@ class SelectionTable(SelectionField):
         while True:
             chunk = []
             try:
-                for i in xrange(size):
-                    chunk.append(seq.next())
+                for i in range(size):
+                    chunk.append(six.advance_iterator(seq))
                 yield chunk
             except StopIteration:
                 if chunk:
@@ -438,7 +439,7 @@ class VerticalSelectionTable(SelectionField):
             row = []
             try:
                 for col_iter in col_iters:
-                    row.append(col_iter.next())
+                    row.append(six.advance_iterator(col_iter))
                 yield row
             except StopIteration:
                 if row:
@@ -457,7 +458,7 @@ class VerticalSelectionTable(SelectionField):
             row = []
             try:
                 for col_iter in col_iters:
-                    row.append(col_iter.next())
+                    row.append(six.advance_iterator(col_iter))
                 yield row
             except StopIteration:
                 if row:
@@ -694,6 +695,8 @@ class Form(twc.DisplayOnlyWidget):
 
     def __init__(self, **kw):
         super(Form, self).__init__(**kw)
+
+        self.safe_modify('buttons')
         if self.buttons:
             for b in range(0, len(self.buttons)):
                 self.buttons[b] = self.buttons[b].req()
@@ -764,12 +767,15 @@ class FormPage(twc.Page):
         elif req.method == 'POST':
             try:
                 data = cls.validate(req.POST)
-            except twc.ValidationError, e:
+            except twc.ValidationError as e:
                 resp = webob.Response(
                     request=req,
                     content_type="text/html; charset=UTF8",
                 )
-                resp.body = e.widget.display().encode('utf-8')
+                if six.PY3:
+                    resp.text = e.widget.display().encode('utf-8')
+                else:
+                    resp.body = e.widget.display().encode('utf-8')
             else:
                 resp = cls.validated_request(req, data)
             return resp
@@ -780,7 +786,16 @@ class FormPage(twc.Page):
             request=req,
             content_type="text/html; charset=UTF8",
         )
-        resp.body = 'Form posted successfully'
+
+        if six.PY3:
+            resp.text = 'Form posted successfully'
+        else:
+            resp.body = 'Form posted successfully'
+
         if twc.core.request_local()['middleware'].config.debug:
-            resp.body += ' ' + repr(data)
+            if six.PY3:
+                resp.text += ' ' + repr(data)
+            else:
+                resp.body += ' ' + repr(data)
+
         return resp

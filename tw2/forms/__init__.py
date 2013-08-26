@@ -2,7 +2,7 @@
 This package contains the basic form widgets.
 """
 
-from widgets import (
+from .widgets import (
     Button,
     CheckBox,
     CheckBoxList,
@@ -46,6 +46,6 @@ from widgets import (
     VerticalCheckBoxTable,
     VerticalRadioButtonTable,
 )
-from mashups import PostlabeledCheckBox, PostlabeledPartialRadioButton
-from calendars import CalendarDatePicker, CalendarDateTimePicker
-from datagrid import DataGrid
+from .mashups import PostlabeledCheckBox, PostlabeledPartialRadioButton
+from .calendars import CalendarDatePicker, CalendarDateTimePicker
+from .datagrid import DataGrid
