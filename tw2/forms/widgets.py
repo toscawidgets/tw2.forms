@@ -61,8 +61,15 @@ class HTML5MinMaxMixin(twc.Widget):
         attribute=True, default=None)
 
 
+class HTML5StepMixin(twc.Widget):
+    '''HTML5 mixin for input field step size'''
+    step = twc.Param('The step size between numbers',
+        attribute=True, default=None)
+
+
 class HTML5KitchenSinkMixin(HTML5PatternMixin,
-    HTML5PlaceholderMixin, HTML5LengthMixin, HTML5MinMaxMixin):
+    HTML5PlaceholderMixin, HTML5LengthMixin, HTML5MinMaxMixin,
+    HTML5StepMixin):
     '''HTML5 mixin which aggregates all HTML5 mixins'''
     pass
 
@@ -77,12 +84,15 @@ class InputField(FormField):
     required = twc.Param('Input field is required',
         attribute=True, default=None)
 
+    autofocus = twc.Param('Autofocus form field (HTML5 only)',
+        attribute=True, default=False)
+
     template = "tw2.forms.templates.input_field"
 
     def prepare(self):
         super(InputField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None
+        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None  # Why not 'required' if self.required in [True, 'required'] else None ?
         self.required = None  # Why?
 
 
@@ -294,6 +304,61 @@ class ImageButton(twc.Link, InputField):
         self.src = self.link
         self.safe_modify('attrs')
         self.attrs['src'] = self.src  # TBD: hack!
+
+
+#--
+# HTML5 Fields
+#--
+
+
+class EmailField(TextField):
+    '''An email input field (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'email'
+    validator = twc.EmailValidator
+
+
+class URLField(TextField):
+    '''An url input field (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'url'
+    validator = twc.URLValidator
+
+
+class NumberField(TextField):
+    '''A number spinbox (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'number'
+
+
+class RangeField(TextField):
+    '''A number slider (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'range'
+
+
+class SearchField(TextField):
+    '''A search box (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'search'
+
+
+class ColorField(TextField):
+    '''A color picker field (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'color'
 
 
 #--
@@ -732,6 +797,8 @@ class Form(twc.DisplayOnlyWidget):
     buttons = twc.Param('List of additional buttons to be placed at the ' +
                         'bottom of the form',
                         default=[])
+    novalidate = twc.Param('Turn off HTML5 form validation',
+        attribute=True, default=None)
 
     attrs = {'enctype': 'multipart/form-data'}
     id_suffix = 'form'
