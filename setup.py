@@ -35,12 +35,13 @@ if sys.version_info[0] < 3:
 
 setup(
     name='tw2.forms',
-    version='2.1.4.1',
-    description='The basic form widgets for ToscaWidgets 2.',
+    version='2.2.0',
+    description='The basic form widgets for ToscaWidgets 2, a web widget toolkit.',
     long_description=open('README.rst').read().split('\n\n', 1)[1],
-    author='Paul Johnston, Christopher Perkins, Alberto Valverde & contributors',
-    author_email='paj@pajhome.org.uk',
-    url='http://toscawidgets.org',
+    author='Paul Johnston, Christopher Perkins, Alberto Valverde Gonzalez & contributors',
+    author_email='toscawidgets-discuss@googlegroups.com',
+    url = "http://toscawidgets.org/",
+    download_url = "https://pypi.python.org/pypi/tw2.forms/",
     install_requires=requires,
     packages=find_packages(exclude=['ez_setup', 'tests']),
     namespace_packages=['tw2'],

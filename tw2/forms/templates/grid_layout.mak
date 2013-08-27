@@ -2,7 +2,7 @@
 <table ${tw.attrs(attrs=w.attrs)}>
 <tr>\
 % for col in w.children[0].children_non_hidden:
-    <th>${unicode(col.label)}</th>
+    <th>${col.label}</th>
 % endfor
 </tr>
 % for row in w.children:

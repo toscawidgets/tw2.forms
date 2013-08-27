@@ -99,6 +99,13 @@ class CheckBox(InputField):
     type = "checkbox"
     validator = twc.BoolValidator
 
+    def _validate(self, value, state=None):
+        # Since twc.BoolValidator returns None if no value is present
+        # (which is the common case if a HTML checkbox is not checked)
+        # we explicitly convert to bool again here
+        self.value = bool(super(CheckBox, self)._validate(value, state))
+        return self.value
+
     def prepare(self):
         super(CheckBox, self).prepare()
         checked = self.validator.to_python(self.value)
@@ -265,6 +272,7 @@ class ImageButton(twc.Link, InputField):
                        default=None)
     alt = twc.Param('Alternate text', attribute=True, default='')
     src = twc.Variable(attribute=True)
+    template = "tw2.forms.templates.input_field"
 
     def prepare(self):
         super(ImageButton, self).prepare()
