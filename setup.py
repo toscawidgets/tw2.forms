@@ -42,6 +42,7 @@ setup(
     author_email='toscawidgets-discuss@googlegroups.com',
     url = "http://toscawidgets.org/",
     download_url = "https://pypi.python.org/pypi/tw2.forms/",
+    license='MIT',
     install_requires=requires,
     packages=find_packages(exclude=['ez_setup', 'tests']),
     namespace_packages=['tw2'],
