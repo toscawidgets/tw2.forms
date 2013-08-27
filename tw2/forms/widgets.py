@@ -233,6 +233,7 @@ class ImageButton(twc.Link, InputField):
                        default=None)
     alt = twc.Param('Alternate text', attribute=True, default='')
     src = twc.Variable(attribute=True)
+    template = "tw2.forms.templates.input_field"
 
     def prepare(self):
         super(ImageButton, self).prepare()
