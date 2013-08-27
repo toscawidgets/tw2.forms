@@ -12,7 +12,7 @@ from . import datagrid as dg
 
 
 class DemoTextField(twf.TextField):
-    placeholder = "Search upto 7 characters..."
+    placeholder = "Type up to 7 characters..."
     maxlength = 7
 
 
@@ -121,3 +121,25 @@ class DemoDataGrid(dg.DataGrid):
     ]
 
     fields = [DummyObject.name, DummyObject.address]
+
+
+class DemoEmailField(twf.EmailField):
+    placeholder = 'Enter your Email-Address...'
+
+
+class DemoUrlField(twf.UrlField):
+    placeholder = 'http://toscawidgets.org'
+
+
+class DemoNumberField(twf.NumberField):
+    min = 0
+    max = 10
+    step = 2
+    value = 8
+
+
+class DemoRangeField(twf.RangeField):
+    min = 0
+    max = 10
+    step = 2
+    value = 8

@@ -310,7 +310,7 @@ class EmailField(TextField):
     validator = twc.EmailValidator
 
 
-class URLField(TextField):
+class UrlField(TextField):
     '''An url input field (HTML5 only).
 
     Will fallback to a normal text input field on browser not supporting HTML5.
