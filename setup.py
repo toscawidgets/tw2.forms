@@ -18,7 +18,7 @@ requires = [
     "six",
 ]
 
-tests_require=[
+tests_require = [
     #'BeautifulSoup',
     'nose',
     'sieve',
@@ -40,8 +40,8 @@ setup(
     long_description=open('README.rst').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde Gonzalez & contributors',
     author_email='toscawidgets-discuss@googlegroups.com',
-    url = "http://toscawidgets.org/",
-    download_url = "https://pypi.python.org/pypi/tw2.forms/",
+    url="http://toscawidgets.org/",
+    download_url="https://pypi.python.org/pypi/tw2.forms/",
     license='MIT',
     install_requires=requires,
     packages=find_packages(exclude=['ez_setup', 'tests']),
