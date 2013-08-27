@@ -25,16 +25,25 @@ class FormField(twc.Widget):
 
 
 class HTML5PatternMixin(twc.Widget):
-    pattern = twc.Param('JavaScript Regex to match field with',
+    '''HTML5 mixin for input field regex pattern matching
+
+    TODO: Configure server-side validator
+    '''
+    pattern = twc.Param('JavaScript regex to match field with',
         attribute=True, default=None)
 
 
 class HTML5PlaceholderMixin(twc.Widget):
-    placeholder = twc.Param('Placeholder text (HTML5 Only)',
+    '''HTML5 mixin for input field placeholders'''
+    placeholder = twc.Param('Placeholder text (HTML5 only)',
         attribute=True, default=None)
 
 
 class HTML5LengthMixin(twc.Widget):
+    '''HTML5 mixin for input field length limits
+
+    TODO: Configure server-side validator
+    '''
     minlength = twc.Param('Minumim length of field',
         attribute=True, default=None)
     maxlength = twc.Param('Maximum length of field',
@@ -42,6 +51,10 @@ class HTML5LengthMixin(twc.Widget):
 
 
 class HTML5MinMaxMixin(twc.Widget):
+    '''HTML5 mixin for input field value limits
+
+    TODO: Configure server-side validator
+    '''
     min = twc.Param('Minimum value for field',
         attribute=True, default=None)
     max = twc.Param('Maximum value for field',
@@ -50,6 +63,7 @@ class HTML5MinMaxMixin(twc.Widget):
 
 class HTML5KitchenSinkMixin(HTML5PatternMixin,
     HTML5PlaceholderMixin, HTML5LengthMixin, HTML5MinMaxMixin):
+    '''HTML5 mixin which aggregates all HTML5 mixins'''
     pass
 
 
@@ -69,7 +83,8 @@ class InputField(FormField):
         super(InputField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['required'] = 'required' if self.required in [True, 'required'] else None
-        self.retuired=None
+        self.required = None  # Why?
+
 
 class PostlabeledInputField(InputField):
     """ Inherits :class:`InputField`, but with a :attr:`text`
