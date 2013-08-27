@@ -316,7 +316,7 @@ class URLField(TextField):
     Will fallback to a normal text input field on browser not supporting HTML5.
     '''
     type = 'url'
-    validator = twc.URLValidator
+    validator = twc.UrlValidator
 
 
 class NumberField(HTML5NumberMixin, TextField):
