@@ -63,7 +63,7 @@ class TestCheckbox(WidgetTest):
 
     def test_value_false(self):
         params = {'value': False}
-        expected = '<input type="checkbox" class="something"/>'
+        expected = '<input type="checkbox" class="something">'
         for engine in self._get_all_possible_engines():
             yield (self._check_rendering_vs_expected,
                 engine, self.attrs, params, expected)
