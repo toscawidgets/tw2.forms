@@ -24,54 +24,12 @@ class FormField(twc.Widget):
         )
 
 
-class HTML5PatternMixin(twc.Widget):
-    '''HTML5 mixin for input field regex pattern matching
-
-    TODO: Configure server-side validator
-    '''
-    pattern = twc.Param('JavaScript regex to match field with',
-        attribute=True, default=None)
-
-
-class HTML5PlaceholderMixin(twc.Widget):
-    '''HTML5 mixin for input field placeholders'''
-    placeholder = twc.Param('Placeholder text (HTML5 only)',
-        attribute=True, default=None)
-
-
-class HTML5LengthMixin(twc.Widget):
-    '''HTML5 mixin for input field length limits
-
-    TODO: Configure server-side validator
-    '''
-    minlength = twc.Param('Minumim length of field',
-        attribute=True, default=None)
+class TextFieldMixin(twc.Widget):
+    '''Misc mixin class with attributes for textual input fields'''
     maxlength = twc.Param('Maximum length of field',
         attribute=True, default=None)
-
-
-class HTML5MinMaxMixin(twc.Widget):
-    '''HTML5 mixin for input field value limits
-
-    TODO: Configure server-side validator
-    '''
-    min = twc.Param('Minimum value for field',
+    placeholder = twc.Param('Placeholder text (HTML5 only)',
         attribute=True, default=None)
-    max = twc.Param('Maximum value for field',
-        attribute=True, default=None)
-
-
-class HTML5StepMixin(twc.Widget):
-    '''HTML5 mixin for input field step size'''
-    step = twc.Param('The step size between numbers',
-        attribute=True, default=None)
-
-
-class HTML5KitchenSinkMixin(HTML5PatternMixin,
-    HTML5PlaceholderMixin, HTML5LengthMixin, HTML5MinMaxMixin,
-    HTML5StepMixin):
-    '''HTML5 mixin which aggregates all HTML5 mixins'''
-    pass
 
 
 class InputField(FormField):
@@ -85,7 +43,7 @@ class InputField(FormField):
         attribute=True, default=None)
 
     autofocus = twc.Param('Autofocus form field (HTML5 only)',
-        attribute=True, default=False)
+        attribute=True, default=None)
 
     template = "tw2.forms.templates.input_field"
 
@@ -93,7 +51,7 @@ class InputField(FormField):
         super(InputField, self).prepare()
         self.safe_modify('attrs')
         self.attrs['required'] = 'required' if self.required in [True, 'required'] else None  # Why not 'required' if self.required in [True, 'required'] else None ?
-        self.required = None  # Why?
+        self.required = None  # Needed because self.required would otherwise overwrite self.attrs['required'] again
 
 
 class PostlabeledInputField(InputField):
@@ -105,18 +63,14 @@ class PostlabeledInputField(InputField):
     template = "tw2.forms.templates.postlabeled_input_field"
 
 
-class TextField(HTML5KitchenSinkMixin, InputField):
+class TextField(TextFieldMixin, InputField):
     size = twc.Param('Size of the field', default=None, attribute=True)
-    placeholder = twc.Param(
-        'Placeholder text (HTML5 Only)', attribute=True, default=None)
     type = 'text'
 
 
-class TextArea(HTML5KitchenSinkMixin, FormField):
+class TextArea(TextFieldMixin, FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
-    placeholder = twc.Param(
-        'Placeholder text (HTML5 Only)', attribute=True, default=None)
     template = "tw2.forms.templates.textarea"
 
 
@@ -146,7 +100,7 @@ class RadioButton(InputField):
                         default=False)
 
 
-class PasswordField(HTML5LengthMixin, InputField):
+class PasswordField(TextFieldMixin, InputField):
     """
     A password field. This never displays a value passed into the widget,
     although it does redisplay entered values on validation failure. If no
@@ -307,9 +261,45 @@ class ImageButton(twc.Link, InputField):
 
 
 #--
-# HTML5 Fields
+# HTML5 Mixins
 #--
 
+class HTML5PatternMixin(twc.Widget):
+    '''HTML5 mixin for input field regex pattern matching
+
+    See http://html5pattern.com/ for common patterns.
+
+    TODO: Configure server-side validator
+    '''
+    pattern = twc.Param('JavaScript regex to match field with',
+        attribute=True, default=None)
+
+
+class HTML5MinMaxMixin(twc.Widget):
+    '''HTML5 mixin for input field value limits
+
+    TODO: Configure server-side validator
+    '''
+    min = twc.Param('Minimum value for field',
+        attribute=True, default=None)
+    max = twc.Param('Maximum value for field',
+        attribute=True, default=None)
+
+
+class HTML5StepMixin(twc.Widget):
+    '''HTML5 mixin for input field step size'''
+    step = twc.Param('The step size between numbers',
+        attribute=True, default=None)
+
+
+class HTML5NumberMixin(HTML5MinMaxMixin, HTML5StepMixin):
+    '''HTML5 mixin for number input fields'''
+    pass
+
+
+#--
+# HTML5 Fields
+#--
 
 class EmailField(TextField):
     '''An email input field (HTML5 only).
@@ -329,7 +319,7 @@ class URLField(TextField):
     validator = twc.URLValidator
 
 
-class NumberField(TextField):
+class NumberField(HTML5NumberMixin, TextField):
     '''A number spinbox (HTML5 only).
 
     Will fallback to a normal text input field on browser not supporting HTML5.
@@ -337,7 +327,7 @@ class NumberField(TextField):
     type = 'number'
 
 
-class RangeField(TextField):
+class RangeField(HTML5NumberMixin, TextField):
     '''A number slider (HTML5 only).
 
     Will fallback to a normal text input field on browser not supporting HTML5.
