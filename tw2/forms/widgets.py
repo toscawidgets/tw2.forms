@@ -195,6 +195,7 @@ class LabelField(InputField):
     """
     type = 'hidden'
     template = "tw2.forms.templates.label_field"
+    escape = twc.Param('Whether text shall be html-escaped or not', default=True)
     validator = twc.BlankValidator
 
 
@@ -208,6 +209,7 @@ class LinkField(twc.Widget):
     link = twc.Param('Link target', default='')
     text = twc.Param('Link text', default='')
     value = twc.Param("Value to replace $ with in the link/text")
+    escape = twc.Param('Whether text shall be html-escaped or not', default=True)
     validator = twc.BlankValidator
 
     def prepare(self):
