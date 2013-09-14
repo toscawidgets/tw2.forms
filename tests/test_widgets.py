@@ -653,6 +653,19 @@ class TestLabel(WidgetTest):
     attrs = {'text': 'something'}
     expected = """<span>something</span>"""
 
+    def test_escape(self):
+        attrs = {'text': 'line 1<br />line 2'}
+        expected = '<span>line 1&lt;br /&gt;line 2</span>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
+
+        attrs = {'text': 'line 1<br />line 2', 'escape': False}
+        expected = '<span>line 1<br />line 2</span>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
+
 
 class TestForm(WidgetTest):
 
