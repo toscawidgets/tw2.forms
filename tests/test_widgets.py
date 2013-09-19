@@ -38,6 +38,14 @@ class TestInputField(WidgetTest):
     params = {'value': 6}
     expected = '<input type="foo" class="something" value="6"/>'
 
+    def test_empty_value(self):
+        attrs = {'type': 'email'}
+        params = {'value': ''}
+        expected = '<input type="email" value="" />'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, params, expected)
+
 
 class TestTextField(WidgetTest):
     widget = TextField
