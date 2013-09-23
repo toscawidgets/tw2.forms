@@ -24,6 +24,8 @@ THE SOFTWARE.
 Portions of this document have been taken in part and modified from the
 original tw.forms codebase written primarily by Alberto Valaverde
 
+
+TODO: HTML5 type attribute support with native support detection and fallback
 """
 import re
 from datetime import datetime, date

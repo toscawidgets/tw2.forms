@@ -1,2 +1,8 @@
 <%namespace name="tw" module="tw2.core.mako_util"/>\
-<span>${w.value or ''}<input ${tw.attrs(attrs=w.attrs)}/></span>
+<span>\
+% if w.escape:
+${w.value or ''}\
+% else:
+${w.value or '' | n}\
+% endif
+<input ${tw.attrs(attrs=w.attrs)}/></span>

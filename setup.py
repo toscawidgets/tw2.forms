@@ -18,7 +18,7 @@ requires = [
     "six",
 ]
 
-tests_require=[
+tests_require = [
     #'BeautifulSoup',
     'nose',
     'sieve',
@@ -35,13 +35,14 @@ if sys.version_info[0] < 3:
 
 setup(
     name='tw2.forms',
-    version='2.2.0.2',
+    version='2.2.0.3',
     description='The basic form widgets for ToscaWidgets 2, a web widget toolkit.',
     long_description=open('README.rst').read().split('\n\n', 1)[1],
     author='Paul Johnston, Christopher Perkins, Alberto Valverde Gonzalez & contributors',
     author_email='toscawidgets-discuss@googlegroups.com',
-    url = "http://toscawidgets.org/",
-    download_url = "https://pypi.python.org/pypi/tw2.forms/",
+    url="http://toscawidgets.org/",
+    download_url="https://pypi.python.org/pypi/tw2.forms/",
+    license='MIT',
     install_requires=requires,
     packages=find_packages(exclude=['ez_setup', 'tests']),
     namespace_packages=['tw2'],

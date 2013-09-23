@@ -24,12 +24,34 @@ class FormField(twc.Widget):
         )
 
 
+class TextFieldMixin(twc.Widget):
+    '''Misc mixin class with attributes for textual input fields'''
+    maxlength = twc.Param('Maximum length of field',
+        attribute=True, default=None)
+    placeholder = twc.Param('Placeholder text (HTML5 only)',
+        attribute=True, default=None)
+
+
 class InputField(FormField):
     type = twc.Variable('Type of input field',
                         default=twc.Required,
                         attribute=True)
+
     value = twc.Param(attribute=True)
+
+    required = twc.Param('Input field is required',
+        attribute=True, default=None)
+
+    autofocus = twc.Param('Autofocus form field (HTML5 only)',
+        attribute=True, default=None)
+
     template = "tw2.forms.templates.input_field"
+
+    def prepare(self):
+        super(InputField, self).prepare()
+        self.safe_modify('attrs')
+        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None  # Why not 'required' if self.required in [True, 'required'] else None ?
+        self.required = None  # Needed because self.required would otherwise overwrite self.attrs['required'] again
 
 
 class PostlabeledInputField(InputField):
@@ -41,18 +63,14 @@ class PostlabeledInputField(InputField):
     template = "tw2.forms.templates.postlabeled_input_field"
 
 
-class TextField(InputField):
+class TextField(TextFieldMixin, InputField):
     size = twc.Param('Size of the field', default=None, attribute=True)
-    placeholder = twc.Param(
-        'Placeholder text (HTML5 Only)', attribute=True, default=None)
     type = 'text'
 
 
-class TextArea(FormField):
+class TextArea(TextFieldMixin, FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
-    placeholder = twc.Param(
-        'Placeholder text (HTML5 Only)', attribute=True, default=None)
     template = "tw2.forms.templates.textarea"
 
 
@@ -82,7 +100,7 @@ class RadioButton(InputField):
                         default=False)
 
 
-class PasswordField(InputField):
+class PasswordField(TextFieldMixin, InputField):
     """
     A password field. This never displays a value passed into the widget,
     although it does redisplay entered values on validation failure. If no
@@ -177,6 +195,7 @@ class LabelField(InputField):
     """
     type = 'hidden'
     template = "tw2.forms.templates.label_field"
+    escape = twc.Param('Whether text shall be html-escaped or not', default=True)
     validator = twc.BlankValidator
 
 
@@ -190,6 +209,7 @@ class LinkField(twc.Widget):
     link = twc.Param('Link target', default='')
     text = twc.Param('Link text', default='')
     value = twc.Param("Value to replace $ with in the link/text")
+    escape = twc.Param('Whether text shall be html-escaped or not', default=True)
     validator = twc.BlankValidator
 
     def prepare(self):
@@ -240,6 +260,97 @@ class ImageButton(twc.Link, InputField):
         self.src = self.link
         self.safe_modify('attrs')
         self.attrs['src'] = self.src  # TBD: hack!
+
+
+#--
+# HTML5 Mixins
+#--
+
+class HTML5PatternMixin(twc.Widget):
+    '''HTML5 mixin for input field regex pattern matching
+
+    See http://html5pattern.com/ for common patterns.
+
+    TODO: Configure server-side validator
+    '''
+    pattern = twc.Param('JavaScript regex to match field with',
+        attribute=True, default=None)
+
+
+class HTML5MinMaxMixin(twc.Widget):
+    '''HTML5 mixin for input field value limits
+
+    TODO: Configure server-side validator
+    '''
+    min = twc.Param('Minimum value for field',
+        attribute=True, default=None)
+    max = twc.Param('Maximum value for field',
+        attribute=True, default=None)
+
+
+class HTML5StepMixin(twc.Widget):
+    '''HTML5 mixin for input field step size'''
+    step = twc.Param('The step size between numbers',
+        attribute=True, default=None)
+
+
+class HTML5NumberMixin(HTML5MinMaxMixin, HTML5StepMixin):
+    '''HTML5 mixin for number input fields'''
+    pass
+
+
+#--
+# HTML5 Fields
+#--
+
+class EmailField(TextField):
+    '''An email input field (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'email'
+    validator = twc.EmailValidator
+
+
+class UrlField(TextField):
+    '''An url input field (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'url'
+    validator = twc.UrlValidator
+
+
+class NumberField(HTML5NumberMixin, TextField):
+    '''A number spinbox (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'number'
+
+
+class RangeField(HTML5NumberMixin, TextField):
+    '''A number slider (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'range'
+
+
+class SearchField(TextField):
+    '''A search box (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'search'
+
+
+class ColorField(TextField):
+    '''A color picker field (HTML5 only).
+
+    Will fallback to a normal text input field on browser not supporting HTML5.
+    '''
+    type = 'color'
 
 
 #--
@@ -678,6 +789,8 @@ class Form(twc.DisplayOnlyWidget):
     buttons = twc.Param('List of additional buttons to be placed at the ' +
                         'bottom of the form',
                         default=[])
+    novalidate = twc.Param('Turn off HTML5 form validation',
+        attribute=True, default=None)
 
     attrs = {'enctype': 'multipart/form-data'}
     id_suffix = 'form'

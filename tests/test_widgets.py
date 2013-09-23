@@ -38,6 +38,14 @@ class TestInputField(WidgetTest):
     params = {'value': 6}
     expected = '<input type="foo" class="something" value="6"/>'
 
+    def test_empty_value(self):
+        attrs = {'type': 'email'}
+        params = {'value': ''}
+        expected = '<input type="email" value="" />'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, params, expected)
+
 
 class TestTextField(WidgetTest):
     widget = TextField
@@ -63,7 +71,7 @@ class TestCheckbox(WidgetTest):
 
     def test_value_false(self):
         params = {'value': False}
-        expected = '<input type="checkbox" class="something"/>'
+        expected = '<input type="checkbox" class="something">'
         for engine in self._get_all_possible_engines():
             yield (self._check_rendering_vs_expected,
                 engine, self.attrs, params, expected)
@@ -127,12 +135,38 @@ class TestLabelField(WidgetTest):
         value="info" name="hidden_name" id="hid"/></span>"""
     validate_params = [[None, {'hid': 'b'}, EmptyField]]
 
+    def test_escape(self):
+        attrs = {'value': 'line 1<br />line 2'}
+        expected = '<span>line 1&lt;br /&gt;line 2<input value="line 1&lt;br /&gt;line 2" type="hidden"/></span>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
+
+        attrs = {'value': 'line 1<br />line 2', 'escape': False}
+        expected = '<span>line 1<br />line 2<input value="line 1<br />line 2" type="hidden"/></span>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
+
 
 class TestLinkField(WidgetTest):
     widget = LinkField
     attrs = {'css_class': 'something', 'value': 'info',
         'name': 'hidden_name', 'text': 'some $', 'link': '/some/$'}
     expected = """<a href="/some/info" class="something">some info</a>"""
+
+    def test_escape(self):
+        attrs = {'text': 'line 1<br />line 2'}
+        expected = '<a href="">line 1&lt;br /&gt;line 2</a>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
+
+        attrs = {'text': 'line 1<br />line 2', 'escape': False}
+        expected = '<a href="">line 1<br />line 2</a>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
 
 
 class TestButton(WidgetTest):
@@ -626,6 +660,19 @@ class TestLabel(WidgetTest):
     widget = Label
     attrs = {'text': 'something'}
     expected = """<span>something</span>"""
+
+    def test_escape(self):
+        attrs = {'text': 'line 1<br />line 2'}
+        expected = '<span>line 1&lt;br /&gt;line 2</span>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
+
+        attrs = {'text': 'line 1<br />line 2', 'escape': False}
+        expected = '<span>line 1<br />line 2</span>'
+        for engine in self._get_all_possible_engines():
+            yield (self._check_rendering_vs_expected,
+                engine, attrs, self.params, expected)
 
 
 class TestForm(WidgetTest):
