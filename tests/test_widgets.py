@@ -9,7 +9,7 @@ from tw2.core.testbase import (
 )
 from nose.tools import raises
 from six.moves import StringIO
-from tw2.core import EmptyField, IntValidator, ValidationError
+from tw2.core import EmptyField, IntValidator, ValidationError, BoolValidator
 from tw2.core.middleware import make_middleware
 from cgi import FieldStorage
 from datetime import datetime
@@ -75,6 +75,15 @@ class TestCheckbox(WidgetTest):
         for engine in self._get_all_possible_engines():
             yield (self._check_rendering_vs_expected,
                 engine, self.attrs, params, expected)
+
+    def test_renders_correctly_after_failed_validation(self):
+        try:
+            w = self.widget(id='x', validator=BoolValidator(required=True)).validate({'x': ''})
+        except ValidationError as e:
+            # Should correctly render to be able to display validation error
+            e.widget.display()
+        else:
+            raise Exception('Should have raised validation error!')
 
 
 class TestRadioButton(WidgetTest):
