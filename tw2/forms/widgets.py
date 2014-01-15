@@ -453,7 +453,7 @@ class MultipleSelectionField(SelectionField):
         super(MultipleSelectionField, self).prepare()
 
     def _opt_matches_value(self, opt):
-        return six.text_type(opt) in self.value
+        return six.text_type(opt) in [six.text_type(v) for v in self.value]
 
     def _validate(self, value, state=None):
         value = value or []
