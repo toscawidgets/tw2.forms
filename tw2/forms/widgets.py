@@ -275,6 +275,8 @@ class HTML5PatternMixin(twc.Widget):
     '''
     pattern = twc.Param('JavaScript regex to match field with',
         attribute=True, default=None)
+    title = twc.Param('Tooltip and message shown on invalid value',
+        attribute=True, default=None)
 
 
 class HTML5MinMaxMixin(twc.Widget):
