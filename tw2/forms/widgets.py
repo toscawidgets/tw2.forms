@@ -87,7 +87,13 @@ class CheckBox(InputField):
 
     def prepare(self):
         super(CheckBox, self).prepare()
-        checked = self.validator.to_python(self.value)
+
+        try:
+            checked = self.validator.to_python(self.value)
+        except twc.validation.catch:
+            # If if fails conversion/validation it is considered to be false
+            checked = False
+
         self.safe_modify('attrs')
         self.attrs['checked'] = checked and 'checked' or None
         self.attrs['value'] = None
