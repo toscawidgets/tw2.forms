@@ -55,7 +55,7 @@ class InputField(FormField):
 
 
 class PostlabeledInputField(InputField):
-    """ Inherits :class:`InputField`, but with a :attr:`text`
+    """ Inherits InputField, but with a text
     label that follows the input field """
     text = twc.Param('Text to display after the field.')
     text_attrs = twc.Param('Dict of attributes to inject into the label.',
@@ -690,7 +690,7 @@ class ListLayout(BaseLayout):
 class RowLayout(BaseLayout):
     """
     Arrange widgets in a table row. This is normally only useful as a child to
-    :class:`GridLayout`.
+    GridLayout.
     """
     resources = [twc.Link(id='error', modname='tw2.forms',
                           filename='static/dialog-warning.png'),
