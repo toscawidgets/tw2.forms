@@ -869,10 +869,9 @@ class ListFieldSet(FieldSet):
 
 class FormPage(twc.Page):
     """
-    A page that contains a form. The :meth:`request` method
-    performs validation,
-    redisplaying the form on errors. On success, it calls
-    :meth:`validated_request`.
+    A page that contains a form. The request method performs
+    validation, redisplaying the form on errors.
+    On success, it calls validated_request.
     """
     _no_autoid = True
 
