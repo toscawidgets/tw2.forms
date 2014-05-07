@@ -128,7 +128,8 @@ class CalendarDatePicker(FormField):
         'it will be called each time before displaying.',
         default=datetime.now)
 
-    def get_calendar_lang_file_link(self, lang):
+    @classmethod
+    def get_calendar_lang_file_link(cls, lang):
         """
         Returns a CalendarLangFileLink containing a list of name
         patterns to try in turn to find the correct calendar locale
@@ -136,7 +137,7 @@ class CalendarDatePicker(FormField):
         """
         fname = 'static/calendar/lang/calendar-%s.js' % lang.lower()
         return twc.JSLink(modname='tw2.forms',
-                      filename=fname)
+                          filename=fname)
 
     def __init__(self, *args, **kw):
         if self.validator is None:
@@ -146,9 +147,13 @@ class CalendarDatePicker(FormField):
             )
         super(CalendarDatePicker, self).__init__(*args, **kw)
 
+    @classmethod
+    def post_define(cls):
+        cls.resources = [calendar_css, calendar_js, calendar_setup,
+                         cls.get_calendar_lang_file_link(cls.calendar_lang)]
+
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
-        self.resources = [calendar_css, calendar_js, calendar_setup]
         if not self.value and self.required:
             if callable(self.default):
                 self.value = self.default()
@@ -159,9 +164,12 @@ class CalendarDatePicker(FormField):
         except AttributeError:
             self.strdate = self.value
 
-        self.resources.append(
-            self.get_calendar_lang_file_link(self.calendar_lang)
-        )
+        calendar_options = {"inputField": self.compound_id,
+                            "showsTime": str(self.picker_shows_time).lower(),
+                            "ifFormat": self.date_format,
+                            "button": "%s_trigger" % self.compound_id}
+        calendar_options.update(self.setup_options)
+        self.add_call(twc.js_function('Calendar.setup')(calendar_options))
 
 
 class CalendarDateTimePicker(CalendarDatePicker):
