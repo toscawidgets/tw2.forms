@@ -420,13 +420,11 @@ class SelectionField(FormField):
             if group:
                 self.grouped_options.append((six.text_type(optgroup[0]), opts))
 
-        if self.prompt_text is not None:
-            self.options = [('', self.prompt_text)] + self.options
         if not self.grouped_options:
             self.grouped_options = [(None, self.options)]
-        elif self.prompt_text is not None:
-            self.grouped_options = \
-                    [(None, [('', self.prompt_text)])] + self.grouped_options
+
+        if self.prompt_text is not None:
+            self.grouped_options.insert(0, (None, [({'value': ''}, self.prompt_text)]))
 
     def _opt_matches_value(self, opt):
         return six.text_type(opt) == six.text_type(self.value)
