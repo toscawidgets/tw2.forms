@@ -118,7 +118,7 @@ class CalendarDatePicker(FormField):
                               default='en')
     required = twc.Param(default=False)
     button_text = twc.Param("Text to display on Button", default="Choose")
-    date_format = twc.Param("Date Display Format", default="%m/%d/%Y")
+    date_format = twc.Param("Date Display Format", default="%Y-%m-%d")
     picker_shows_time = twc.Param('Picker Shows Time', default=False)
     tzinfo = twc.Param('Time Zone Information', default=None)
     setup_options = twc.Param('Calendar.setup(...) options', default={})
@@ -182,5 +182,5 @@ class CalendarDateTimePicker(CalendarDatePicker):
         'badFormat': 'Invalid datetime format.',
         'empty': 'Please Enter a Date and Time.',
     }
-    date_format = "%Y/%m/%d %H:%M"
+    date_format = "%Y-%m-%d %H:%M"
     picker_shows_time = True
