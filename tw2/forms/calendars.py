@@ -32,7 +32,7 @@ TODO: HTML5 type attribute support with native support detection and fallback
 """
 import os
 import re
-from datetime import datetime, date
+from datetime import datetime
 import time
 import logging
 
@@ -41,11 +41,19 @@ from .widgets import FormField
 
 
 __all__ = [
+    "CalendarBase",
     "CalendarDatePicker",
     "CalendarDateTimePicker",
     "calendar_js",
     "calendar_setup",
 ]
+
+
+# For better calendar widget detection in sprox
+class CalendarBase(object):
+    '''Base class for calendar widgets'''
+    pass
+
 
 _illegal_s = re.compile(r"((^|[^%])(%%)*%s)")
 
@@ -114,12 +122,14 @@ calendar_setup = twc.JSLink(resources=[calendar_js],
 _calendar_lang_re = re.compile(r'^calendar-(\S+).js$')
 
 calendar_langs = dict(
-    (_calendar_lang_re.match(f).group(1), twc.JSLink(modname=__name__, filename=os.path.join('static/calendar/lang', f)))
-    for f in os.listdir(os.path.join(os.path.dirname(__file__), 'static/calendar/lang')) if f.startswith('calendar-')
+    (_calendar_lang_re.match(f).group(1),
+        twc.JSLink(modname=__name__, filename=os.path.join('static/calendar/lang', f)))
+    for f in os.listdir(os.path.join(os.path.dirname(__file__), 'static/calendar/lang'))
+        if f.startswith('calendar-')
 )
 
 
-class CalendarDatePicker(FormField):
+class CalendarDatePicker(FormField, CalendarBase):
     """
     Uses a javascript calendar system to allow picking of calendar dates.
     The date_format is in yyyy-mm-dd unless otherwise specified
@@ -142,8 +152,8 @@ class CalendarDatePicker(FormField):
     def __init__(self, *args, **kw):
         if self.validator is None:
             self.validator = twc.DateTimeValidator(
-            format=self.date_format,
-            required=self.required
+                format=self.date_format,
+                required=self.required
             )
         super(CalendarDatePicker, self).__init__(*args, **kw)
 
