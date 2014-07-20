@@ -27,6 +27,7 @@ original tw.forms codebase written primarily by Alberto Valaverde
 
 TODO: HTML5 type attribute support with native support detection and fallback
 """
+import os
 import re
 from datetime import datetime, date
 import time
@@ -107,6 +108,13 @@ calendar_js = twc.JSLink(
 calendar_setup = twc.JSLink(resources=[calendar_js],
     modname='tw2.forms', filename='static/calendar/calendar-setup.js')
 
+_calendar_lang_re = re.compile(r'^calendar-(\S+).js$')
+
+calendar_langs = dict(
+    (_calendar_lang_re.match(f).group(1), twc.JSLink(modname=__name__, filename=os.path.join('static/calendar/lang', f)))
+    for f in os.listdir(os.path.join(os.path.dirname(__file__), 'static/calendar/lang')) if f.startswith('calendar-')
+)
+
 
 class CalendarDatePicker(FormField):
     """
@@ -128,17 +136,6 @@ class CalendarDatePicker(FormField):
         'it will be called each time before displaying.',
         default=datetime.now)
 
-    @classmethod
-    def get_calendar_lang_file_link(cls, lang):
-        """
-        Returns a CalendarLangFileLink containing a list of name
-        patterns to try in turn to find the correct calendar locale
-        file to use.
-        """
-        fname = 'static/calendar/lang/calendar-%s.js' % lang.lower()
-        return twc.JSLink(modname='tw2.forms',
-                          filename=fname)
-
     def __init__(self, *args, **kw):
         if self.validator is None:
             self.validator = twc.DateTimeValidator(
@@ -150,7 +147,7 @@ class CalendarDatePicker(FormField):
     @classmethod
     def post_define(cls):
         cls.resources = [calendar_css, calendar_js, calendar_setup,
-                         cls.get_calendar_lang_file_link(cls.calendar_lang)]
+                         calendar_langs[cls.calendar_lang]]
 
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
