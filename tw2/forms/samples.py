@@ -8,6 +8,7 @@ See http://toscawidgets.org/documentation/WidgetBrowser for more information
 
 import tw2.core as twc
 from . import widgets as twf
+from . import calendars as cal
 from . import datagrid as dg
 
 
@@ -143,3 +144,11 @@ class DemoRangeField(twf.RangeField):
     max = 10
     step = 2
     value = 8
+
+
+class DemoCalendarDatePicker(cal.CalendarDatePicker):
+    pass
+
+
+class DemoCalendarDateTimePicker(cal.CalendarDateTimePicker):
+    calendar_lang = 'de'

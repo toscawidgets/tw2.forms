@@ -25,6 +25,9 @@ Portions of this document have been taken in part and modified from the
 original tw.forms codebase written primarily by Alberto Valaverde
 
 
+Note that you can not set different languages for multiple calendar widgets
+on one page.
+
 TODO: HTML5 type attribute support with native support detection and fallback
 """
 import os
@@ -119,7 +122,7 @@ calendar_langs = dict(
 class CalendarDatePicker(FormField):
     """
     Uses a javascript calendar system to allow picking of calendar dates.
-    The date_format is in mm/dd/yyyy unless otherwise specified
+    The date_format is in yyyy-mm-dd unless otherwise specified
     """
     template = "tw2.forms.templates.calendar"
     calendar_lang = twc.Param("Default Language to use in the Calendar",
@@ -173,7 +176,7 @@ class CalendarDateTimePicker(CalendarDatePicker):
     """
     Use a javascript calendar system to allow picking of calendar dates and
     time.
-    The date_format is in mm/dd/yyyy hh:mm unless otherwise specified
+    The date_format is in yyyy-mm-dd hh:mm unless otherwise specified
     """
     messages = {
         'badFormat': 'Invalid datetime format.',
