@@ -22,6 +22,7 @@ tests_require = [
     #'BeautifulSoup',
     'nose',
     'sieve',
+    'coverage',
 ] + _extra_genshi + _extra_mako + _extra_jinja
 
 if sys.version_info[0] == 2 and sys.version_info[1] <= 5:
@@ -62,6 +63,8 @@ setup(
         'genshi': _extra_genshi,
         'mako': _extra_mako,
         'jinja': _extra_jinja,
+        'test': tests_require,
+        'tests': tests_require,
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
