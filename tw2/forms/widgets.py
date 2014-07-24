@@ -707,23 +707,20 @@ class RowLayout(BaseLayout):
 
 class StripBlanks(twc.Validator):
     def any_content(self, val):
-        if type(val) == list:
+        if isinstance(val, list):
             for v in val:
                 if self.any_content(v):
                     return True
             return False
-        elif type(val) == dict:
+        elif isinstance(val, dict):
             for k in val:
                 if k == 'id':
                     continue
                 if self.any_content(val[k]):
                     return True
             return False
-        elif type(val) == cgi.FieldStorage:
-            try:
-                return bool(v['file'].filename)
-            except:
-                return False
+        elif isinstance(val, cgi.FieldStorage):
+            return bool(val.filename)
         else:
             return bool(val)
 
