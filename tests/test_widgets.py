@@ -624,18 +624,25 @@ class TestRowLayout(WidgetTest):
 class TestGridLayout(WidgetTest):
 
     widget = GridLayout
-    attrs = {'children': [
+    attrs = {'id': 'grid',
+        'children': [
             TextField(id='field1'),
             TextField(id='field2'),
             TextField(id='field3')],
         'repetition': 1,
     }
-    expected = """<table>
+    expected = """<table id="grid">
         <tr><th>Field1</th><th>Field2</th><th>Field3</th></tr>
-        <tr class="error"><td colspan="0" id=":error">
+        <tr class="error"><td colspan="0" id="grid:error">
         </td></tr>
         </table>"""
     declarative = True
+    validate_params = [[
+        None,
+        {'grid:0:field1': 'something'},
+        None,
+        None,
+    ]]
 
 
 class TestSpacer(WidgetTest):
