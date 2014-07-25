@@ -130,14 +130,20 @@ class FileValidator(twc.Validator):
         'badext': "File name must have '$extension' extension",
     }
 
+    def _validate_file(self, value, outer_call=None):
+        if self.required and not getattr(value, 'filename', None):
+            raise twc.ValidationError('required', self)
+
+        if (self.extension is not None
+                and not value.filename.endswith(self.extension)):
+            raise twc.ValidationError('badext', self)
+
     def _validate_python(self, value, outer_call=None):
         if isinstance(value, cgi.FieldStorage):
-            if self.required and not getattr(value, 'filename', None):
-                raise twc.ValidationError('required', self)
-
-            if (self.extension is not None
-                    and not value.filename.endswith(self.extension)):
-                raise twc.ValidationError('badext', self)
+            self._validate_file(value, outer_call)
+        elif isinstance(value, list):
+            for val in value:
+                self._validate_file(val, outer_call)
         elif value:
             raise twc.ValidationError('corrupt', self)
         elif self.required:
