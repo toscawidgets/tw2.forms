@@ -50,7 +50,7 @@ class InputField(FormField):
     def prepare(self):
         super(InputField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None  # Why not 'required' if self.required in [True, 'required'] else None ?
+        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None
         self.required = None  # Needed because self.required would otherwise overwrite self.attrs['required'] again
 
 

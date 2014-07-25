@@ -639,8 +639,8 @@ class TestGridLayout(WidgetTest):
     declarative = True
     validate_params = [[
         None,
-        {'grid:0:field1': 'something'},
-        None,
+        {'grid:0:field1': 'something', 'grid:0:field2': 'something','grid:0:field3': 'something'},
+        [{'field1': 'something', 'field2': 'something','field3': 'something'}],
         None,
     ]]
 
