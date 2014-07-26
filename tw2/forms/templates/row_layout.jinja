@@ -1,6 +1,6 @@
 <tr {{ w.attrs|xmlattr }}>
     {% for c in w.children_non_hidden %}
-    <td>
+    <td id="{{ c.compound_id }}:container">
         {{ c.display() }}
         {% if c.error_msg %}
         <img src="{{ w.resources.error.link }}" title="{{ c.error_msg }}"/>

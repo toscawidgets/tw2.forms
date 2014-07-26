@@ -2,7 +2,7 @@
 <tr\
  ${tw.attrs(attrs=w.attrs)}>
    % for c in w.children_non_hidden:
-    <td>
+    <td id="${c.compound_id or ''}:container">
         ${c.display() | n}
        % if c.error_msg:
         <img src="${w.resources.error.link}" title="${c.error_msg}"/>

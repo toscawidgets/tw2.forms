@@ -475,15 +475,15 @@ class TestListLayout(WidgetTest):
         TextField(id='field2'),
         TextField(id='field3')]}
     expected = """<ul>
-        <li class="odd">
+        <li id="field1:container" class="odd">
             <label for="field1">Field1</label>
             <input name="field1" id="field1" type="text"/>
             <span id="field1:error" class="error"></span>
-        </li><li class="even">
+        </li><li id="field2:container" class="even">
             <label for="field2">Field2</label>
             <input name="field2" id="field2" type="text"/>
             <span id="field2:error" class="error"></span>
-        </li><li class="odd">
+        </li><li id="field3:container" class="odd">
             <label for="field3">Field3</label>
             <input name="field3" id="field3" type="text"/>
             <span id="field3:error" class="error"></span>
@@ -498,7 +498,7 @@ class TestListLayoutErrors(TestListLayout):
     attrs = {'children': [TextField(id='field1'), ],
              'error_msg': 'bogus error'}
     expected = """<ul>
-        <li class="odd">
+        <li id="field1:container" class="odd">
             <label for="field1">Field1</label>
             <input name="field1" id="field1" type="text"/>
             <span id="field1:error" class="error"></span>
@@ -610,11 +610,11 @@ class TestRowLayout(WidgetTest):
             TextField(id='field3')],
         'repetition': 1}
     expected = """<tr class="even">
-        <td>
+        <td id="field1:container">
             <input name="field1" id="field1" type="text"/>
-        </td><td>
+        </td><td id="field2:container">
             <input name="field2" id="field2" type="text"/>
-        </td><td>
+        </td><td id="field3:container">
             <input name="field3" id="field3" type="text"/>
         </td><td>
         </td></tr>"""
@@ -755,17 +755,17 @@ class TestListForm(WidgetTest):
     expected = """<form method="post" enctype="multipart/form-data">
         <span class="error"></span>
         <ul >
-            <li class="odd">
+            <li id="field1:container" class="odd">
              <label for="field1">Field1</label>
                 <input name="field1" id="field1" type="text"/>
                 <span id="field1:error" class="error"></span>
             </li>
-            <li class="even">
+            <li id="field2:container" class="even">
              <label for="field2">Field2</label>
                 <input name="field2" id="field2" type="text"/>
                 <span id="field2:error" class="error"></span>
             </li>
-            <li class="odd">
+            <li id="field3:container" class="odd">
              <label for="field3">Field3</label>
                 <input name="field3" id="field3" type="text"/>
                 <span id="field3:error" class="error"></span>
@@ -868,17 +868,17 @@ class TestListFieldset(WidgetTest):
     expected = """<fieldset>
         <legend></legend>
         <ul >
-            <li class="odd">
+            <li id="field1:container" class="odd">
              <label for="field1">Field1</label>
                 <input name="field1" id="field1" type="text"/>
                 <span id="field1:error" class="error"></span>
             </li>
-            <li class="even">
+            <li id="field2:container" class="even">
              <label for="field2">Field2</label>
                 <input name="field2" id="field2" type="text"/>
                 <span id="field2:error" class="error"></span>
             </li>
-            <li class="odd">
+            <li id="field3:container" class="odd">
              <label for="field3">Field3</label>
                 <input name="field3" id="field3" type="text"/>
                 <span id="field3:error" class="error"></span>
