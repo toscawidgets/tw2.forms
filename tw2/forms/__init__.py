@@ -53,5 +53,5 @@ from .widgets import (
     VerticalRadioButtonTable,
 )
 from .mashups import PostlabeledCheckBox, PostlabeledPartialRadioButton
-from .calendars import CalendarDatePicker, CalendarDateTimePicker
+from .calendars import CalendarBase, CalendarDatePicker, CalendarDateTimePicker
 from .datagrid import DataGrid

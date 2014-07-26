@@ -10,7 +10,7 @@ class="${(i % 2 and 'even' or 'odd') + ((c.validator and getattr(c.validator, 'r
 title="${c.help_text}" \
      % endif
 ${tw.attrs(attrs=c.container_attrs)}\
->
+id="${c.compound_id or ''}:container">
      <label for="${c.id}">${c.label or ''}</label>
         ${c.display() | n}
         % if not w.hover_help:

@@ -25,10 +25,14 @@ Portions of this document have been taken in part and modified from the
 original tw.forms codebase written primarily by Alberto Valaverde
 
 
+Note that you can not set different languages for multiple calendar widgets
+on one page.
+
 TODO: HTML5 type attribute support with native support detection and fallback
 """
+import os
 import re
-from datetime import datetime, date
+from datetime import datetime
 import time
 import logging
 
@@ -37,11 +41,19 @@ from .widgets import FormField
 
 
 __all__ = [
+    "CalendarBase",
     "CalendarDatePicker",
     "CalendarDateTimePicker",
     "calendar_js",
     "calendar_setup",
 ]
+
+
+# For better calendar widget detection in sprox
+class CalendarBase(object):
+    '''Base class for calendar widgets'''
+    pass
+
 
 _illegal_s = re.compile(r"((^|[^%])(%%)*%s)")
 
@@ -107,18 +119,27 @@ calendar_js = twc.JSLink(
 calendar_setup = twc.JSLink(resources=[calendar_js],
     modname='tw2.forms', filename='static/calendar/calendar-setup.js')
 
+_calendar_lang_re = re.compile(r'^calendar-(\S+).js$')
 
-class CalendarDatePicker(FormField):
+calendar_langs = dict(
+    (_calendar_lang_re.match(f).group(1),
+        twc.JSLink(modname=__name__, filename=os.path.join('static/calendar/lang', f)))
+    for f in os.listdir(os.path.join(os.path.dirname(__file__), 'static/calendar/lang'))
+        if f.startswith('calendar-')
+)
+
+
+class CalendarDatePicker(FormField, CalendarBase):
     """
     Uses a javascript calendar system to allow picking of calendar dates.
-    The date_format is in mm/dd/yyyy unless otherwise specified
+    The date_format is in yyyy-mm-dd unless otherwise specified
     """
     template = "tw2.forms.templates.calendar"
     calendar_lang = twc.Param("Default Language to use in the Calendar",
                               default='en')
     required = twc.Param(default=False)
     button_text = twc.Param("Text to display on Button", default="Choose")
-    date_format = twc.Param("Date Display Format", default="%m/%d/%Y")
+    date_format = twc.Param("Date Display Format", default="%Y-%m-%d")
     picker_shows_time = twc.Param('Picker Shows Time', default=False)
     tzinfo = twc.Param('Time Zone Information', default=None)
     setup_options = twc.Param('Calendar.setup(...) options', default={})
@@ -128,27 +149,21 @@ class CalendarDatePicker(FormField):
         'it will be called each time before displaying.',
         default=datetime.now)
 
-    def get_calendar_lang_file_link(self, lang):
-        """
-        Returns a CalendarLangFileLink containing a list of name
-        patterns to try in turn to find the correct calendar locale
-        file to use.
-        """
-        fname = 'static/calendar/lang/calendar-%s.js' % lang.lower()
-        return twc.JSLink(modname='tw2.forms',
-                      filename=fname)
-
     def __init__(self, *args, **kw):
         if self.validator is None:
             self.validator = twc.DateTimeValidator(
-            format=self.date_format,
-            required=self.required
+                format=self.date_format,
+                required=self.required
             )
         super(CalendarDatePicker, self).__init__(*args, **kw)
 
+    @classmethod
+    def post_define(cls):
+        cls.resources = [calendar_css, calendar_js, calendar_setup,
+                         calendar_langs[cls.calendar_lang]]
+
     def prepare(self):
         super(CalendarDatePicker, self).prepare()
-        self.resources = [calendar_css, calendar_js, calendar_setup]
         if not self.value and self.required:
             if callable(self.default):
                 self.value = self.default()
@@ -159,20 +174,23 @@ class CalendarDatePicker(FormField):
         except AttributeError:
             self.strdate = self.value
 
-        self.resources.append(
-            self.get_calendar_lang_file_link(self.calendar_lang)
-        )
+        calendar_options = {"inputField": self.compound_id,
+                            "showsTime": str(self.picker_shows_time).lower(),
+                            "ifFormat": self.date_format,
+                            "button": "%s_trigger" % self.compound_id}
+        calendar_options.update(self.setup_options)
+        self.add_call(twc.js_function('Calendar.setup')(calendar_options))
 
 
 class CalendarDateTimePicker(CalendarDatePicker):
     """
     Use a javascript calendar system to allow picking of calendar dates and
     time.
-    The date_format is in mm/dd/yyyy hh:mm unless otherwise specified
+    The date_format is in yyyy-mm-dd hh:mm unless otherwise specified
     """
     messages = {
         'badFormat': 'Invalid datetime format.',
         'empty': 'Please Enter a Date and Time.',
     }
-    date_format = "%Y/%m/%d %H:%M"
+    date_format = "%Y-%m-%d %H:%M"
     picker_shows_time = True

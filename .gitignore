@@ -15,3 +15,5 @@ dist/
 .pydevproject
 .settings
 nosetests.xml
+htmlcov
+tests/htmlcov

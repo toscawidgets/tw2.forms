@@ -50,12 +50,12 @@ class InputField(FormField):
     def prepare(self):
         super(InputField, self).prepare()
         self.safe_modify('attrs')
-        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None  # Why not 'required' if self.required in [True, 'required'] else None ?
+        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None
         self.required = None  # Needed because self.required would otherwise overwrite self.attrs['required'] again
 
 
 class PostlabeledInputField(InputField):
-    """ Inherits :class:`InputField`, but with a :attr:`text`
+    """ Inherits InputField, but with a text
     label that follows the input field """
     text = twc.Param('Text to display after the field.')
     text_attrs = twc.Param('Dict of attributes to inject into the label.',
@@ -281,6 +281,8 @@ class HTML5PatternMixin(twc.Widget):
     '''
     pattern = twc.Param('JavaScript regex to match field with',
         attribute=True, default=None)
+    title = twc.Param('Tooltip and message shown on invalid value',
+        attribute=True, default=None)
 
 
 class HTML5MinMaxMixin(twc.Widget):
@@ -424,13 +426,11 @@ class SelectionField(FormField):
             if group:
                 self.grouped_options.append((six.text_type(optgroup[0]), opts))
 
-        if self.prompt_text is not None:
-            self.options = [('', self.prompt_text)] + self.options
         if not self.grouped_options:
             self.grouped_options = [(None, self.options)]
-        elif self.prompt_text is not None:
-            self.grouped_options = \
-                    [(None, [('', self.prompt_text)])] + self.grouped_options
+
+        if self.prompt_text is not None:
+            self.grouped_options.insert(0, (None, [({'value': ''}, self.prompt_text)]))
 
     def _opt_matches_value(self, opt):
         return six.text_type(opt) == six.text_type(self.value)
@@ -459,7 +459,7 @@ class MultipleSelectionField(SelectionField):
         super(MultipleSelectionField, self).prepare()
 
     def _opt_matches_value(self, opt):
-        return six.text_type(opt) in self.value
+        return six.text_type(opt) in [six.text_type(v) for v in self.value]
 
     def _validate(self, value, state=None):
         value = value or []
@@ -694,7 +694,7 @@ class ListLayout(BaseLayout):
 class RowLayout(BaseLayout):
     """
     Arrange widgets in a table row. This is normally only useful as a child to
-    :class:`GridLayout`.
+    GridLayout.
     """
     resources = [twc.Link(id='error', modname='tw2.forms',
                           filename='static/dialog-warning.png'),
@@ -713,23 +713,20 @@ class RowLayout(BaseLayout):
 
 class StripBlanks(twc.Validator):
     def any_content(self, val):
-        if type(val) == list:
+        if isinstance(val, list):
             for v in val:
                 if self.any_content(v):
                     return True
             return False
-        elif type(val) == dict:
+        elif isinstance(val, dict):
             for k in val:
                 if k == 'id':
                     continue
                 if self.any_content(val[k]):
                     return True
             return False
-        elif type(val) == cgi.FieldStorage:
-            try:
-                return bool(v['file'].filename)
-            except:
-                return False
+        elif isinstance(val, cgi.FieldStorage):
+            return bool(val.filename)
         else:
             return bool(val)
 
@@ -873,10 +870,9 @@ class ListFieldSet(FieldSet):
 
 class FormPage(twc.Page):
     """
-    A page that contains a form. The :meth:`request` method
-    performs validation,
-    redisplaying the form on errors. On success, it calls
-    :meth:`validated_request`.
+    A page that contains a form. The request method performs
+    validation, redisplaying the form on errors.
+    On success, it calls validated_request.
     """
     _no_autoid = True
 

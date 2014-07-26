@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.2.2
+-----
+
+- Multiple Fixes and Improvements to CalendarPickers and Validators
+- Improvements with HTML5 form fields
+- Fix StripBlanks validator `e625395 <https://github.com/toscawidgets/tw2.forms/commit/e6253952f37e618d2d5c31ddc01cdc0ed674028f>`_
+- Add container ids to all layout widgets `e439ef5 <https://github.com/toscawidgets/tw2.forms/commit/e439ef53e65aecb9f7c973382c67f7374519e6b1>`_
+- Make sure the prompt_text submits an empty value and not the prompt text itself `54e0ac7 <https://github.com/toscawidgets/tw2.forms/commit/54e0ac753f409c881321218e5bfdac03f4d9312a>`_
+
 2.2.0.3
 -------
 

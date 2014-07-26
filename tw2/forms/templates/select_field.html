@@ -2,8 +2,11 @@
     <optgroup py:for="group, options in w.grouped_options"
               py:strip="not group"
               label="${group}" >
-        <option py:for="attrs, desc in options"
-                py:attrs="attrs"
-                py:content="desc" />
+        <py:for each="attrs, desc in options">
+            <option py:with="value=attrs.pop('value', '')"
+                    value="${value}"
+                    py:attrs="attrs"
+                    py:content="desc"/>
+        </py:for>
     </optgroup>
 </select>

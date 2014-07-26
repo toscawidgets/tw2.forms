@@ -214,7 +214,7 @@ class TestSingleSelectField(WidgetTest):
         'options': ((1, 'a'), (2, 'b'), (3, 'c')), 'id': 'hid',
         'validator': IntValidator()}
     expected = """<select class="something" id="hid" name="hid">
-            <option></option>
+            <option value=""></option>
             <option value="1">a</option>
             <option value="2">b</option>
             <option value="3">c</option>
@@ -223,7 +223,7 @@ class TestSingleSelectField(WidgetTest):
 
     def test_option_group(self):
         expected = """<select class="something">
-                <option></option>
+                <option value="">PROMPT_TEXT</option>
                 <optgroup label="group">
                     <option value=""></option>
                     <option value="1">Red</option>
@@ -235,7 +235,9 @@ class TestSingleSelectField(WidgetTest):
                     <option value="Yellow">Yellow</option>
                 </optgroup>
             </select>"""
-        attrs = {'css_class': 'something', 'options': [
+        attrs = {'css_class': 'something',
+                 'prompt_text': 'PROMPT_TEXT',
+                 'options': [
             ('group', ['', (1, 'Red'), (2, 'Blue')]),
             ('group2', ['', 'Pink', 'Yellow'])]}
         for engine in self._get_all_possible_engines():
@@ -244,7 +246,7 @@ class TestSingleSelectField(WidgetTest):
 
     def test_option_no_values(self):
         expected = """<select class="something">
-                <option></option>
+                <option value=""></option>
                 <option value="a">a</option>
                 <option value="b">b</option>
                 <option value="c">c</option>
@@ -256,7 +258,7 @@ class TestSingleSelectField(WidgetTest):
 
     def test_prompt_text(self):
         expected = """<select>
-                <option >Pick one:</option>
+                <option value="">Pick one:</option>
                 <option value="a">a</option>
                 <option value="b">b</option>
                 <option value="c">c</option>
@@ -267,7 +269,7 @@ class TestSingleSelectField(WidgetTest):
                 engine, attrs, self.params, expected)
 
     def test_no_options(self):
-        expected = """<select><option/></select>"""
+        expected = """<select><option value=""/></select>"""
         attrs = {'options': []}
         for engine in self._get_all_possible_engines():
             yield (self._check_rendering_vs_expected,
@@ -482,15 +484,15 @@ class TestListLayout(WidgetTest):
         TextField(id='field2'),
         TextField(id='field3')]}
     expected = """<ul>
-        <li class="odd">
+        <li id="field1:container" class="odd">
             <label for="field1">Field1</label>
             <input name="field1" id="field1" type="text"/>
             <span id="field1:error" class="error"></span>
-        </li><li class="even">
+        </li><li id="field2:container" class="even">
             <label for="field2">Field2</label>
             <input name="field2" id="field2" type="text"/>
             <span id="field2:error" class="error"></span>
-        </li><li class="odd">
+        </li><li id="field3:container" class="odd">
             <label for="field3">Field3</label>
             <input name="field3" id="field3" type="text"/>
             <span id="field3:error" class="error"></span>
@@ -505,7 +507,7 @@ class TestListLayoutErrors(TestListLayout):
     attrs = {'children': [TextField(id='field1'), ],
              'error_msg': 'bogus error'}
     expected = """<ul>
-        <li class="odd">
+        <li id="field1:container" class="odd">
             <label for="field1">Field1</label>
             <input name="field1" id="field1" type="text"/>
             <span id="field1:error" class="error"></span>
@@ -617,11 +619,11 @@ class TestRowLayout(WidgetTest):
             TextField(id='field3')],
         'repetition': 1}
     expected = """<tr class="even">
-        <td>
+        <td id="field1:container">
             <input name="field1" id="field1" type="text"/>
-        </td><td>
+        </td><td id="field2:container">
             <input name="field2" id="field2" type="text"/>
-        </td><td>
+        </td><td id="field3:container">
             <input name="field3" id="field3" type="text"/>
         </td><td>
         </td></tr>"""
@@ -631,18 +633,25 @@ class TestRowLayout(WidgetTest):
 class TestGridLayout(WidgetTest):
 
     widget = GridLayout
-    attrs = {'children': [
+    attrs = {'id': 'grid',
+        'children': [
             TextField(id='field1'),
             TextField(id='field2'),
             TextField(id='field3')],
         'repetition': 1,
     }
-    expected = """<table>
+    expected = """<table id="grid">
         <tr><th>Field1</th><th>Field2</th><th>Field3</th></tr>
-        <tr class="error"><td colspan="0" id=":error">
+        <tr class="error"><td colspan="0" id="grid:error">
         </td></tr>
         </table>"""
     declarative = True
+    validate_params = [[
+        None,
+        {'grid:0:field1': 'something', 'grid:0:field2': 'something','grid:0:field3': 'something'},
+        [{'field1': 'something', 'field2': 'something','field3': 'something'}],
+        None,
+    ]]
 
 
 class TestSpacer(WidgetTest):
@@ -755,17 +764,17 @@ class TestListForm(WidgetTest):
     expected = """<form method="post" enctype="multipart/form-data">
         <span class="error"></span>
         <ul >
-            <li class="odd">
+            <li id="field1:container" class="odd">
              <label for="field1">Field1</label>
                 <input name="field1" id="field1" type="text"/>
                 <span id="field1:error" class="error"></span>
             </li>
-            <li class="even">
+            <li id="field2:container" class="even">
              <label for="field2">Field2</label>
                 <input name="field2" id="field2" type="text"/>
                 <span id="field2:error" class="error"></span>
             </li>
-            <li class="odd">
+            <li id="field3:container" class="odd">
              <label for="field3">Field3</label>
                 <input name="field3" id="field3" type="text"/>
                 <span id="field3:error" class="error"></span>
@@ -868,17 +877,17 @@ class TestListFieldset(WidgetTest):
     expected = """<fieldset>
         <legend></legend>
         <ul >
-            <li class="odd">
+            <li id="field1:container" class="odd">
              <label for="field1">Field1</label>
                 <input name="field1" id="field1" type="text"/>
                 <span id="field1:error" class="error"></span>
             </li>
-            <li class="even">
+            <li id="field2:container" class="even">
              <label for="field2">Field2</label>
                 <input name="field2" id="field2" type="text"/>
                 <span id="field2:error" class="error"></span>
             </li>
-            <li class="odd">
+            <li id="field3:container" class="odd">
              <label for="field3">Field3</label>
                 <input name="field3" id="field3" type="text"/>
                 <span id="field3:error" class="error"></span>

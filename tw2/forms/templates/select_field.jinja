@@ -3,9 +3,9 @@
         {% if group %}
         <optgroup {{ {'label': group}|xmlattr }}>
         {% endif %}
-        {% for attrs, desc in options %}
-        <option {% if attrs %}{{ attrs|xmlattr }}{% endif %}>{{ desc }}</option>
-        {% endfor %}    
+            {% for attrs, desc in options %}
+            <option {% if attrs %}{{ attrs|xmlattr }}{% endif %}>{{ desc }}</option>
+            {% endfor %}
         {% if group %}
         </optgroup>
         {% endif %}
