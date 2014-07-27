@@ -731,6 +731,9 @@ class StripBlanks(twc.Validator):
             return bool(val)
 
     def to_python(self, value, state=None):
+        value = value or []
+        if not isinstance(value, list):
+            raise twc.ValidationError('corrupt', self)
         return [v for v in value if self.any_content(v)]
 
 
