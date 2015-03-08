@@ -175,7 +175,7 @@ class CalendarDatePicker(FormField, CalendarBase):
             self.strdate = self.value
 
         calendar_options = {"inputField": self.compound_id,
-                            "showsTime": str(self.picker_shows_time).lower(),
+                            "showsTime": self.picker_shows_time,
                             "ifFormat": self.date_format,
                             "button": "%s_trigger" % self.compound_id}
         calendar_options.update(self.setup_options)
