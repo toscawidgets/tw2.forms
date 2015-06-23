@@ -121,10 +121,12 @@ calendar_setup = twc.JSLink(resources=[calendar_js],
 
 _calendar_lang_re = re.compile(r'^calendar-(\S+).js$')
 
+# Use pkg_resources to support local files and zip packages (frozen)
+from pkg_resources import resource_listdir
 calendar_langs = dict(
     (_calendar_lang_re.match(f).group(1),
-        twc.JSLink(modname=__name__, filename=os.path.join('static/calendar/lang', f)))
-    for f in os.listdir(os.path.join(os.path.dirname(__file__), 'static/calendar/lang'))
+        twc.JSLink(modname='tw2.forms', filename='static/calendar/lang/' + f))
+    for f in resource_listdir('tw2.forms', 'static/calendar/lang')
         if f.startswith('calendar-')
 )
 
