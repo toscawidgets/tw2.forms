@@ -1,6 +1,16 @@
 Changelog
 =========
 
+2.2.2.2
+-------
+
+- Fix CalendarWidget boolean option conversion `00e29c7 <https://github.com/toscawidgets/tw2.forms/commit/00e29c7feef46f0b2b166f795474ab20ec6471f8>`_
+
+2.2.2.1
+-------
+
+- Fix StripBlanks validator when value is None `a015460 <https://github.com/toscawidgets/tw2.forms/commit/a01546065c2eb6c0e06f2c2bd03aa2a10195fc0e>`_
+
 2.2.2
 -----
 
