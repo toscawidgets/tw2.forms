@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2.2.2
--------
+2.2.3 (2.2.2.2)
+---------------
 
 - Fix CalendarWidget boolean option conversion `00e29c7 <https://github.com/toscawidgets/tw2.forms/commit/00e29c7feef46f0b2b166f795474ab20ec6471f8>`_
 
