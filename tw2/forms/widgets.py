@@ -45,7 +45,7 @@ class AutofocusAttrMixin(twc.Widget):
 
 
 class TextFieldMixin(twc.Widget):
-    '''Misc mixin class with attributes for textual input fields'''
+    '''Misc mixin class with attributes for textual form fields'''
     maxlength = twc.Param('Maximum length of field',
         attribute=True, default=None)
     placeholder = twc.Param('Placeholder text (HTML5 only)',
