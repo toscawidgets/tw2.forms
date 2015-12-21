@@ -37,7 +37,7 @@ import time
 import logging
 
 import tw2.core as twc
-from .widgets import RequiredAttrMixin, FormField
+from .widgets import RequiredAttrMixin, AutofocusAttrMixin, FormField
 
 
 __all__ = [
@@ -130,7 +130,7 @@ calendar_langs = dict(
 
 
 class CalendarDatePicker(
-        RequiredAttrMixin, FormField, CalendarBase):
+        RequiredAttrMixin, AutofocusAttrMixin, FormField, CalendarBase):
     """
     Uses a javascript calendar system to allow picking of calendar dates.
     The date_format is in yyyy-mm-dd unless otherwise specified
