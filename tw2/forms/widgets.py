@@ -76,7 +76,8 @@ class TextField(TextFieldMixin, InputField):
     type = 'text'
 
 
-class TextArea(TextFieldMixin, FormField):
+class TextArea(
+        TextFieldMixin, RequiredAttrMixin, AutofocusAttrMixin, FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
     template = "tw2.forms.templates.textarea"
@@ -372,7 +373,7 @@ class ColorField(TextField):
 #--
 # Selection fields
 #--
-class SelectionField(FormField):
+class SelectionField(RequiredAttrMixin, AutofocusAttrMixin, FormField):
     """
     Base class for single and multiple selection fields.
 
