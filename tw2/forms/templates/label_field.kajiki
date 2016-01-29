@@ -1,0 +1,1 @@
+<span xmlns:py="http://genshi.edgewall.org/">$w.value<input py:attrs="w.attrs"/></span>

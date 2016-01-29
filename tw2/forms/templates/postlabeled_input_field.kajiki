@@ -1,0 +1,1 @@
+<input xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs"/> <label for="${w.compound_id}" py:attrs="w.text_attrs">$w.text</label>

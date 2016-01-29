@@ -1,0 +1,11 @@
+<table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs" >
+    <tbody>
+    <tr py:for="row in w.options_rows">
+        <td py:for="attrs, desc in row">
+            <input py:attrs="attrs" />
+            <label for="${attrs['id']}" py:content="desc" />
+        </td>
+        <td py:for="j in xrange(w.cols - len(row))" />
+    </tr>
+    </tbody>
+</table>

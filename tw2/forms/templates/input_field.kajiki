@@ -1,0 +1,1 @@
+<input xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs"/>

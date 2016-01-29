@@ -1,0 +1,10 @@
+<form xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+     <span class="error" py:content="w.error_msg"/>
+     <div py:if="w.help_msg" class="help">
+      <p>
+         ${w.help_msg}
+      </p>
+     </div>
+    ${w.child.display()}
+    <py:for each="button in w.buttons">${button.display()}</py:for>
+</form>

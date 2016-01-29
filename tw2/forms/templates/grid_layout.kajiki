@@ -1,0 +1,7 @@
+<table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+    <tr><th py:for="col in w.children[0].children_non_hidden">$col.label</th></tr>
+    <py:for each="row in w.children">${row.display()}</py:for>
+    <tr class="error"><td colspan="${len(w.children)}" id="${w.compound_id}:error">
+        ${w.error_msg}
+    </td></tr>
+</table>

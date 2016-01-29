@@ -1,0 +1,14 @@
+<table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+    <tr py:for="i,c in enumerate(w.children_non_hidden)" class="${(i % 2 and 'even' or 'odd') + ((c.validator and getattr(c.validator, 'required', getattr(c.validator, 'not_empty', False))) and ' required' or '') + (c.error_msg and ' error' or '')}" title="${w.hover_help and c.help_text or None}" py:attrs="c.container_attrs" id="${c.compound_id}:container">
+        <th py:if="c.label"><label for="${c.id}">$c.label</label></th>
+        <td py:attrs="(not c.label) and dict(colspan='2') or None">
+            ${c.display()}
+            <py:if test="not w.hover_help">$c.help_text</py:if>
+            <span id="${c.compound_id}:error" py:content="c.error_msg"/>
+        </td>
+    </tr>
+    <tr class="error"><td colspan="2">
+        <py:for each="c in w.children_hidden">${c.display()}</py:for>
+        <span id="${w.compound_id}:error" py:content="w.error_msg"/>
+    </td></tr>
+</table>

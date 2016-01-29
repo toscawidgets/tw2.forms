@@ -1,0 +1,11 @@
+<ul xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+    <li py:for="group, opts in w.grouped_options" py:strip="not group">
+        <div class="group_header" py:if="group">$group</div>
+        <ul py:strip="not group">
+            <li py:for="attrs, desc in opts">
+                <input py:attrs="attrs" />
+                <label for="${attrs['id']}" py:content="desc" />
+            </li>
+        </ul>
+    </li>
+</ul>

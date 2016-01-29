@@ -1,0 +1,4 @@
+<fieldset xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+    <legend py:content="w.legend" />
+    ${w.child.display()}
+</fieldset>

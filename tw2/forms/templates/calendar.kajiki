@@ -1,0 +1,4 @@
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/">
+    <input type="text" id="${w.compound_id}" name="${w.id}" class="${w.css_class}" value="${w.strdate}" py:attrs="w.attrs"/>
+    <input type="button" id="${w.compound_id}_trigger" class="date_field_button" value="${w.button_text}" />
+</div>
