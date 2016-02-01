@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.4
+-----
+
+- Added Widgets templates for Kajiki `f423e63 <https://github.com/toscawidgets/tw2.forms/commit/f423e634ac57e65d7ed2ac7f1036fbc185f92955>`_
+
 2.2.3 (2.2.2.2)
 ---------------
 
