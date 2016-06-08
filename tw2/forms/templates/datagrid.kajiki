@@ -1,6 +1,4 @@
-<table xmlns="http://www.w3.org/1999/xhtml"
-       xmlns:py="http://genshi.edgewall.org/"
-       py:attrs="w.attrs" cellpadding="0" cellspacing="1" border="0">
+<table py:attrs="w.attrs" cellpadding="0" cellspacing="1" border="0">
     <thead py:if="w.columns">
         <tr>
             <th py:for="i, col in enumerate(w.columns)"

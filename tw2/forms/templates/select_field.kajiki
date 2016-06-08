@@ -1,4 +1,4 @@
-<select xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+<select py:attrs="w.attrs">
     <optgroup py:for="group, options in w.grouped_options"
               py:strip="not group"
               label="${group}" >

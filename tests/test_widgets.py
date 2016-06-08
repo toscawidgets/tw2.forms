@@ -29,7 +29,7 @@ class WidgetTest(_WidgetTest):
     the first two since those are the only templates provided by tw2.forms
     itself.
     """
-    engines = ['mako', 'jinja']
+    engines = ['mako', 'jinja', 'kajiki']
 
 
 class TestInputField(WidgetTest):
@@ -154,6 +154,9 @@ class TestLabelField(WidgetTest):
         attrs = {'value': 'line 1<br />line 2', 'escape': False}
         expected = '<span>line 1<br />line 2<input value="line 1<br />line 2" type="hidden"/></span>'
         for engine in self._get_all_possible_engines():
+            if engine == 'kajiki':
+                # Kajiki has no support for escape: False
+                continue
             yield (self._check_rendering_vs_expected,
                 engine, attrs, self.params, expected)
 
@@ -174,6 +177,9 @@ class TestLinkField(WidgetTest):
         attrs = {'text': 'line 1<br />line 2', 'escape': False}
         expected = '<a href="">line 1<br />line 2</a>'
         for engine in self._get_all_possible_engines():
+            if engine == 'kajiki':
+                # Kajiki has no support for escape: False
+                continue
             yield (self._check_rendering_vs_expected,
                 engine, attrs, self.params, expected)
 
@@ -689,6 +695,9 @@ class TestLabel(WidgetTest):
         attrs = {'text': 'line 1<br />line 2', 'escape': False}
         expected = '<span>line 1<br />line 2</span>'
         for engine in self._get_all_possible_engines():
+            if engine == 'kajiki':
+                # Kajiki has no support for escape: False
+                continue
             yield (self._check_rendering_vs_expected,
                 engine, attrs, self.params, expected)
 

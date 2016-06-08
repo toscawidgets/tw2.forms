@@ -1,4 +1,4 @@
-<table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs" >
+<table py:attrs="w.attrs" >
     <tbody>
     <tr py:for="row in w.options_rows">
         <td py:for="attrs, desc in row">

@@ -1,4 +1,4 @@
-<table xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs" >
+<table py:attrs="w.attrs" >
     <thead py:if="w.grouped_options[0][0]">
         <tr>
             <th py:for="group_name, options in w.grouped_options">${group_name}</th>

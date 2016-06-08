@@ -1,4 +1,4 @@
-<ul xmlns:py="http://genshi.edgewall.org/" py:attrs="w.attrs">
+<ul py:attrs="w.attrs">
     <py:for each="c in w.children_hidden">
         ${c.display()}
     </py:for>

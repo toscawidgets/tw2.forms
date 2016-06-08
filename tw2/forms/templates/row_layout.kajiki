@@ -1,4 +1,4 @@
-<tr xmlns:py="http://genshi.edgewall.org/"  py:attrs="w.attrs">
+<tr py:attrs="w.attrs">
     <td py:for="c in w.children_non_hidden" id="${c.compound_id}:container">
         ${c.display()}
         <py:if test="c.error_msg"><img src="${w.resources.error.link}" title="${c.error_msg}"/></py:if>
