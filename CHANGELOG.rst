@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.2.5
+-----
+
+- Included Kajiki template in testsuite `4738464 <https://github.com/toscawidgets/tw2.forms/commit/4738464d87d678f180131d8bd894131ecec5a007>`_
+- Fixed CalendarPickers ``name`` attribute using id instead of key. `5cd675e <https://github.com/toscawidgets/tw2.forms/commit/5cd675e2704c3ea6be6866d454e870b49d252b1d>`_
+
 2.2.4
 -----
 
