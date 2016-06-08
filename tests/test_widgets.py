@@ -1103,3 +1103,13 @@ def test_picker_required_validation():
         pass
     else:
         assert False, data
+
+
+class TestCalendarDateTimePicker(WidgetTest):
+    widget = CalendarDateTimePicker
+    attrs = {'css_class': 'something', 'id': 'forceddid'}
+    params = {'value': datetime(2016, 1, 1, 15, 30)}
+    expected = """<div>
+  <input type="text" id="forceddid" name="forceddid" class="something" value="2016-01-01 15:30" />
+  <input type="button" id="forceddid_trigger" class="date_field_button" value="Choose" />
+</div>"""
