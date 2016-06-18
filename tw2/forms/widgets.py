@@ -24,34 +24,42 @@ class FormField(twc.Widget):
         )
 
 
+class RequiredAttrMixin(twc.Widget):
+
+    required = twc.Param('Form field is required',
+        attribute=True, default=None)
+
+    def prepare(self):
+        super(RequiredAttrMixin, self).prepare()
+        self.safe_modify('attrs')
+        self.attrs['required'] = 'required' if self.required in [
+                True, 'required'] else None
+        # Needed because self.required would otherwise overwrite
+        # self.attrs['required'] again
+        self.required = None
+
+
+class AutofocusAttrMixin(twc.Widget):
+    autofocus = twc.Param('Autofocus form field (HTML5 only)',
+        attribute=True, default=None)
+
+
 class TextFieldMixin(twc.Widget):
-    '''Misc mixin class with attributes for textual input fields'''
+    '''Misc mixin class with attributes for textual form fields'''
     maxlength = twc.Param('Maximum length of field',
         attribute=True, default=None)
     placeholder = twc.Param('Placeholder text (HTML5 only)',
         attribute=True, default=None)
 
 
-class InputField(FormField):
+class InputField(RequiredAttrMixin, AutofocusAttrMixin, FormField):
     type = twc.Variable('Type of input field',
                         default=twc.Required,
                         attribute=True)
 
     value = twc.Param(attribute=True)
 
-    required = twc.Param('Input field is required',
-        attribute=True, default=None)
-
-    autofocus = twc.Param('Autofocus form field (HTML5 only)',
-        attribute=True, default=None)
-
     template = "tw2.forms.templates.input_field"
-
-    def prepare(self):
-        super(InputField, self).prepare()
-        self.safe_modify('attrs')
-        self.attrs['required'] = 'required' if self.required in [True, 'required'] else None
-        self.required = None  # Needed because self.required would otherwise overwrite self.attrs['required'] again
 
 
 class PostlabeledInputField(InputField):
@@ -68,7 +76,8 @@ class TextField(TextFieldMixin, InputField):
     type = 'text'
 
 
-class TextArea(TextFieldMixin, FormField):
+class TextArea(
+        TextFieldMixin, RequiredAttrMixin, AutofocusAttrMixin, FormField):
     rows = twc.Param('Number of rows', default=None, attribute=True)
     cols = twc.Param('Number of columns', default=None, attribute=True)
     template = "tw2.forms.templates.textarea"
@@ -364,7 +373,7 @@ class ColorField(TextField):
 #--
 # Selection fields
 #--
-class SelectionField(FormField):
+class SelectionField(RequiredAttrMixin, AutofocusAttrMixin, FormField):
     """
     Base class for single and multiple selection fields.
 
