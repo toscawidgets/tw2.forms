@@ -10,15 +10,17 @@ import six
 # Basic Fields
 #--
 class FormField(twc.Widget):
+    """Basic Form Widget from which each other field will inherit"""
     name = twc.Variable(
         'dom name',
         request_local=False,
         attribute=True,
         default=property(lambda s: hasattr(s, 'compound_key') and s.compound_key or s.compound_id)
-    )
+    )  #: Name of the field
 
     @property
     def required(self):
+        """If the field is required according to its validator (read-only)"""
         return self.validator and (
             getattr(self.validator, 'required', None)
         )
@@ -27,23 +29,29 @@ class FormField(twc.Widget):
 class TextFieldMixin(twc.Widget):
     '''Misc mixin class with attributes for textual input fields'''
     maxlength = twc.Param('Maximum length of field',
-        attribute=True, default=None)
+        attribute=True, default=None)  #: Maximum length of the field
     placeholder = twc.Param('Placeholder text (HTML5 only)',
-        attribute=True, default=None)
+        attribute=True, default=None)  #: Placeholder text, until user writes something.
 
 
 class InputField(FormField):
+    """A generic <input> field.
+    
+    Generally you won't use this one, but will rely
+    on one of its specialised subclasses like :class:`.TextField`
+    or :class:`Checkbox`.
+    """
     type = twc.Variable('Type of input field',
                         default=twc.Required,
-                        attribute=True)
+                        attribute=True)  #: Input type
 
-    value = twc.Param(attribute=True)
+    value = twc.Param(attribute=True)  #: Current value of the input
 
     required = twc.Param('Input field is required',
-        attribute=True, default=None)
+        attribute=True, default=None)  #: Add required attributed to the input.
 
     autofocus = twc.Param('Autofocus form field (HTML5 only)',
-        attribute=True, default=None)
+        attribute=True, default=None)  #: Add autofocus attributed to the input.
 
     template = "tw2.forms.templates.input_field"
 
@@ -57,24 +65,29 @@ class InputField(FormField):
 class PostlabeledInputField(InputField):
     """ Inherits InputField, but with a text
     label that follows the input field """
-    text = twc.Param('Text to display after the field.')
+    text = twc.Param('Text to display after the field.')  #: Text to display in the label after the field.
     text_attrs = twc.Param('Dict of attributes to inject into the label.',
-                           default={})
+                           default={})  #: Attributes of the label displayed after to the field.
     template = "tw2.forms.templates.postlabeled_input_field"
 
 
 class TextField(TextFieldMixin, InputField):
-    size = twc.Param('Size of the field', default=None, attribute=True)
+    """A simple text field where to input a single line of text"""
+    size = twc.Param('Size of the field', default=None, attribute=True)  #: Add size attribute to the HTML field.
     type = 'text'
 
 
 class TextArea(TextFieldMixin, FormField):
-    rows = twc.Param('Number of rows', default=None, attribute=True)
-    cols = twc.Param('Number of columns', default=None, attribute=True)
+    """A multiline text area"""
+    rows = twc.Param('Number of rows', default=None, attribute=True)  #: Add a rows= attribute to the HTML textarea
+    cols = twc.Param('Number of columns', default=None, attribute=True)  #: Add a cols= attribute to the HTML textarea
     template = "tw2.forms.templates.textarea"
 
 
 class CheckBox(InputField):
+    """A single checkbox. 
+    
+    Its value will be True or Folse if selected or not."""
     type = "checkbox"
     validator = twc.BoolValidator
 
@@ -100,10 +113,11 @@ class CheckBox(InputField):
 
 
 class RadioButton(InputField):
+    """A single radio button"""
     type = "radio"
     checked = twc.Param('Whether the field is selected',
                         attribute=True,
-                        default=False)
+                        default=False)  #: If the radio button is checked or not.
 
 
 class PasswordField(TextFieldMixin, InputField):
@@ -180,6 +194,10 @@ class FileField(InputField):
 class HiddenField(InputField):
     """
     A hidden field.
+
+    Typically this is used to bring around in the form
+    values that the user should not be able to modify
+    or see. Like the ID of the entity edited by the form.
     """
     type = 'hidden'
 
@@ -387,9 +405,9 @@ class SelectionField(FormField):
     That is no longer the case.
     """
 
-    options = twc.Param('Options to be displayed')
+    options = twc.Param('Options to be displayed')  #: List of options to pick from in the form ``[(id, text), (id, text), ...]``
     prompt_text = twc.Param('Text to prompt user to select an option.',
-                            default=None)
+                            default=None)  #: Prompt to display when no option is selected. Set to ``None`` to disable this.
 
     selected_verb = twc.Variable(default='selected')
     field_type = twc.Variable(default=False)
@@ -445,7 +463,7 @@ class SelectionField(FormField):
 
 class MultipleSelectionField(SelectionField):
     item_validator = twc.Param('Validator that applies to each item',
-                               default=None)
+                               default=None)  #: Validator that has to be applied to each item.
 
     def prepare(self):
         if not self.value:
@@ -474,12 +492,14 @@ class MultipleSelectionField(SelectionField):
 
 
 class SingleSelectField(SelectionField):
+    """Specialised :class:`SelectionField` to pick one element from a list of options."""
     template = "tw2.forms.templates.select_field"
     prompt_text = ''
 
 
 class MultipleSelectField(MultipleSelectionField):
-    size = twc.Param('Number of visible options', default=None, attribute=True)
+    """Specialised :class:`SelectionField` to pick multiple elements from a list of options."""
+    size = twc.Param('Number of visible options', default=None, attribute=True)  #: Number of options to show
     multiple = twc.Variable(attribute=True, default='multiple')
     template = "tw2.forms.templates.select_field"
 
