@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.6
+-----
+
+- Improve docstrings and documentation of form fields
+
 2.2.5
 -----
 
