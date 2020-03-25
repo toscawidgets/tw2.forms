@@ -11,8 +11,13 @@ except:
 # Requirements to install buffet plugins and engines
 _extra_genshi = ["Genshi >= 0.3.5"]
 _extra_mako = ["Mako >= 0.1.1"]
-_extra_jinja = ["Jinja2"]
 _extra_kajiki = ["Kajiki >= 0.5.5"]
+
+if sys.version_info[0:2] < (3, 6):
+    _extra_jinja = ["jinja2 < 3.0"]
+else:
+    _extra_jinja = ["jinja2"]
+
 
 requires = [
     "tw2.core>=2.1.4",
